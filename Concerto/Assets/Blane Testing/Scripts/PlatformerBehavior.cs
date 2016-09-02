@@ -15,7 +15,6 @@ public class PlatformerBehavior : MonoBehaviour {
 
     //Private Variables
     private LayerMask platformLayerMask;
-    private BoxCollider2D box;
     private Rigidbody2D rig;
     private Vector2 bottomRaycastOrigin;
     
@@ -23,7 +22,6 @@ public class PlatformerBehavior : MonoBehaviour {
 	void Start () {
         //Layermask for platforms, used for raycasting
         platformLayerMask = LayerMask.GetMask("Platform");
-        box = GetComponent<BoxCollider2D>();
         rig = GetComponent<Rigidbody2D>();
     }
 	
