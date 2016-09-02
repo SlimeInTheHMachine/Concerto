@@ -101,7 +101,7 @@ public class Beat_Peter : MonoBehaviour {
 		//Input
 		if (transform.localScale.x >= endSize.x - marginOfError)
 		{
-			colorControl.color = new Color(0.0f, 255.0f, 0.0f);
+			colorControl.color = new Color(0.1f, 0.6f, 0.9f);
 			if (Input.GetButtonDown("Jump"))
 			{
 				shake = 0.3f;
@@ -112,7 +112,7 @@ public class Beat_Peter : MonoBehaviour {
 		}
 		else
 		{
-			colorControl.color = new Color(255.0f, 0.0f, 0.0f);
+			colorControl.color = new Color(0.0f, 1.0f, 0.0f);
 		}
 		//Screen Shake 
 		if (shake > 0)
