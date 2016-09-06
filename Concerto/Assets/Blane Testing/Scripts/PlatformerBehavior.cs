@@ -24,6 +24,45 @@ public class PlatformerBehavior : MonoBehaviour {
         platformLayerMask = LayerMask.GetMask("Platform");
         rig = GetComponent<Rigidbody2D>();
     }
+
+    void FixedUpdate()
+    {
+        //Raycast to use platforms
+        bottomRaycastOrigin = new Vector2(transform.position.x, transform.position.y) - offset;
+
+        //Using raycasts and layermasks we can do basic collisions for platforms relatively quickly
+        RaycastHit2D rayHit = Physics2D.Raycast(bottomRaycastOrigin, Vector2.down, bottomRaycastLength, platformLayerMask.value);
+        if (rayHit.collider != null)
+        {
+            //Physics Forces on platform
+            Vector2 normalForce = new Vector2(0f, (9.8f * (rig.gravityScale * rig.mass)));
+            rig.AddForce(normalForce);
+            if (Mathf.Abs(rig.mass * (rig.velocity.x / Time.deltaTime)) > minClampForce.x)
+            {
+                Vector2 friction = new Vector2(normalForce.y * frictionCoff, 0f);
+                if (rig.velocity.x < 0f)
+                    rig.AddForce(friction);
+                else
+                    rig.AddForce(-friction);
+            }
+
+            //Stop the object from falling through the platform
+            if (rig.velocity.y <= 0f)
+            {
+                //Compensate for force built up in air
+                Vector2 tempForce = new Vector2(0, -(rig.mass * (rig.velocity.y / Time.deltaTime)));
+
+                //Stop bouncing //needs to be in fixed or physics
+                if (Mathf.Abs(tempForce.y) < minClampForce.y)
+                    rig.velocity = new Vector2(rig.velocity.x, 0f);
+                else
+                    rig.AddForce(tempForce);
+            }
+        }
+
+        //Keep forces from being obscene
+        ClampForce();
+    }
 	
     //general Update. Need to move physics and other things to respective update functions
     void Update()
@@ -43,37 +82,15 @@ public class PlatformerBehavior : MonoBehaviour {
                 rig.AddForce(jumpForce);
                 secondJump = true;
             }
-            //Stop the object from falling through the platform
-            if(rig.velocity.y <= 0f)
-            {
-                //Compensate for force built up in air
-                Vector2 tempForce = new Vector2(0, -(rig.mass * (rig.velocity.y / Time.deltaTime)));
-                
-                //Stop bouncing //needs to be in fixed or physics
-                if (Mathf.Abs(tempForce.y) < minClampForce.y)
-                    rig.velocity = new Vector2(rig.velocity.x, 0f);
-                else
-                    rig.AddForce(tempForce);
-            }
-
-            //Physics Forces on platform
-            Vector2 normalForce = new Vector2(0f, (9.8f * rig.gravityScale));
-            rig.AddForce(normalForce);
-            if (Mathf.Abs(rig.mass * (rig.velocity.x / Time.deltaTime)) > minClampForce.x)
-            {
-                Vector2 friction = new Vector2(normalForce.y * frictionCoff, 0f);
-                if(rig.velocity.x < 0f)
-                    rig.AddForce(friction);
-                else
-                    rig.AddForce(-friction);
-            }
         }
         else
         {
             //Jump in midair
             if (Input.GetButtonDown("Jump") && secondJump)
             {
-                
+                Vector2 tempForce = new Vector2(0, -(rig.mass * (rig.velocity.y / Time.deltaTime)));
+                rig.AddForce(tempForce);
+
                 rig.AddForce(jumpForce);
                 secondJump = false;
             }
@@ -85,9 +102,6 @@ public class PlatformerBehavior : MonoBehaviour {
             rig.AddForce(movementForce);
         else if(Input.GetAxis("Horizontal") < 0)
             rig.AddForce(-movementForce);
-
-        //Keep forces from being obscene
-        ClampForce();
 
     }
 
@@ -110,6 +124,8 @@ public class PlatformerBehavior : MonoBehaviour {
         {
             if (tempForce.y > 0f)
                 addForceVector.y -= (tempForce.y - maxClampForce.y);
+            else
+                addForceVector.y -= (tempForce.y + maxClampForce.y);
         }
 
         if (Mathf.Abs(tempForce.x) < minClampForce.x)
