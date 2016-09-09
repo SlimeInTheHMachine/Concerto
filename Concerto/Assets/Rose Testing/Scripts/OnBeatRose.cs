@@ -26,6 +26,8 @@ public class OnBeatRose: MonoBehaviour {
     public float shakeAmount;
     public float decreaseFactor;
 
+
+    public bool Pressable = false;
     // Use this for initialization
     void Start() {
         startTime = Time.time;
@@ -76,6 +78,9 @@ public class OnBeatRose: MonoBehaviour {
         //Input
         if (transform.localScale.x >= endSize.x - marginOfError)
         {
+          
+            Pressable = true;
+            Debug.Log("Is pressable? " + Pressable);
             colorControl.color = new Color(0.0f, 255.0f, 0.0f);
             if (Input.GetButtonDown("Jump"))
             {
@@ -87,6 +92,8 @@ public class OnBeatRose: MonoBehaviour {
         }
         else
         {
+            Pressable = false;
+            Debug.Log("Is pressable? " + Pressable);
             colorControl.color = new Color(255.0f, 0.0f, 0.0f);
         }
         //Screen Shake 
