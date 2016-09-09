@@ -12,6 +12,7 @@ public class PlatformerBehavior : MonoBehaviour {
     public bool secondJump;
     public float frictionCoff;
     public Vector2 offset;
+    public bool tryingToFall = false;
 
     //Private Variables
     private LayerMask platformLayerMask;
@@ -28,6 +29,8 @@ public class PlatformerBehavior : MonoBehaviour {
 
     void FixedUpdate()
     {
+        //RAYCAST NOT DETECTING EDGE COLLIDER!!!!!!
+
         //Raycast to use platforms
         bottomRaycastOrigin = new Vector2(transform.position.x, transform.position.y) - offset;
 
@@ -36,8 +39,13 @@ public class PlatformerBehavior : MonoBehaviour {
         if (rayHit.collider != null)
         {
             //Physics Forces on platform
+
+            //Normal
             Vector2 normalForce = new Vector2(0f, (9.8f * (rig.gravityScale * rig.mass)));
-            rig.AddForce(normalForce);
+            if (!tryingToFall)
+                rig.AddForce(normalForce);
+
+            //Friction
             if (Mathf.Abs(rig.mass * ((lastVelocity.x - rig.velocity.x) / Time.fixedDeltaTime)) > minClampForce.x)
             {
                 Vector2 friction = new Vector2(normalForce.y * frictionCoff, 0f);
@@ -46,15 +54,8 @@ public class PlatformerBehavior : MonoBehaviour {
                 else
                     rig.AddForce(-friction);
             }
-
-            //Stop the object from falling through the platform
-            if (rig.velocity.y <= 0f)
-            {
-                //Compensate for force built up in air
-                rig.velocity = new Vector2(rig.velocity.x, 0f);
-            }
         }
-
+        
         //Keep forces from being obscene
         ClampForce();
     }
@@ -62,6 +63,7 @@ public class PlatformerBehavior : MonoBehaviour {
     //general Update. Need to move physics and other things to respective update functions
     void Update()
     {
+       
         //Raycast to use platforms
         bottomRaycastOrigin = new Vector2(transform.position.x, transform.position.y) - offset;
 
@@ -76,6 +78,13 @@ public class PlatformerBehavior : MonoBehaviour {
                 //Chaos CONTROOOLS!!!
                 rig.AddForce(jumpForce);
                 secondJump = true;
+            }
+
+            //Stop the object from falling through the platform
+            if (!tryingToFall && rig.velocity.y <= 0f)
+            {
+                //Compensate for force built up in air
+                rig.velocity = new Vector2(rig.velocity.x, 0f);
             }
         }
         else
@@ -96,6 +105,12 @@ public class PlatformerBehavior : MonoBehaviour {
         else if(Input.GetAxis("Horizontal") < 0)
             rig.AddForce(-movementForce);
 
+        if (Input.GetAxis("Vertical") < 0)
+            tryingToFall = true;
+        else
+            tryingToFall = false;
+
+
         lastVelocity = rig.velocity;
     }
 
@@ -103,18 +118,24 @@ public class PlatformerBehavior : MonoBehaviour {
     //Keep forces in check with equal and opposite
     void ClampForce()
     {
-        
+        //Something limiting xforces // velocity = 0 //why //#gah
+        Debug.Log(rig.velocity);
+
+       
         Vector2 tempForce = new Vector2((rig.mass *((lastVelocity.x - rig.velocity.x) / Time.fixedDeltaTime)), (rig.mass * ((lastVelocity.y - rig.velocity.y) / Time.fixedDeltaTime)));
+       // Debug.Log(tempForce);
         Vector2 addForceVector = new Vector2(0,0);
 
-        if( Mathf.Abs(tempForce.x) > maxClampForce.x)
-        {
-            if (tempForce.x > 0f)
-                addForceVector.x -= (tempForce.x - maxClampForce.x);
-            else
-                addForceVector.x -= (tempForce.x + maxClampForce.x);
-        }
-
+        //Not doing anything
+        /*
+       if( Mathf.Abs(tempForce.x) > maxClampForce.x)
+       {
+           if (tempForce.x > 0f)
+               addForceVector.x -= (tempForce.x - maxClampForce.x);
+           else
+               addForceVector.x -= (tempForce.x + maxClampForce.x);
+       }
+        
         if (Mathf.Abs(tempForce.y) > maxClampForce.y)
         {
             if (tempForce.y > 0f)
@@ -123,11 +144,11 @@ public class PlatformerBehavior : MonoBehaviour {
                 addForceVector.y -= (tempForce.y + maxClampForce.y);
         }
 
-        //Something limiting xforces // tempforce = 0 //why //#gah
-        Debug.Log(tempForce);
+        */ 
+        //Broken
         if (Mathf.Abs(tempForce.x) < minClampForce.x)
             rig.velocity = new Vector2(0f, rig.velocity.y);
-
+            
         rig.AddForce(addForceVector);
     }
 }
