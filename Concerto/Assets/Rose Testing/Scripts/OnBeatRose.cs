@@ -13,13 +13,12 @@ public class OnBeatRose: MonoBehaviour {
     public Vector2 endSize;
     private float startTime;
     private SpriteRenderer colorControl;
-    private Camera mainCamera;
     public Transform cameraPos;
 
     public int scoreNum;
     public Text score;
 
-    public AudioSource audio;
+    public AudioSource source;
     public AudioClip beat;
 
     public float shake;
@@ -32,9 +31,8 @@ public class OnBeatRose: MonoBehaviour {
         score.text = "" + scoreNum;
         timeBetweenSizeChange = timeBetweenBeats / 2;
         growing = true;
-        audio = GetComponent<AudioSource>();
+        source = GetComponent<AudioSource>();
         colorControl = gameObject.GetComponent<SpriteRenderer>();
-        mainCamera = gameObject.GetComponent<Camera>();
     }
 
     // Update is called once per frame
@@ -46,9 +44,9 @@ public class OnBeatRose: MonoBehaviour {
             float t = sizeChanged / endSize.x;
             transform.localScale = Vector2.Lerp(startSize, endSize, t);
 
-            if (transform.localScale.x >= endSize.x - marginOfError && audio.isPlaying == false)
+            if (transform.localScale.x >= endSize.x - marginOfError && source.isPlaying == false)
             {
-                audio.PlayOneShot(beat);
+                source.PlayOneShot(beat);
             }
 
             if (transform.localScale.x >= endSize.x)
