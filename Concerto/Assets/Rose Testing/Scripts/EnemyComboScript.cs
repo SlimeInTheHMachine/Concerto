@@ -6,6 +6,8 @@ using System;
 public class EnemyComboScript : MonoBehaviour {
 
     public bool Selected = false;
+    //[SerializeField]
+    public GameObject GameControl;
     [SerializeField]
     GameObject TextGameObject;
     [SerializeField]
@@ -13,6 +15,7 @@ public class EnemyComboScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
+        GameControl = GameObject.FindGameObjectWithTag("GameController");
         //Puts in three standard buttons
         ComboLetters = new Queue<string>();
         ComboLetters.Enqueue("a");
@@ -25,8 +28,12 @@ public class EnemyComboScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (GameControl.GetComponent<OnBeatRose>().Pressable)
+        {
+            Debug.Log("We could have pressed!");
+        }
         TextGameObject.GetComponent<TextMesh>().text = ComboLetters.Peek();
-        if (!Selected)
+        if (!Selected )
         {
             try
             {
@@ -34,7 +41,8 @@ public class EnemyComboScript : MonoBehaviour {
                 {
                     Destroy(this.gameObject);
                 }
-                if (Input.GetKeyDown(ComboLetters.Peek()))
+                //Debug.Log("Is pressable? " + GameControl.GetComponent<OnBeatRose>().Pressable);
+                if (Input.GetKeyDown(ComboLetters.Peek()) && GameControl.GetComponent<OnBeatRose>().Pressable)
                 {
                     string temp = ComboLetters.Dequeue();
                     Debug.Log("Dequeue'd " + temp);

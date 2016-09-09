@@ -13,28 +13,28 @@ public class OnBeatRose: MonoBehaviour {
     public Vector2 endSize;
     private float startTime;
     private SpriteRenderer colorControl;
-    private Camera mainCamera;
     public Transform cameraPos;
 
     public int scoreNum;
     public Text score;
 
-    public AudioSource audio;
+    public AudioSource source;
     public AudioClip beat;
 
     public float shake;
     public float shakeAmount;
     public float decreaseFactor;
 
+
+    public bool Pressable = false;
     // Use this for initialization
     void Start() {
         startTime = Time.time;
         score.text = "" + scoreNum;
         timeBetweenSizeChange = timeBetweenBeats / 2;
         growing = true;
-        audio = GetComponent<AudioSource>();
+        source = GetComponent<AudioSource>();
         colorControl = gameObject.GetComponent<SpriteRenderer>();
-        mainCamera = gameObject.GetComponent<Camera>();
     }
 
     // Update is called once per frame
@@ -46,9 +46,9 @@ public class OnBeatRose: MonoBehaviour {
             float t = sizeChanged / endSize.x;
             transform.localScale = Vector2.Lerp(startSize, endSize, t);
 
-            if (transform.localScale.x >= endSize.x - marginOfError && audio.isPlaying == false)
+            if (transform.localScale.x >= endSize.x - marginOfError && source.isPlaying == false)
             {
-                audio.PlayOneShot(beat);
+                source.PlayOneShot(beat);
             }
 
             if (transform.localScale.x >= endSize.x)
@@ -76,6 +76,9 @@ public class OnBeatRose: MonoBehaviour {
         //Input
         if (transform.localScale.x >= endSize.x - marginOfError)
         {
+          
+            Pressable = true;
+            Debug.Log("Is pressable? " + Pressable);
             colorControl.color = new Color(0.0f, 255.0f, 0.0f);
             if (Input.GetButtonDown("Jump"))
             {
@@ -87,6 +90,8 @@ public class OnBeatRose: MonoBehaviour {
         }
         else
         {
+            Pressable = false;
+            Debug.Log("Is pressable? " + Pressable);
             colorControl.color = new Color(255.0f, 0.0f, 0.0f);
         }
         //Screen Shake 
