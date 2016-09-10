@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class BeatManager : MonoBehaviour
@@ -13,14 +13,16 @@ public class BeatManager : MonoBehaviour
 	public delegate void BeatFunction();
 	//All functions of other beat-relevant objects in the scene
 	public System.Collections.Generic.List<BeatFunction> BeatFunctions;
-	//Event that calls BeatFunction
-	public static event BeatFunction BeatEvent; 
-
+	/// <summary>
+	/// Occurs when on beat. Subscribers must be void.
+	/// </summary>
+	public static event BeatFunction onBeat; 
 
 	// Use this for initialization
 	void Start ()
 	{
-
+		onBeat += tempTestMethod;
+		onBeat += tempTestMethod2;
 
 	}
 	
@@ -32,21 +34,26 @@ public class BeatManager : MonoBehaviour
 
 	void FixedUpdate()
 	{
+		//Debug.Log("Fixed Update");
 		//Keep track of more time passing
 		timeCounter += Time.fixedDeltaTime;
+		//Debug.Log(timeCounter);
 		//If enough time has passed for a beat
 		if (timeCounter >= (float)BeatTime)
 		{
 			timeCounter-= (float)BeatTime;
-			//Trigger beat event here
+			//Trigger onbeat event
+			onBeat();
 		}
 	}
 
-	//Add an event to the list of delegates
-	public void addDelegate()
+	private void tempTestMethod()
 	{
+		Debug.Log("Test method triggered");
 	}
-	public void removeDelegate()
+
+	private void tempTestMethod2()
 	{
+		Debug.Log("Test method2 triggered");
 	}
 }
