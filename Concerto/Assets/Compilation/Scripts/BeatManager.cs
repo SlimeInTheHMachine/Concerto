@@ -8,6 +8,10 @@ public class BeatManager : MonoBehaviour
 	public double BeatTime;
 	//Keeps a running track of time passing
 	private float timeCounter;
+	public float TimeCounter
+	{
+		get { return timeCounter;}
+	}
 	
 	//function to call on the beat
 	public delegate void BeatFunction();
@@ -17,6 +21,26 @@ public class BeatManager : MonoBehaviour
 	/// Occurs when on beat. Subscribers must be void.
 	/// </summary>
 	public static event BeatFunction onBeat; 
+
+	//Prevents other instances of BeatManager, since the constructor is restricted
+	protected BeatManager (){}
+	//static instance of BeatManager
+	public static BeatManager instance = null;
+
+	//Awake is before all Start functions
+	void Awake()
+	{
+		//Check if instance exists
+		if (instance == null)
+			//If not, assign this to it.
+			instance = this;
+		else if (instance != this)
+			//If so (somehow), destroy this object.
+			Destroy(gameObject);    
+		//Sets this to not be destroyed when reloading scene
+		//DontDestroyOnLoad(gameObject);
+	}
+
 
 	// Use this for initialization
 	void Start ()
