@@ -7,7 +7,7 @@ public class Beat_Stef : MonoBehaviour
 {
 
     GameObject beatManager;
-    public bool onTime;
+    public bool inputCheck;
     public bool growing;
     private float timeBetweenSizeChange;
     public float timeBetweenBeats;
@@ -43,7 +43,7 @@ public class Beat_Stef : MonoBehaviour
     {
         //Gets the time to be used for beats from the Beat Manager
         beatManager = GameObject.Find("BeatManager");
-        beatTime = beatManager.GetComponent<BeatManager>().BeatTime;
+        beatTime = beatManager.GetComponent<BeatMan2>().BeatTime;
 
         startTime = Time.time;
         score.text = "" + scoreNum;
@@ -111,16 +111,20 @@ public class Beat_Stef : MonoBehaviour
     }
     void Update()
     {
+
         //Input
         if (transform.localScale.x >= endSize.x - marginOfError)
         {
             colorControl.color = new Color(0.4f, 1.0f, 0.4f);
-            if (Input.GetButtonDown("Jump"))
+            if (beatManager.GetComponent<BeatMan2>().onTime)
             {
-                shake = 0.3f;
-                scoreNum++;
-                score.text = "" + scoreNum;
+                if (Input.GetButtonDown("Jump"))
+                {
+                    shake = 0.3f;
+                    scoreNum++;
+                    score.text = "" + scoreNum;
 
+                }
             }
         }
         else
@@ -139,9 +143,5 @@ public class Beat_Stef : MonoBehaviour
         {
             shake = 0.0f;
         }
-    }
-    void toggleTimer()
-    {
-        onTime = !onTime;
     }
 }

@@ -5,12 +5,17 @@ using UnityEngine.UI;
 
 public class BeatMan2 : MonoBehaviour
 {
-
+    public bool onTime;
+    public float marginOfError;
     //the time in seconds for a beat.
     public double BeatTime;
     //Keeps a running track of time passing
     private float timeCounter;
-
+    public float TimeCounter
+    {
+        get { return timeCounter; }
+    }
+    
     //function to call on the beat
     public delegate void BeatFunction();
     //All functions of other beat-relevant objects in the scene
@@ -51,11 +56,21 @@ public class BeatMan2 : MonoBehaviour
             //Trigger onbeat event
             onBeat();
         }
-    }
 
-    void 
-    private void beatTimerStart()
+        if (timeCounter >= BeatTime + marginOfError || timeCounter <= BeatTime - marginOfError)
+        {
+            onTime = true;
+        }
+
+        else
+        {
+            onTime = false;
+        }
+
+    }
+    
+    private void beatTimer()
     {
-      
+
     }
 }
