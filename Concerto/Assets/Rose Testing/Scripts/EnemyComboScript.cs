@@ -7,31 +7,45 @@ public class EnemyComboScript : MonoBehaviour {
 
     public bool Selected = false;
     //[SerializeField]
-    public GameObject GameControl;
+    //public GameObject GameControl;
     [SerializeField]
     GameObject TextGameObject;
     [SerializeField]
     Queue<string> ComboLetters;
+
+    /// <summary>
+    /// Bool whether or not the ability to press buttons is there.
+    /// </summary>
+    bool pressable = false;
 	// Use this for initialization
 	void Start () {
 
-        GameControl = GameObject.FindGameObjectWithTag("GameController");
+        //GameControl = GameObject.FindGameObjectWithTag("GameController");
         //Puts in three standard buttons
         ComboLetters = new Queue<string>();
         ComboLetters.Enqueue("a");
         ComboLetters.Enqueue("b");
         ComboLetters.Enqueue("c");
+        BeatManager.onBeat += subscriberTest;
+        BeatManager.safeBeforeBeat += SetBeatGood;
 
 
         TextGameObject = gameObject.transform.Find("Enemy Letter").gameObject;
     }
-	
-	// Update is called once per frame
-	void Update () {
-        if (GameControl.GetComponent<OnBeatRose>().Pressable)
-        {
-            Debug.Log("We could have pressed!");
-        }
+
+    void SetBeatGood()
+    {
+        pressable = true;
+    }
+    void subscriberTest()
+    {
+        pressable = false;
+        Debug.Log("Entered subscriber function");
+    }
+
+    // Update is called once per frame
+    void Update () {
+       
         TextGameObject.GetComponent<TextMesh>().text = ComboLetters.Peek();
         if (!Selected )
         {
@@ -41,8 +55,8 @@ public class EnemyComboScript : MonoBehaviour {
                 {
                     Destroy(this.gameObject);
                 }
-                //Debug.Log("Is pressable? " + GameControl.GetComponent<OnBeatRose>().Pressable);
-                if (Input.GetKeyDown(ComboLetters.Peek()) && GameControl.GetComponent<OnBeatRose>().Pressable)
+                
+                if (Input.GetKeyDown(ComboLetters.Peek()) && pressable)
                 {
                     string temp = ComboLetters.Dequeue();
                     Debug.Log("Dequeue'd " + temp);

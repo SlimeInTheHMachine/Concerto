@@ -3,11 +3,16 @@ using System.Collections;
 
 public class BeatManager : MonoBehaviour
 {
-
+    [SerializeField]
+    float safeZoneTime;
 	//the time in seconds for a beat.
 	public double BeatTime;
 	//Keeps a running track of time passing
 	private float timeCounter;
+
+    /// <summary>
+    /// Gets the timeCounter
+    /// </summary>
 	public float TimeCounter
 	{
 		get { return timeCounter;}
@@ -20,10 +25,20 @@ public class BeatManager : MonoBehaviour
 	/// <summary>
 	/// Occurs when on beat. Subscribers must be void.
 	/// </summary>
-	public static event BeatFunction onBeat; 
+	public static event BeatFunction onBeat;
 
-	//Prevents other instances of BeatManager, since the constructor is restricted
-	protected BeatManager (){}
+    /// <summary>
+    /// SafeZone before Beat Begins
+    /// </summary>
+    public static event BeatFunction safeBeforeBeat;
+
+    /// <summary>
+    /// Removal of SafeZone after beat plays
+    /// </summary>
+    public static event BeatFunction safeAfterBeat;
+
+    //Prevents other instances of BeatManager, since the constructor is restricted
+    protected BeatManager (){}
 	//static instance of BeatManager
 	public static BeatManager instance = null;
 
@@ -46,7 +61,7 @@ public class BeatManager : MonoBehaviour
 	void Start ()
 	{
 		onBeat += tempTestMethod;
-		onBeat += tempTestMethod2;
+        safeBeforeBeat += tempTestMethod2;
 
 	}
 	
@@ -63,6 +78,10 @@ public class BeatManager : MonoBehaviour
 		timeCounter += Time.fixedDeltaTime;
 		//Debug.Log(timeCounter);
 		//If enough time has passed for a beat
+        if(timeCounter >= safeZoneTime)
+        {
+            safeBeforeBeat();
+        }
 		if (timeCounter >= (float)BeatTime)
 		{
 			timeCounter-= (float)BeatTime;
