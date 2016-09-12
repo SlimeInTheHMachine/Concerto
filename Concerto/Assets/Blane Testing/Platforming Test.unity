@@ -97,6 +97,7 @@ GameObject:
   - 50: {fileID: 313539731}
   - 114: {fileID: 313539732}
   - 61: {fileID: 313539730}
+  - 114: {fileID: 313539733}
   m_Layer: 0
   m_Name: Ricky the Brick
   m_TagString: Player
@@ -179,7 +180,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 313539727}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 254115371b2f78b4b8bdf536536610e5, type: 3}
   m_Name: 
@@ -187,11 +188,32 @@ MonoBehaviour:
   bottomRaycastLength: .769999981
   jumpForce: {x: 0, y: 400}
   movementForce: {x: 50, y: 0}
-  maxClampForce: {x: 200, y: 800}
-  minClampForce: {x: 3, y: 150}
+  maxClampForce: {x: 5, y: 800}
+  minClampForce: {x: .0500000007, y: 150}
   secondJump: 1
   frictionCoff: .449999988
   offset: {x: 0, y: .430000007}
+  tryingToFall: 0
+--- !u!114 &313539733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 313539727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9ba2fa64e866164d8ed4050bc9b9cd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bottomRaycastLength: .769999981
+  jumpForce: 400
+  movementForce: 10
+  frictionCoff: .100000001
+  decelMultiVal: .99000001
+  maxClampForce: {x: 10, y: 800}
+  minClampForce: {x: .0500000007, y: .5}
+  raycastOffset: {x: 0, y: .430000007}
+  secondJump: 0
   tryingToFall: 0
 --- !u!1 &685205227
 GameObject:
@@ -670,6 +692,7 @@ GameObject:
   - 92: {fileID: 2064464833}
   - 124: {fileID: 2064464832}
   - 81: {fileID: 2064464831}
+  - 114: {fileID: 2064464836}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -744,3 +767,15 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
+--- !u!114 &2064464836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2064464830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74ad955de82c8e540a703227afb1dc9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 313539727}

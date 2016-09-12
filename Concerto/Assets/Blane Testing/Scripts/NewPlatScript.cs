@@ -1,17 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlatformerBehavior : MonoBehaviour {
+public class NewPlatScript : MonoBehaviour {
 
     //Public Variables
     public float bottomRaycastLength;
-    public Vector2 jumpForce;
-    public Vector2 movementForce;
+    public float jumpForce;
+    public float movementForce;
+    public float frictionCoff;
+    public float decelMultiVal;
     public Vector2 maxClampForce;
     public Vector2 minClampForce;
+    public Vector2 raycastOffset;
     public bool secondJump;
-    public float frictionCoff;
-    public Vector2 offset;
     public bool tryingToFall = false;
 
     //Private Variables
@@ -19,20 +20,18 @@ public class PlatformerBehavior : MonoBehaviour {
     private Rigidbody2D rig;
     private Vector2 bottomRaycastOrigin;
     private Vector2 lastVelocity;
-    
-	// Use this for initialization
-	void Start () {
+
+    // Use this for initialization
+    void Start () {
         //Layermask for platforms, used for raycasting
         platformLayerMask = LayerMask.GetMask("Platform");
         rig = GetComponent<Rigidbody2D>();
     }
-
+	
     void FixedUpdate()
     {
-        //RAYCAST NOT DETECTING EDGE COLLIDER!!!!!!
-
         //Raycast to use platforms
-        bottomRaycastOrigin = new Vector2(transform.position.x, transform.position.y) - offset;
+        bottomRaycastOrigin = new Vector2(transform.position.x, transform.position.y) - raycastOffset;
 
         //Using raycasts and layermasks we can do basic collisions for platforms relatively quickly
         RaycastHit2D rayHit = Physics2D.Raycast(bottomRaycastOrigin, Vector2.down, bottomRaycastLength, platformLayerMask.value);
@@ -40,35 +39,40 @@ public class PlatformerBehavior : MonoBehaviour {
         {
             //Physics Forces on platform
 
-            //Normal
+            //Normal Force
             Vector2 normalForce = new Vector2(0f, (9.8f * (rig.gravityScale * rig.mass)));
             if (!tryingToFall)
                 rig.AddForce(normalForce);
 
-            //Friction
+            //Friction Force
             if (Mathf.Abs(rig.mass * ((lastVelocity.x - rig.velocity.x) / Time.fixedDeltaTime)) > minClampForce.x)
             {
-                Vector2 friction = new Vector2(normalForce.y * frictionCoff, 0f);
+                Vector2 frictionForce = new Vector2(normalForce.y * frictionCoff, 0f);
                 if (rig.velocity.x < 0f)
-                    rig.AddForce(friction);
+                    rig.AddForce(frictionForce);
                 else
-                    rig.AddForce(-friction);
+                    rig.AddForce(-frictionForce);
             }
         }
-        
+
+        //Natural Decel
+        if (Input.GetAxis("Horizontal") == 0)
+        {
+            rig.velocity = new Vector2(rig.velocity.x * decelMultiVal, rig.velocity.y);
+        }
+
         //Keep forces from being obscene
-        ClampForce();
+        ClampSpeeds();
+        //Keep this for next frame
         lastVelocity = rig.velocity;
     }
-	
-    //general Update. Need to move physics and other things to respective update functions
-    void Update()
-    {
-       
-        //Raycast to use platforms
-        bottomRaycastOrigin = new Vector2(transform.position.x, transform.position.y) - offset;
 
-        //Using raycasts and layermasks we can do basic collisions for platforms relatively quickly
+	// Update is called once per frame
+	void Update () {
+        //Raycast to use platforms //Working
+        bottomRaycastOrigin = new Vector2(transform.position.x, transform.position.y) - raycastOffset;
+
+        //Using raycasts and layermasks we can do basic collisions for platforms relatively quickly //Working
         RaycastHit2D rayHit = Physics2D.Raycast(bottomRaycastOrigin, Vector2.down, bottomRaycastLength, platformLayerMask.value);
         if (rayHit.collider != null)
         {
@@ -76,12 +80,12 @@ public class PlatformerBehavior : MonoBehaviour {
             Debug.DrawLine(bottomRaycastOrigin, rayHit.collider.transform.position, Color.red);
             if (Input.GetButtonDown("Jump"))
             {
-                //Chaos CONTROOOLS!!!
-                rig.AddForce(jumpForce);
+                //Chaos CONTROOOLS!!! //Working
+                rig.AddForce(new Vector2(0f, jumpForce));
                 secondJump = true;
             }
 
-            //Stop the object from falling through the platform
+            //Stop the object from falling through the platform //Working so long as collision is detected
             if (!tryingToFall && rig.velocity.y <= 0f)
             {
                 //Compensate for force built up in air
@@ -90,21 +94,20 @@ public class PlatformerBehavior : MonoBehaviour {
         }
         else
         {
-            //Jump in midair
+            //Jump in midair //Working
             if (Input.GetButtonDown("Jump") && secondJump)
             {
                 rig.velocity = new Vector2(rig.velocity.x, 0f);
-                rig.AddForce(jumpForce);
+                rig.AddForce(new Vector2(0f, jumpForce));
                 secondJump = false;
             }
         }
 
-        //Chaos CONTROOOLS!!!
-
+        //Chaos CONTROOOLS!!! //Working
         if (Input.GetAxis("Horizontal") > 0)
-            rig.AddForce(movementForce);
-        else if(Input.GetAxis("Horizontal") < 0)
-            rig.AddForce(-movementForce);
+            rig.AddForce(new Vector2(movementForce, 0f));
+        else if (Input.GetAxis("Horizontal") < 0)
+            rig.AddForce(new Vector2(-movementForce, 0f));
 
         if (Input.GetAxis("Vertical") < 0)
             tryingToFall = true;
@@ -114,31 +117,31 @@ public class PlatformerBehavior : MonoBehaviour {
 
     //#JelloPunchesBack
     //Keep forces in check with equal and opposite
-    void ClampForce()
+    void ClampSpeeds()
     {
 
-        Vector2 tempForce = new Vector2((rig.mass *((lastVelocity.x - rig.velocity.x) / Time.fixedDeltaTime)), (rig.mass * ((lastVelocity.y - rig.velocity.y) / Time.fixedDeltaTime)));
-        Vector2 addForceVector = new Vector2(0,0);
+        Vector2 currentTotalForce = new Vector2((rig.mass * ((lastVelocity.x - rig.velocity.x) / Time.fixedDeltaTime)), (rig.mass * ((lastVelocity.y - rig.velocity.y) / Time.fixedDeltaTime)));
+        Vector2 addForceVector = new Vector2(0, 0);
 
-       if( Mathf.Abs(tempForce.x) > maxClampForce.x)
-       {
-           if (tempForce.x > 0f)
-               addForceVector.x -= (tempForce.x - maxClampForce.x);
-           else
-               addForceVector.x -= (tempForce.x + maxClampForce.x);
-       }
-        
-        if (Mathf.Abs(tempForce.y) > maxClampForce.y)
+        if (Mathf.Abs(currentTotalForce.x) > maxClampForce.x)
         {
-            if (tempForce.y > 0f)
-                addForceVector.y -= (tempForce.y - maxClampForce.y);
+            if (currentTotalForce.x > 0f)
+                addForceVector.x -= (currentTotalForce.x - maxClampForce.x);
             else
-                addForceVector.y -= (tempForce.y + maxClampForce.y);
+                addForceVector.x -= (currentTotalForce.x + maxClampForce.x);
         }
 
-        if (Mathf.Abs(tempForce.x) < minClampForce.x)
+        if (Mathf.Abs(currentTotalForce.y) > maxClampForce.y)
+        {
+            if (currentTotalForce.y > 0f)
+                addForceVector.y -= (currentTotalForce.y - maxClampForce.y);
+            else
+                addForceVector.y -= (currentTotalForce.y + maxClampForce.y);
+        }
+
+        if (Mathf.Abs(currentTotalForce.x) < minClampForce.x)
             rig.velocity = new Vector2(0f, rig.velocity.y);
-            
+
         rig.AddForce(addForceVector);
     }
 }
