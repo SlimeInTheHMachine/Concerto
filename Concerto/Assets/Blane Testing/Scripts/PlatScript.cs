@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NewPlatScript : MonoBehaviour {
+public class PlatScript : MonoBehaviour {
 
     //Public Variables
     public float bottomRaycastLength;
@@ -9,8 +9,8 @@ public class NewPlatScript : MonoBehaviour {
     public float movementForce;
     public float frictionCoff;
     public float decelMultiVal;
-    public Vector2 maxClampForce;
-    public Vector2 minClampForce;
+    public Vector2 maxClampSpeed;
+    public Vector2 minClampSpeed;
     public Vector2 raycastOffset;
     public bool secondJump;
     public bool tryingToFall = false;
@@ -19,7 +19,6 @@ public class NewPlatScript : MonoBehaviour {
     private LayerMask platformLayerMask;
     private Rigidbody2D rig;
     private Vector2 bottomRaycastOrigin;
-    private Vector2 lastVelocity;
 
     // Use this for initialization
     void Start () {
@@ -45,7 +44,7 @@ public class NewPlatScript : MonoBehaviour {
                 rig.AddForce(normalForce);
 
             //Friction Force
-            if (Mathf.Abs(rig.mass * ((lastVelocity.x - rig.velocity.x) / Time.fixedDeltaTime)) > minClampForce.x)
+            if (Mathf.Abs(rig.velocity.x) > minClampSpeed.x)
             {
                 Vector2 frictionForce = new Vector2(normalForce.y * frictionCoff, 0f);
                 if (rig.velocity.x < 0f)
@@ -63,8 +62,6 @@ public class NewPlatScript : MonoBehaviour {
 
         //Keep forces from being obscene
         ClampSpeeds();
-        //Keep this for next frame
-        lastVelocity = rig.velocity;
     }
 
 	// Update is called once per frame
@@ -80,7 +77,7 @@ public class NewPlatScript : MonoBehaviour {
             Debug.DrawLine(bottomRaycastOrigin, rayHit.collider.transform.position, Color.red);
             if (Input.GetButtonDown("Jump"))
             {
-                //Chaos CONTROOOLS!!! //Working
+                //Chaos CONTROOOLS!!!
                 rig.AddForce(new Vector2(0f, jumpForce));
                 secondJump = true;
             }
@@ -94,7 +91,7 @@ public class NewPlatScript : MonoBehaviour {
         }
         else
         {
-            //Jump in midair //Working
+            //Jump in midair
             if (Input.GetButtonDown("Jump") && secondJump)
             {
                 rig.velocity = new Vector2(rig.velocity.x, 0f);
@@ -103,11 +100,21 @@ public class NewPlatScript : MonoBehaviour {
             }
         }
 
-        //Chaos CONTROOOLS!!! //Working
+        //Chaos CONTROOOLS!!!
         if (Input.GetAxis("Horizontal") > 0)
+        {
+            //Instant stop
+           // if(rig.velocity.x < 0f)
+           //     rig.velocity = new Vector2(0f, rig.velocity.y);
             rig.AddForce(new Vector2(movementForce, 0f));
+        }
         else if (Input.GetAxis("Horizontal") < 0)
+        {
+            //Instant stop
+           // if (rig.velocity.x > 0f)
+           //     rig.velocity = new Vector2(0f, rig.velocity.y);
             rig.AddForce(new Vector2(-movementForce, 0f));
+        }
 
         if (Input.GetAxis("Vertical") < 0)
             tryingToFall = true;
@@ -119,29 +126,33 @@ public class NewPlatScript : MonoBehaviour {
     //Keep forces in check with equal and opposite
     void ClampSpeeds()
     {
-
-        Vector2 currentTotalForce = new Vector2((rig.mass * ((lastVelocity.x - rig.velocity.x) / Time.fixedDeltaTime)), (rig.mass * ((lastVelocity.y - rig.velocity.y) / Time.fixedDeltaTime)));
+        //check for speeds
+        Vector2 currentSpeed = rig.velocity;
         Vector2 addForceVector = new Vector2(0, 0);
 
-        if (Mathf.Abs(currentTotalForce.x) > maxClampForce.x)
+        if (Mathf.Abs(currentSpeed.x) > maxClampSpeed.x)
         {
-            if (currentTotalForce.x > 0f)
-                addForceVector.x -= (currentTotalForce.x - maxClampForce.x);
+            if (currentSpeed.x > 0f)
+                addForceVector.x -= (currentSpeed.x - maxClampSpeed.x);
             else
-                addForceVector.x -= (currentTotalForce.x + maxClampForce.x);
+                addForceVector.x -= (currentSpeed.x + maxClampSpeed.x);
         }
 
-        if (Mathf.Abs(currentTotalForce.y) > maxClampForce.y)
+        if (Mathf.Abs(currentSpeed.y) > maxClampSpeed.y)
         {
-            if (currentTotalForce.y > 0f)
-                addForceVector.y -= (currentTotalForce.y - maxClampForce.y);
+            if (currentSpeed.y > 0f)
+                addForceVector.y -= (currentSpeed.y - maxClampSpeed.y);
             else
-                addForceVector.y -= (currentTotalForce.y + maxClampForce.y);
+                addForceVector.y -= (currentSpeed.y + maxClampSpeed.y);
         }
 
-        if (Mathf.Abs(currentTotalForce.x) < minClampForce.x)
+        //stop is small enough
+        if (Mathf.Abs(currentSpeed.x) < minClampSpeed.x)
             rig.velocity = new Vector2(0f, rig.velocity.y);
 
-        rig.AddForce(addForceVector);
+        //find the opposite force
+        Vector2 accelForce = new Vector2(rig.mass * (addForceVector.x / Time.fixedDeltaTime), rig.mass * (addForceVector.y / Time.fixedDeltaTime));
+
+        rig.AddForce(accelForce);
     }
 }
