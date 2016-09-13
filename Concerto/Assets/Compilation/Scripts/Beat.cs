@@ -3,8 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class OnBeatStef : MonoBehaviour {
+public class Beat : MonoBehaviour {
+    GameObject beatManager;
+    public double beatTime;
+    GameObject beatMeter;
 
+    public bool inputCheck;
     public bool growing;
     private float timeBetweenSizeChange;
     public float timeBetweenBeats;
@@ -25,27 +29,74 @@ public class OnBeatStef : MonoBehaviour {
     public float shakeAmount;
     public float decreaseFactor;
 
+    [SerializeField]
+    private GameObject LBar;
+    [SerializeField]
+    private GameObject RBar;
+    private List<GameObject> Bars;
+    public float dist;
+    GameObject emptyObject;
+
+
+
     // Use this for initialization
-    void Start() {
+    void Start()
+    {
+        //Gets the time to be used for beats from the Beat Manager
+        beatManager = GameObject.Find("BeatManager");
+        beatTime = beatManager.GetComponent<BeatManager>().BeatTime;
+        beatMeter = GameObject.Find("Beat");
+
         startTime = Time.time;
         score.text = "" + scoreNum;
-        timeBetweenSizeChange = timeBetweenBeats / 2;
+        timeBetweenSizeChange = (float)beatTime / 2;
+        //Debug.Log(timeBetweenSizeChange2);
         growing = true;
         source = GetComponent<AudioSource>();
         colorControl = gameObject.GetComponent<SpriteRenderer>();
+        Bars = new List<GameObject>();
+
     }
 
     // Update is called once per frame
-    void FixedUpdate() {
+    void FixedUpdate()
+    {
+
         //Oscillation
         if (growing)
         {
+
             float sizeChanged = (Time.time - startTime) * transform.localScale.x / timeBetweenSizeChange;
             float t = sizeChanged / endSize.x;
             transform.localScale = Vector2.Lerp(startSize, endSize, t);
 
             if (transform.localScale.x >= endSize.x - marginOfError && source.isPlaying == false)
             {
+                //Debug.Log("Test");
+                GameObject tempLBar = Instantiate(LBar);
+                GameObject tempRBar = Instantiate(RBar);
+
+                //tempLBar.transform.SetParent(transform.parent.transform);
+                //tempRBar.transform.SetParent(transform.parent.transform);
+                //
+                //tempLBar.transform.localScale = new Vector3(0.2f, 0.15f, 0f);
+                //tempRBar.transform.localScale = new Vector3(0.2f, 0.15f, 0f);
+                
+                Bars.Add(tempLBar);
+                Bars.Add(tempRBar);
+
+
+                float spdToMove = dist / timeBetweenBeats / 200.0f;
+
+                Vector3 transL = new Vector3(transform.position.x - dist, transform.position.y, transform.position.z);
+                Vector3 transR = new Vector3(transform.position.x + dist, transform.position.y, transform.position.z);
+
+                tempLBar.transform.position = transL;
+                tempRBar.transform.position = transR;
+                tempLBar.GetComponent<Bar>().xspd = spdToMove;
+                tempRBar.GetComponent<Bar>().xspd = -spdToMove;
+
+
                 source.PlayOneShot(beat);
             }
 
@@ -71,21 +122,23 @@ public class OnBeatStef : MonoBehaviour {
     }
     void Update()
     {
+
         //Input
-        if (transform.localScale.x >= endSize.x - marginOfError)
+        if (beatManager.GetComponent<BeatManager>().onTime)
         {
-            colorControl.color = new Color(0.0f, 255.0f,  0.0f);
+            colorControl.color = new Color(0.4f, 1.0f, 0.4f);
             if (Input.GetButtonDown("Jump"))
             {
                 shake = 0.3f;
                 scoreNum++;
                 score.text = "" + scoreNum;
-                
+
             }
         }
         else
         {
-            colorControl.color = new Color(  255.0f, 0.0f, 0.0f);
+            //This doesn't do anything!
+            colorControl.color = new Color(0.1f, 0.6f, 0.9f);//(0.0f, 1.0f, 0.0f);
         }
         //Screen Shake 
         if (shake > 0)
