@@ -26,22 +26,22 @@ public class EnemyComboScript : MonoBehaviour {
         ComboLetters.Enqueue("a");
         ComboLetters.Enqueue("b");
         ComboLetters.Enqueue("c");
-        BeatManager.onBeat += subscriberTest;
-        BeatManager.safeBeforeBeat += SetBeatGood;
+        //BeatManager.onBeat += subscriberTest;
+        //BeatManager.safeBeforeBeat += SetBeatGood;
 
 
         TextGameObject = gameObject.transform.Find("Enemy Letter").gameObject;
     }
 
-    void SetBeatGood()
-    {
-        pressable = true;
-    }
-    void subscriberTest()
-    {
-        pressable = false;
-        Debug.Log("Entered subscriber function");
-    }
+    //void SetBeatGood()
+    //{
+    //    pressable = true;
+    //}
+    //void subscriberTest()
+    //{
+    //    pressable = false;
+    //    Debug.Log("Entered subscriber function");
+    //}
 
     // Update is called once per frame
     void Update () {
