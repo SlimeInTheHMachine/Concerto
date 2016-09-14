@@ -5,12 +5,11 @@ public class BeatManager : MonoBehaviour
 {
     public bool onTime;
     public float marginOfError;
-
-    [SerializeField]
-	//the time in seconds for a beat.
-	public double BeatTime;
-	//Keeps a running track of time passing
-	private float timeCounter;
+    //Keeps a running track of time passing
+    private float timeCounter;
+    //the time in seconds for a beat.
+    public double BeatTime;
+	
 
     /// <summary>
     /// Gets the timeCounter
@@ -22,14 +21,11 @@ public class BeatManager : MonoBehaviour
 	
 	//function to call on the beat
 	public delegate void BeatFunction();
-	//All functions of other beat-relevant objects in the scene
-	public System.Collections.Generic.List<BeatFunction> BeatFunctions;
+
 	/// <summary>
 	/// Occurs when on beat. Subscribers must be void.
 	/// </summary>
 	public static event BeatFunction onBeat;
-
-    GameObject beat;
 
     //Prevents other instances of BeatManager, since the constructor is restricted
     protected BeatManager (){}
@@ -45,7 +41,8 @@ public class BeatManager : MonoBehaviour
 			instance = this;
 		else if (instance != this)
 			//If so (somehow), destroy this object.
-			Destroy(gameObject);    
+			Destroy(gameObject);
+            
 		//Sets this to not be destroyed when reloading scene
 		//DontDestroyOnLoad(gameObject);
 	}
@@ -54,10 +51,8 @@ public class BeatManager : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-        onBeat += beatTimer;
-
-        //Gets the time to be used for beats from the Beat Manager
-        beat = GameObject.Find("BeatManager");
+        //Add the beatTimer function to the onBeat event
+        onBeat += beatTimer;        
     }
 	
 	// Update is called once per frame
@@ -68,29 +63,29 @@ public class BeatManager : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		//Debug.Log("Fixed Update");
 		//Keep track of more time passing
 		timeCounter += Time.fixedDeltaTime;
 		//Debug.Log(timeCounter);
 		//If enough time has passed for a beat
 		if (timeCounter >= (float)BeatTime)
 		{
-			timeCounter-= (float)BeatTime;
+            //Potentially causing beat acceleration issue
+            //timeCounter-= (float)BeatTime;
+
+            //Set the timer back to nothing and start again.
+            timeCounter = 0f;
+
 			//Trigger onbeat event
 			onBeat();
 		}
 
         //Checks whether the beat is accepting input within a margin of error
         if (timeCounter >= BeatTime + marginOfError || timeCounter <= BeatTime - marginOfError)
-        {
             onTime = true;
-        }
-
         else
-        {
             onTime = false;
-        }
     }
+
     private void beatTimer()
     {
         Debug.Log("Beat Plays");
