@@ -3,8 +3,10 @@ using System.Collections;
 
 public class BeatManager : MonoBehaviour
 {
+    public bool onTime;
+    public float marginOfError;
+
     [SerializeField]
-    float safeZoneTime;
 	//the time in seconds for a beat.
 	public double BeatTime;
 	//Keeps a running track of time passing
@@ -27,15 +29,7 @@ public class BeatManager : MonoBehaviour
 	/// </summary>
 	public static event BeatFunction onBeat;
 
-    /// <summary>
-    /// SafeZone before Beat Begins
-    /// </summary>
-    public static event BeatFunction safeBeforeBeat;
-
-    /// <summary>
-    /// Removal of SafeZone after beat plays
-    /// </summary>
-    public static event BeatFunction safeAfterBeat;
+    GameObject beat;
 
     //Prevents other instances of BeatManager, since the constructor is restricted
     protected BeatManager (){}
@@ -60,10 +54,11 @@ public class BeatManager : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		onBeat += tempTestMethod;
-        safeBeforeBeat += tempTestMethod2;
+        onBeat += beatTimer;
 
-	}
+        //Gets the time to be used for beats from the Beat Manager
+        beat = GameObject.Find("BeatManager");
+    }
 	
 	// Update is called once per frame
 	void Update ()
@@ -78,25 +73,26 @@ public class BeatManager : MonoBehaviour
 		timeCounter += Time.fixedDeltaTime;
 		//Debug.Log(timeCounter);
 		//If enough time has passed for a beat
-        if(timeCounter >= safeZoneTime)
-        {
-            safeBeforeBeat();
-        }
 		if (timeCounter >= (float)BeatTime)
 		{
 			timeCounter-= (float)BeatTime;
 			//Trigger onbeat event
 			onBeat();
 		}
-	}
 
-	private void tempTestMethod()
-	{
-		Debug.Log("Test method triggered");
-	}
+        //Checks whether the beat is accepting input within a margin of error
+        if (timeCounter >= BeatTime + marginOfError || timeCounter <= BeatTime - marginOfError)
+        {
+            onTime = true;
+        }
 
-	private void tempTestMethod2()
-	{
-		Debug.Log("Test method2 triggered");
-	}
+        else
+        {
+            onTime = false;
+        }
+    }
+    private void beatTimer()
+    {
+        Debug.Log("Beat Plays");
+    }
 }
