@@ -12,7 +12,7 @@ public class Beat_Peter : MonoBehaviour {
 	public Vector2 startSize;
 	public Vector2 endSize;
 	private float startTime;
-	private SpriteRenderer colorControl;
+	private Image colorControl;
 	public Transform cameraPos;
 	
 	public int scoreNum;
@@ -20,7 +20,8 @@ public class Beat_Peter : MonoBehaviour {
 	
 	public AudioSource source;
 	public AudioClip beat;
-	
+
+    public Animator beatAnim;
 	public float shake;
 	public float shakeAmount;
 	public float decreaseFactor;
@@ -39,10 +40,15 @@ public class Beat_Peter : MonoBehaviour {
 		timeBetweenSizeChange = timeBetweenBeats / 2;
 		growing = true;
 		source = GetComponent<AudioSource>();
-		colorControl = gameObject.GetComponent<SpriteRenderer>();
+		colorControl = gameObject.GetComponent<Image>();
 		Bars = new List<GameObject> ();
+        beatAnim = GetComponent<Animator>();
 	}
 	
+    public void AnimTestEvent()
+    {
+        source.PlayOneShot(beat);
+    }
 	// Update is called once per frame
 	void FixedUpdate() {
 		//Oscillation
@@ -56,22 +62,22 @@ public class Beat_Peter : MonoBehaviour {
 			if (transform.localScale.x >= endSize.x - marginOfError && source.isPlaying == false)
 			{
 				//Debug.Log("Test");
-				GameObject tempLBar = Instantiate(LBar);
-				GameObject tempRBar = Instantiate(RBar);
-				Bars.Add (tempLBar);
-				Bars.Add (tempRBar);
+				//GameObject tempLBar = Instantiate(LBar);
+				//GameObject tempRBar = Instantiate(RBar);
+				//Bars.Add (tempLBar);
+				//Bars.Add (tempRBar);
 
-				float spdToMove = dist / timeBetweenBeats / 200.0f;
+				//float spdToMove = dist / timeBetweenBeats / 200.0f;
 				
-				Vector3 transL = new Vector3(transform.position.x - dist, transform.position.y, transform.position.z);
-				Vector3 transR = new Vector3(transform.position.x + dist, transform.position.y, transform.position.z);
+				//Vector3 transL = new Vector3(transform.position.x - dist, transform.position.y, transform.position.z);
+				//Vector3 transR = new Vector3(transform.position.x + dist, transform.position.y, transform.position.z);
 
-				tempLBar.transform.position = transL;
-				tempRBar.transform.position = transR;
-				tempLBar.GetComponent<Bar>().xspd = spdToMove;
-				tempRBar.GetComponent<Bar>().xspd = -spdToMove;
+				//tempLBar.transform.position = transL;
+				//tempRBar.transform.position = transR;
+				//tempLBar.GetComponent<Bar>().xspd = spdToMove;
+				//tempRBar.GetComponent<Bar>().xspd = -spdToMove;
 
-				source.PlayOneShot(beat);
+				//source.PlayOneShot(beat);
 			}
 			
 			if (transform.localScale.x >= endSize.x)
