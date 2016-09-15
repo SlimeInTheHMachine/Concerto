@@ -32,9 +32,22 @@ public class Beat_Peter : MonoBehaviour {
 	private GameObject RBar;
 	private List<GameObject> Bars;
 	public float dist;
-	
-	// Use this for initialization
-	void Start() {
+
+
+    public delegate void BeatFunction();
+
+    /// <summary>
+    /// Occurs when on beat. Subscribers must be void.
+    /// </summary>
+    public static event BeatFunction onBeat;
+
+    //Prevents other instances of BeatManager, since the constructor is restricted
+    protected Beat_Peter() { }
+    //static instance of BeatManager
+    public static Beat_Peter instance = null;
+
+    // Use this for initialization
+    void Start() {
 		startTime = Time.time;
 		score.text = "" + scoreNum;
 		timeBetweenSizeChange = timeBetweenBeats / 2;
@@ -43,14 +56,34 @@ public class Beat_Peter : MonoBehaviour {
 		colorControl = gameObject.GetComponent<Image>();
 		Bars = new List<GameObject> ();
         beatAnim = GetComponent<Animator>();
-	}
-	
+        onBeat += beatTimer;
+    }
+
+    void Awake()
+    {
+        //Check if instance exists
+        if (instance == null)
+            //If not, assign this to it.
+            instance = this;
+        else if (instance != this)
+            //If so (somehow), destroy this object.
+            Destroy(gameObject);
+
+
+    }
     public void AnimTestEvent()
     {
         source.PlayOneShot(beat);
+        onBeat();
     }
-	// Update is called once per frame
-	void FixedUpdate() {
+    // Update is called once per frame
+
+
+    private void beatTimer()
+    {
+        Debug.Log("Beat Plays");
+    }
+    void FixedUpdate() {
 		//Oscillation
 		if (growing)
 		{
