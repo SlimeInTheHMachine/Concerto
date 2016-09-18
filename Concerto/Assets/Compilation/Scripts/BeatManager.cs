@@ -88,6 +88,6 @@ public class BeatManager : MonoBehaviour
 
     private void beatTimer()
     {
-        Debug.Log("Beat Plays");
+        Debug.Log("Beat Plays at " + Time.fixedTime);
     }
 }
