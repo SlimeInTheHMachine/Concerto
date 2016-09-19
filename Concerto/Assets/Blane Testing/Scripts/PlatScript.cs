@@ -19,12 +19,14 @@ public class PlatScript : MonoBehaviour {
     private LayerMask platformLayerMask;
     private Rigidbody2D rig;
     private Vector2 bottomRaycastOrigin;
+    private EnemyComboScript1 currentEnemy;
 
     // Use this for initialization
     void Start () {
         //Layermask for platforms, used for raycasting
         platformLayerMask = LayerMask.GetMask("Platform");
         rig = GetComponent<Rigidbody2D>();
+        BeatManager.onBeat += enemyLogic;
     }
 	
     void FixedUpdate()
@@ -62,6 +64,7 @@ public class PlatScript : MonoBehaviour {
 
         //Keep forces from being obscene
         ClampSpeeds();
+
     }
 
 	// Update is called once per frame
@@ -155,4 +158,21 @@ public class PlatScript : MonoBehaviour {
 
         rig.AddForce(accelForce);
     }
+
+    void enemyLogic()
+    {
+        if (currentEnemy != null)
+        {
+            //See if there is combat input
+            char input = '\0';
+
+            if(Input.GetButtonDown())
+
+            //If multiple inputs, send null Input to reset queue due to messup
+            currentEnemy.checkInput(input);
+            //If Battle input is there, Check current Battle Input against enemy combo
+            currentEnemy.checkInput(input);
+        }
+    }
+
 }
