@@ -10,7 +10,6 @@ public class BeatManager : MonoBehaviour
     //the time in seconds for a beat.
     public double BeatTime;
 	
-
     /// <summary>
     /// Gets the timeCounter
     /// </summary>
@@ -47,19 +46,12 @@ public class BeatManager : MonoBehaviour
 		//DontDestroyOnLoad(gameObject);
 	}
 
-
 	// Use this for initialization
 	void Start ()
 	{
         //Add the beatTimer function to the onBeat event
         onBeat += beatTimer;        
     }
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
-	}
 
 	void FixedUpdate()
 	{
@@ -70,10 +62,10 @@ public class BeatManager : MonoBehaviour
 		if (timeCounter >= (float)BeatTime)
 		{
             //Potentially causing beat acceleration issue
-            //timeCounter-= (float)BeatTime;
+            timeCounter-= (float)BeatTime;
 
             //Set the timer back to nothing and start again.
-            timeCounter = 0f;
+            //timeCounter = 0f;
 
 			//Trigger onbeat event
 			onBeat();
@@ -88,6 +80,7 @@ public class BeatManager : MonoBehaviour
 
     private void beatTimer()
     {
-        Debug.Log("Beat Plays at " + Time.fixedTime);
+        if(onTime)
+            Debug.Log("Beat Plays at " + Time.fixedTime);
     }
 }

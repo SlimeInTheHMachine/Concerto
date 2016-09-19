@@ -4,7 +4,7 @@ using System.Collections;
 public class PlatScript : MonoBehaviour {
 
     //Public Variables
-    public float bottomRaycastLength;
+    public float bottomRaycastLength, enemyRaycastLength;
     public float jumpForce;
     public float movementForce;
     public float frictionCoff;
@@ -14,19 +14,39 @@ public class PlatScript : MonoBehaviour {
     public Vector2 raycastOffset;
     public bool secondJump;
     public bool tryingToFall = false;
+    public int score;
+    public EnemyComboScript1 currentEnemy;
 
     //Private Variables
-    private LayerMask platformLayerMask;
+    private LayerMask platformLayerMask, enemyLayerMask;
     private Rigidbody2D rig;
+    private BoxCollider2D colliderBox;
+    private Rect box;
     private Vector2 bottomRaycastOrigin;
-    private EnemyComboScript1 currentEnemy;
+    
+
+    //Structs
+    public struct Box
+    {
+        public float minX, maxX, minY, maxY;
+
+        public void setBounds(float smallX, float bigX, float smallY, float bigY)
+        {
+            minX = smallX;
+            maxX = bigX;
+            minY = smallY;
+            maxY = bigY;
+        }
+    }
+
 
     // Use this for initialization
     void Start () {
         //Layermask for platforms, used for raycasting
         platformLayerMask = LayerMask.GetMask("Platform");
+        enemyLayerMask = LayerMask.GetMask("Enemy");
         rig = GetComponent<Rigidbody2D>();
-        BeatManager.onBeat += enemyLogic;
+        colliderBox = GetComponent<BoxCollider2D>();
     }
 	
     void FixedUpdate()
@@ -69,6 +89,9 @@ public class PlatScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+
+        box = new Rect(colliderBox.bounds.min.x, colliderBox.bounds.min.y, colliderBox.bounds.size.x, colliderBox.bounds.size.y);
+
         //Raycast to use platforms //Working
         bottomRaycastOrigin = new Vector2(transform.position.x, transform.position.y) - raycastOffset;
 
@@ -123,6 +146,19 @@ public class PlatScript : MonoBehaviour {
             tryingToFall = true;
         else
             tryingToFall = false;
+
+        //Attack
+
+        //Raycast to enemy
+        rayHit = Physics2D.Raycast(new Vector2(transform.position.x + box.size.x/2, transform.position.y), Vector2.right, enemyRaycastLength, enemyLayerMask.value);
+        //Debug.DrawRay(new Vector2(transform.position.x + box.size.x / 2, transform.position.y), Vector2.right * enemyRaycastLength, Color.blue);
+
+        if (BeatManager.instance.onTime && rayHit.collider != null && (Input.GetButtonDown("XButton") || Input.GetButtonDown("YButton") || Input.GetButtonDown("BButton")) && BeatManager.instance.onTime)
+        {
+            currentEnemy = rayHit.transform.gameObject.GetComponent<EnemyComboScript1>();
+            Debug.DrawRay(new Vector2(transform.position.x + box.size.x / 2, transform.position.y), Vector2.right * enemyRaycastLength, Color.yellow);
+            enemyLogic();
+        }
     }
 
     //#JelloPunchesBack
@@ -187,7 +223,11 @@ public class PlatScript : MonoBehaviour {
                     input = 'F';
             }
 
-            currentEnemy.checkInput(input); 
+            if(currentEnemy.checkInput(input))
+            {
+                score += 1;
+                currentEnemy = null;
+            } 
         }
     }
 }
