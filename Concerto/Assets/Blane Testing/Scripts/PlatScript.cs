@@ -164,15 +164,30 @@ public class PlatScript : MonoBehaviour {
         if (currentEnemy != null)
         {
             //See if there is combat input
+            //If multiple inputs, send garbage Input to reset queue due to messup
+            //If Battle input is there, Check current Battle Input against enemy combo
             char input = '\0';
 
-            if(Input.GetButtonDown())
+            if(Input.GetButtonDown("XButton"))
+            {
+                input = 'X';
+            }
+            if (Input.GetButtonDown("YButton"))
+            {
+                if (input == '\0')
+                    input = 'Y';
+                else
+                    input = 'F';
+            }
+            if (Input.GetButtonDown("BButton"))
+            {
+                if (input == '\0')
+                    input = 'B';
+                else
+                    input = 'F';
+            }
 
-            //If multiple inputs, send null Input to reset queue due to messup
-            currentEnemy.checkInput(input);
-            //If Battle input is there, Check current Battle Input against enemy combo
-            currentEnemy.checkInput(input);
+            currentEnemy.checkInput(input); 
         }
     }
-
 }

@@ -45,11 +45,10 @@ public class EnemyComboScript1 : MonoBehaviour {
     public void checkInput(char input)
     {
         //Reset on mess up
-        if (input == 0)
+        if (input == '\0' || input == 'F')
         {
             currentCombo = new Queue<char>(combo);
         }
-
         else
         {
 
