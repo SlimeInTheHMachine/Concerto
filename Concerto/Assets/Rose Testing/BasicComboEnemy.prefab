@@ -10,9 +10,11 @@ GameObject:
   - 4: {fileID: 491860}
   - 212: {fileID: 21257832}
   - 114: {fileID: 11460104}
+  - 114: {fileID: 11458406}
+  - 61: {fileID: 6127508}
   m_Layer: 0
   m_Name: BasicComboEnemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -53,8 +55,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 123654}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.61999989, y: .65892756, z: 4.56699991}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 164.559998, y: -2.98000002, z: 4.56699991}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 437806}
   m_Father: {fileID: 0}
@@ -85,6 +87,19 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
+--- !u!61 &6127508
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 123654}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Size: {x: .5, y: 1}
 --- !u!102 &10251090
 TextMesh:
   serializedVersion: 3
@@ -92,7 +107,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 154482}
-  m_Text: 
+  m_Text: a
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -106,7 +121,7 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
---- !u!114 &11460104
+--- !u!114 &11458406
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -114,11 +129,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 123654}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcf5860f57a9460428381c48bfe1798b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  beatTime: 0
+  Selected: 0
+  TextGameObject: {fileID: 154482}
+--- !u!114 &11460104
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 123654}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f54bd5325360b7343af83645ecbf4820, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Selected: 0
-  GameControl: {fileID: 124248, guid: d89d9fed9c22df9478cfb13414098add, type: 2}
   TextGameObject: {fileID: 154482}
 --- !u!212 &21257832
 SpriteRenderer:
@@ -146,7 +174,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 3571ab7389a00ce41ae9297567d02a8e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5fe7a83d62299034ba367c6429c76ba3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:
