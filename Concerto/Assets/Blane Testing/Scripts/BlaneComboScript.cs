@@ -3,13 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class EnemyComboScript1 : MonoBehaviour {
+public class BlaneComboScript : MonoBehaviour {
 
     //Public Variables
     public bool Selected = false;
     public char button1, button2, button3;
     
-
     //Private Variables
     private Queue<char> combo, currentCombo;
     //temp Shake code
@@ -31,8 +30,8 @@ public class EnemyComboScript1 : MonoBehaviour {
             combo.Enqueue(button3);
         //Deep Clone
         currentCombo = new Queue<char>(combo);
-
-        //Per enemy? //NOOOOOOOOOOOOO
+        OGPos = transform.position;
+        //Per enemy? //NOOOOOOOOOOOOO //Enemy Manager
         //BeatManager.onBeat += InputCheck;
     }
 
@@ -42,9 +41,9 @@ public class EnemyComboScript1 : MonoBehaviour {
         //Movement
         if (shake > 0)
         {
-            transform.localPosition = UnityEngine.Random.insideUnitCircle * shakeAmount;
+            Vector2 shakeOffset = UnityEngine.Random.insideUnitCircle * shakeAmount;
+            transform.position = transform.position + new Vector3(shakeOffset.x, shakeOffset.y, 0f);
             shake -= Time.deltaTime * decreaseFactor;
-
         }
         else
         {

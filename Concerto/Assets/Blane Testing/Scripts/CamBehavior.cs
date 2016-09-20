@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Camera_Behavior : MonoBehaviour {
+public class CamBehavior : MonoBehaviour {
 
     public GameObject player;
     public Canvas can;
@@ -12,7 +12,7 @@ public class Camera_Behavior : MonoBehaviour {
 
     void Start()
     {
-        BeatManager.onBeat += CamBob;
+        BlaneBeatMan.onBeat += CamBob;
     }
 
     // Update is called once per frame
@@ -37,7 +37,7 @@ public class Camera_Behavior : MonoBehaviour {
             }
         }
 
-            can.transform.position = transform.position;
+        can.transform.position = transform.position;
     }
 
     void CamBob()

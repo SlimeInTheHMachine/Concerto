@@ -15,7 +15,7 @@ public class PlatScript : MonoBehaviour {
     public bool secondJump;
     public bool tryingToFall = false;
     public int score;
-    public EnemyComboScript1 currentEnemy;
+    public BlaneComboScript currentEnemy;
 
     //Private Variables
     private LayerMask platformLayerMask, enemyLayerMask;
@@ -23,22 +23,7 @@ public class PlatScript : MonoBehaviour {
     private BoxCollider2D colliderBox;
     private Rect box;
     private Vector2 bottomRaycastOrigin;
-    
-
-    //Structs
-    public struct Box
-    {
-        public float minX, maxX, minY, maxY;
-
-        public void setBounds(float smallX, float bigX, float smallY, float bigY)
-        {
-            minX = smallX;
-            maxX = bigX;
-            minY = smallY;
-            maxY = bigY;
-        }
-    }
-
+    private char attackInput;
 
     // Use this for initialization
     void Start () {
@@ -47,6 +32,8 @@ public class PlatScript : MonoBehaviour {
         enemyLayerMask = LayerMask.GetMask("Enemy");
         rig = GetComponent<Rigidbody2D>();
         colliderBox = GetComponent<BoxCollider2D>();
+        attackInput = '\0';
+        BlaneBeatMan.endBeat += SubmitAttacks;
     }
 	
     void FixedUpdate()
@@ -153,12 +140,15 @@ public class PlatScript : MonoBehaviour {
         rayHit = Physics2D.Raycast(new Vector2(transform.position.x + box.size.x/2, transform.position.y), Vector2.right, enemyRaycastLength, enemyLayerMask.value);
         //Debug.DrawRay(new Vector2(transform.position.x + box.size.x / 2, transform.position.y), Vector2.right * enemyRaycastLength, Color.blue);
 
-        if (BeatManager.instance.onTime && rayHit.collider != null && (Input.GetButtonDown("XButton") || Input.GetButtonDown("YButton") || Input.GetButtonDown("BButton")) && BeatManager.instance.onTime)
+        if (rayHit.collider != null)
         {
-            currentEnemy = rayHit.transform.gameObject.GetComponent<EnemyComboScript1>();
+            currentEnemy = rayHit.transform.gameObject.GetComponent<BlaneComboScript>();
             Debug.DrawRay(new Vector2(transform.position.x + box.size.x / 2, transform.position.y), Vector2.right * enemyRaycastLength, Color.yellow);
-            enemyLogic();
+            CombatInput();
         }
+
+        //Once onTime, start taking inputs
+        //once beat is over, submit them.
     }
 
     //#JelloPunchesBack
@@ -195,39 +185,47 @@ public class PlatScript : MonoBehaviour {
         rig.AddForce(accelForce);
     }
 
-    void enemyLogic()
+    void CombatInput()
     {
         if (currentEnemy != null)
         {
             //See if there is combat input
-            //If multiple inputs, send garbage Input to reset queue due to messup
-            //If Battle input is there, Check current Battle Input against enemy combo
-            char input = '\0';
-
+            //If multiple inputs or button mash, Garbage Input
             if(Input.GetButtonDown("XButton"))
             {
-                input = 'X';
+                if (attackInput == '\0')
+                    attackInput = 'X';
+                else
+                    attackInput = 'F';
             }
             if (Input.GetButtonDown("YButton"))
             {
-                if (input == '\0')
-                    input = 'Y';
+                if (attackInput == '\0')
+                    attackInput = 'Y';
                 else
-                    input = 'F';
+                    attackInput = 'F';
             }
             if (Input.GetButtonDown("BButton"))
             {
-                if (input == '\0')
-                    input = 'B';
+                if (attackInput == '\0')
+                    attackInput = 'B';
                 else
-                    input = 'F';
-            }
-
-            if(currentEnemy.checkInput(input))
-            {
-                score += 1;
-                currentEnemy = null;
-            } 
+                    attackInput = 'F'; 
+            }   
         }
+        //If Offbeat, Garbage Input
+        if (!BlaneBeatMan.instance.onTime && attackInput != '\0')
+            attackInput = 'F';
+    }
+
+    void SubmitAttacks()
+    {
+        //Submit the attack for the beat at the end
+        if (currentEnemy != null && currentEnemy.checkInput(attackInput))
+        {
+            score += 1;
+            currentEnemy = null;
+        }
+        attackInput = '\0';
     }
 }

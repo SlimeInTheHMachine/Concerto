@@ -4,6 +4,7 @@ using System.Collections;
 public class EnemyManager : MonoBehaviour {
 
     //Variables
+    private GameObject[] enemies;
 
     //Prevents other instances of EnemyManager, since the constructor is restricted
     protected EnemyManager() { }
@@ -22,6 +23,7 @@ public class EnemyManager : MonoBehaviour {
             Destroy(gameObject);
 
         //Get List of enemies
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
     }
 
     // Use this for initialization

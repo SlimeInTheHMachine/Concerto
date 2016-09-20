@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class BeatAnimationScript : MonoBehaviour {
+public class BlaneBeatAnim : MonoBehaviour {
 
 	/// <summary>
 	/// The attached animator that controls shrinking/growing animation
@@ -32,7 +32,7 @@ public class BeatAnimationScript : MonoBehaviour {
 		source = this.GetComponent<AudioSource> ();
 		thisImage = this.GetComponent<Image> ();
 		//Subscribe to onBeat()
-		BeatManager.onBeat += startAnimation;
+		BlaneBeatMan.onBeat += startAnimation;
 	}
 
 	void Update()
