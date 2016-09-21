@@ -1,12 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum attackInputs { A, B, X, Y, None, Garbage};
+
 public class PlatScript : MonoBehaviour {
 
     //Public Variables
     public float bottomRaycastLength, enemyRaycastLength;
     public float jumpForce;
     public float movementForce;
+    public float clashForce;
     public float frictionCoff;
     public float decelMultiVal;
     public Vector2 maxClampSpeed;
@@ -22,8 +25,10 @@ public class PlatScript : MonoBehaviour {
     private Rigidbody2D rig;
     private BoxCollider2D colliderBox;
     private Rect box;
+    private attackInputs attackInput;
     private Vector2 bottomRaycastOrigin;
-    private char attackInput;
+    
+    private bool haveAttacked;
 
     // Use this for initialization
     void Start () {
@@ -32,8 +37,9 @@ public class PlatScript : MonoBehaviour {
         enemyLayerMask = LayerMask.GetMask("Enemy");
         rig = GetComponent<Rigidbody2D>();
         colliderBox = GetComponent<BoxCollider2D>();
-        attackInput = '\0';
-        BlaneBeatMan.endBeat += SubmitAttacks;
+        attackInput = attackInputs.None;
+        BlaneBeatMan.startBeat += ResetAttack;
+        BlaneBeatMan.endBeat += sendNoInput;
     }
 	
     void FixedUpdate()
@@ -74,83 +80,6 @@ public class PlatScript : MonoBehaviour {
 
     }
 
-	// Update is called once per frame
-	void Update () {
-
-        box = new Rect(colliderBox.bounds.min.x, colliderBox.bounds.min.y, colliderBox.bounds.size.x, colliderBox.bounds.size.y);
-
-        //Raycast to use platforms //Working
-        bottomRaycastOrigin = new Vector2(transform.position.x, transform.position.y) - raycastOffset;
-
-        //Using raycasts and layermasks we can do basic collisions for platforms relatively quickly //Working
-        RaycastHit2D rayHit = Physics2D.Raycast(bottomRaycastOrigin, Vector2.down, bottomRaycastLength, platformLayerMask.value);
-        if (rayHit.collider != null)
-        {
-            //Show the object raycast is returning
-            Debug.DrawLine(bottomRaycastOrigin, rayHit.collider.transform.position, Color.red);
-            if (Input.GetButtonDown("Jump"))
-            {
-                //Chaos CONTROOOLS!!!
-                rig.AddForce(new Vector2(0f, jumpForce));
-                secondJump = true;
-            }
-
-            //Stop the object from falling through the platform //Working so long as collision is detected
-            if (!tryingToFall && rig.velocity.y <= 0f)
-            {
-                //Compensate for force built up in air
-                rig.velocity = new Vector2(rig.velocity.x, 0f);
-            }
-        }
-        else
-        {
-            //Jump in midair
-            if (Input.GetButtonDown("Jump") && secondJump)
-            {
-                rig.velocity = new Vector2(rig.velocity.x, 0f);
-                rig.AddForce(new Vector2(0f, jumpForce));
-                secondJump = false;
-            }
-        }
-
-        //Chaos CONTROOOLS!!!
-        if (Input.GetAxis("Horizontal") > 0)
-        {
-            //Instant stop
-           // if(rig.velocity.x < 0f)
-           //     rig.velocity = new Vector2(0f, rig.velocity.y);
-            rig.AddForce(new Vector2(movementForce, 0f));
-        }
-        else if (Input.GetAxis("Horizontal") < 0)
-        {
-            //Instant stop
-           // if (rig.velocity.x > 0f)
-           //     rig.velocity = new Vector2(0f, rig.velocity.y);
-            rig.AddForce(new Vector2(-movementForce, 0f));
-        }
-
-        if (Input.GetAxis("Vertical") < 0)
-            tryingToFall = true;
-        else
-            tryingToFall = false;
-
-        //Attack
-
-        //Raycast to enemy
-        rayHit = Physics2D.Raycast(new Vector2(transform.position.x + box.size.x/2, transform.position.y), Vector2.right, enemyRaycastLength, enemyLayerMask.value);
-        //Debug.DrawRay(new Vector2(transform.position.x + box.size.x / 2, transform.position.y), Vector2.right * enemyRaycastLength, Color.blue);
-
-        if (rayHit.collider != null)
-        {
-            currentEnemy = rayHit.transform.gameObject.GetComponent<BlaneComboScript>();
-            Debug.DrawRay(new Vector2(transform.position.x + box.size.x / 2, transform.position.y), Vector2.right * enemyRaycastLength, Color.yellow);
-            CombatInput();
-        }
-
-        //Once onTime, start taking inputs
-        //once beat is over, submit them.
-    }
-
     //#JelloPunchesBack
     //Keep forces in check with equal and opposite
     void ClampSpeeds()
@@ -185,47 +114,150 @@ public class PlatScript : MonoBehaviour {
         rig.AddForce(accelForce);
     }
 
+    // Update is called once per frame
+    void Update () {
+
+        box = new Rect(colliderBox.bounds.min.x, colliderBox.bounds.min.y, colliderBox.bounds.size.x, colliderBox.bounds.size.y);
+
+        //Raycast to use platforms //Working
+        bottomRaycastOrigin = new Vector2(transform.position.x, transform.position.y) - raycastOffset;
+
+        //Using raycasts and layermasks we can do basic collisions for platforms relatively quickly //Working
+        RaycastHit2D rayHit = Physics2D.Raycast(bottomRaycastOrigin, Vector2.down, bottomRaycastLength, platformLayerMask.value);
+        if (rayHit.collider != null)
+        {
+            //Show the object raycast is returning
+            Debug.DrawLine(bottomRaycastOrigin, rayHit.collider.transform.position, Color.red);
+            if (Input.GetAxis("Vertical") > 0)
+            {
+                //Chaos CONTROOOLS!!!
+                rig.AddForce(new Vector2(0f, jumpForce));
+                secondJump = true;
+            }
+
+            //Stop the object from falling through the platform //Working so long as collision is detected
+            if (!tryingToFall && rig.velocity.y <= 0f)
+            {
+                //Compensate for force built up in air
+                rig.velocity = new Vector2(rig.velocity.x, 0f);
+            }
+        }
+        else
+        {
+            //Jump in midair
+            if (Input.GetAxis("Vertical") > 0 && secondJump)
+            {
+                rig.velocity = new Vector2(rig.velocity.x, 0f);
+                rig.AddForce(new Vector2(0f, jumpForce));
+                secondJump = false;
+            }
+        }
+
+        //Chaos CONTROOOLS!!!
+        if (Input.GetAxis("Horizontal") > 0)
+        {
+            //Instant stop
+           // if(rig.velocity.x < 0f)
+           //     rig.velocity = new Vector2(0f, rig.velocity.y);
+            rig.AddForce(new Vector2(movementForce, 0f));
+        }
+        else if (Input.GetAxis("Horizontal") < 0)
+        {
+            //Instant stop
+           // if (rig.velocity.x > 0f)
+           //     rig.velocity = new Vector2(0f, rig.velocity.y);
+            rig.AddForce(new Vector2(-movementForce, 0f));
+        }
+
+        if (Input.GetAxis("Vertical") < 0)
+            tryingToFall = true;
+        else
+            tryingToFall = false;
+
+        //Attack
+        //Raycast to enemy
+        rayHit = Physics2D.Raycast(new Vector2(transform.position.x + box.size.x/2, transform.position.y), Vector2.right, enemyRaycastLength, enemyLayerMask.value);
+        Debug.DrawRay(new Vector2(transform.position.x + box.size.x / 2, transform.position.y), Vector2.right * enemyRaycastLength, Color.blue);
+
+        if (rayHit.collider != null && (Input.GetButtonDown("AButton") || Input.GetButtonDown("BButton") || Input.GetButtonDown("XButton") || Input.GetButtonDown("YButton")))
+        {
+            currentEnemy = rayHit.transform.gameObject.GetComponent<BlaneComboScript>();
+            Debug.DrawRay(new Vector2(transform.position.x + box.size.x / 2, transform.position.y), Vector2.right * enemyRaycastLength, Color.yellow);
+            CombatInput();
+        }
+    }
+
     void CombatInput()
     {
         if (currentEnemy != null)
         {
             //See if there is combat input
-            //If multiple inputs or button mash, Garbage Input
-            if(Input.GetButtonDown("XButton"))
+            //If multiple inputs, Garbage Input
+            if (Input.GetButtonDown("AButton"))
             {
-                if (attackInput == '\0')
-                    attackInput = 'X';
+                if (attackInput == attackInputs.None)
+                    attackInput = attackInputs.A;
                 else
-                    attackInput = 'F';
-            }
-            if (Input.GetButtonDown("YButton"))
-            {
-                if (attackInput == '\0')
-                    attackInput = 'Y';
-                else
-                    attackInput = 'F';
+                    attackInput = attackInputs.Garbage;
             }
             if (Input.GetButtonDown("BButton"))
             {
-                if (attackInput == '\0')
-                    attackInput = 'B';
+                if (attackInput == attackInputs.None)
+                    attackInput = attackInputs.B;
                 else
-                    attackInput = 'F'; 
-            }   
+                    attackInput = attackInputs.Garbage;
+            }
+            if (Input.GetButtonDown("XButton"))
+            {
+                if (attackInput == attackInputs.None)
+                    attackInput = attackInputs.X;
+                else
+                    attackInput = attackInputs.Garbage;
+            }
+            if (Input.GetButtonDown("YButton"))
+            {
+                if (attackInput == attackInputs.None)
+                    attackInput = attackInputs.Y;
+                else
+                    attackInput = attackInputs.Garbage;
+            }
+
+            //If Offbeat or button mash, Garbage Input
+            if (!BlaneBeatMan.instance.onTime || haveAttacked)
+                attackInput = attackInputs.Garbage;
+
+            //Clash back if you mess up
+            if(!currentEnemy.checkInput(attackInput))
+            {
+                //clash code here
+                rig.AddForce(new Vector2(clashForce, 0f));
+                currentEnemy = null;
+            }
+
+            haveAttacked = true;
         }
-        //If Offbeat, Garbage Input
-        if (!BlaneBeatMan.instance.onTime && attackInput != '\0')
-            attackInput = 'F';
+       
     }
 
-    void SubmitAttacks()
+    //Not Firing in time
+    void sendNoInput()
     {
-        //Submit the attack for the beat at the end
-        if (currentEnemy != null && currentEnemy.checkInput(attackInput))
+        if (currentEnemy != null && !haveAttacked)
         {
-            score += 1;
-            currentEnemy = null;
+            attackInput = attackInputs.None;
+            if (!currentEnemy.checkInput(attackInput))
+            {
+                //clash code here
+                rig.AddForce(new Vector2(clashForce, 0f));
+                currentEnemy = null;
+            }
         }
-        attackInput = '\0';
+        haveAttacked = true;
+    }
+
+    void ResetAttack()
+    {
+        haveAttacked = false;
+        attackInput = attackInputs.None;
     }
 }

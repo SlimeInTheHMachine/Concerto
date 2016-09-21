@@ -7,10 +7,10 @@ public class BlaneComboScript : MonoBehaviour {
 
     //Public Variables
     public bool Selected = false;
-    public char button1, button2, button3;
+    public attackInputs button1, button2, button3, button4;
     
     //Private Variables
-    private Queue<char> combo, currentCombo;
+    private Queue<attackInputs> combo, currentCombo;
     //temp Shake code
     private float shake;
     private float shakeAmount = 0.1f;
@@ -21,15 +21,13 @@ public class BlaneComboScript : MonoBehaviour {
     void Start () {
         //GameControl = GameObject.FindGameObjectWithTag("GameController");
         //Puts in three standard buttons
-        combo = new Queue<char>();
-        if (button1 != 0)
-            combo.Enqueue(button1);
-        if (button2 != 0)
-            combo.Enqueue(button2);
-        if (button3 != 0)
-            combo.Enqueue(button3);
+        combo = new Queue<attackInputs>();
+        combo.Enqueue(button1);
+        combo.Enqueue(button2);
+        combo.Enqueue(button3);
+        combo.Enqueue(button4);
         //Deep Clone
-        currentCombo = new Queue<char>(combo);
+        currentCombo = new Queue<attackInputs>(combo);
         OGPos = transform.position;
         //Per enemy? //NOOOOOOOOOOOOO //Enemy Manager
         //BeatManager.onBeat += InputCheck;
@@ -52,12 +50,12 @@ public class BlaneComboScript : MonoBehaviour {
         }
     }
 
-    public bool checkInput(char input)
+    public bool checkInput(attackInputs input)
     {
         //Reset on mess up
-        if (input == '\0' || input == 'F')
+        if (input == attackInputs.Garbage)
         {
-            currentCombo = new Queue<char>(combo);
+            currentCombo = new Queue<attackInputs>(combo);
             return false;
         }
         else
@@ -68,12 +66,17 @@ public class BlaneComboScript : MonoBehaviour {
                 shake = 0.05f;
                 OGPos = transform.position;
             }
+            else
+            {
+                currentCombo = new Queue<attackInputs>(combo);
+                return false;
+            }
             if (currentCombo.Count == 0)
             {
                 Destroy(gameObject);
                 return true;
             }
-            return false;
+            return true;
         }
     }
 }

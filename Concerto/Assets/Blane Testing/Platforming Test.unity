@@ -264,7 +264,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 481286901}
   - 212: {fileID: 481286900}
-  - 68: {fileID: 481286899}
+  - 61: {fileID: 481286899}
   m_Layer: 8
   m_Name: Platform (1)
   m_TagString: Platform
@@ -272,8 +272,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!68 &481286899
-EdgeCollider2D:
+--- !u!61 &481286899
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -282,10 +282,9 @@ EdgeCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_Offset: {x: 0, y: 1.20000005}
-  m_Points:
-  - {x: -1.20000005, y: 0}
-  - {x: 1.20000005, y: 0}
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Size: {x: 2.4000001, y: 2.4000001}
 --- !u!212 &481286900
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -325,7 +324,7 @@ Transform:
   m_LocalScale: {x: 15, y: .394694418, z: .394694418}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 8
 --- !u!1 &546363627
 GameObject:
   m_ObjectHideFlags: 0
@@ -426,7 +425,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
 --- !u!1 &591081664
 GameObject:
   m_ObjectHideFlags: 0
@@ -500,7 +499,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 2
 --- !u!1001 &739270945
 Prefab:
   m_ObjectHideFlags: 0
@@ -552,7 +551,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1116292441}
   - 212: {fileID: 1116292440}
-  - 68: {fileID: 1116292439}
+  - 61: {fileID: 1116292439}
   m_Layer: 8
   m_Name: Platform
   m_TagString: Platform
@@ -560,8 +559,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!68 &1116292439
-EdgeCollider2D:
+--- !u!61 &1116292439
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -570,10 +569,9 @@ EdgeCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_Offset: {x: 0, y: 1.20000005}
-  m_Points:
-  - {x: -1.20000005, y: 0}
-  - {x: 1.20000005, y: 0}
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Size: {x: 2.4000001, y: 2.4000001}
 --- !u!212 &1116292440
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -613,7 +611,7 @@ Transform:
   m_LocalScale: {x: 109.656487, y: .394694418, z: .394694418}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 9
 --- !u!1 &1231198785
 GameObject:
   m_ObjectHideFlags: 0
@@ -643,8 +641,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onTime: 0
-  marginOfError: .100000001
-  BeatTime: .29999999999999999
+  marginOfError: .200000003
+  BeatTime: .5
 --- !u!4 &1231198787
 Transform:
   m_ObjectHideFlags: 0
@@ -656,7 +654,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 3
 --- !u!4 &1266047932 stripped
 Transform:
   m_PrefabParentObject: {fileID: 417018, guid: 264526c899114da4cbb89ee7f647cd3f, type: 2}
@@ -843,7 +841,7 @@ RectTransform:
   m_Children:
   - {fileID: 145621059}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 5
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -937,6 +935,7 @@ MonoBehaviour:
   enemyRaycastLength: 1.60000002
   jumpForce: 400
   movementForce: 15
+  clashForce: -500
   frictionCoff: .449999988
   decelMultiVal: .99000001
   maxClampSpeed: {x: 15, y: 50}
@@ -1014,7 +1013,7 @@ Transform:
   m_LocalScale: {x: 6.15601063, y: 6.15602016, z: 6.15602016}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 7
 --- !u!1001 &1774633377
 Prefab:
   m_ObjectHideFlags: 0
@@ -1057,6 +1056,22 @@ Prefab:
     - target: {fileID: 123654, guid: e53924d883655a248b3b432d637aad70, type: 2}
       propertyPath: m_Name
       value: BasicComboEnemy (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 11460104, guid: e53924d883655a248b3b432d637aad70, type: 2}
+      propertyPath: button1
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11460104, guid: e53924d883655a248b3b432d637aad70, type: 2}
+      propertyPath: button3
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11460104, guid: e53924d883655a248b3b432d637aad70, type: 2}
+      propertyPath: button4
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 11460104, guid: e53924d883655a248b3b432d637aad70, type: 2}
+      propertyPath: button2
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e53924d883655a248b3b432d637aad70, type: 2}
@@ -1120,7 +1135,7 @@ Transform:
   - {fileID: 1284479232}
   - {fileID: 1648889688}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 6
 --- !u!212 &2072342408
 SpriteRenderer:
   m_ObjectHideFlags: 0
