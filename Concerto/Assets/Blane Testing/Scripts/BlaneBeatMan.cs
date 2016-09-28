@@ -101,19 +101,19 @@ public class BlaneBeatMan : MonoBehaviour
 
     private void beatTimer1()
     {
-        if (onTime)
-            Debug.Log("Start Beat at " + Time.fixedTime);
+        //if (onTime)
+        //  Debug.Log("Start Beat at " + Time.fixedTime);
     }
 
     private void beatTimer2()
     {
-        if(onTime)
-            Debug.Log("Beat Plays at " + Time.fixedTime);
+        //if(onTime)
+        //   Debug.Log("Beat Plays at " + Time.fixedTime);
     }
 
     private void beatTimer3()
     {
-        if (onTime)
-            Debug.Log("End Beat at " + Time.fixedTime);
+        //if (onTime)
+        //   Debug.Log("End Beat at " + Time.fixedTime);
     }
 }

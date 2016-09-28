@@ -1,20 +1,60 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-//public enum attackInputs { A, B, X, Y, None, Garbage, Down, Right, Left, Up}; // Arrows
+public enum attackInputs { A, B, X, Y, None, Garbage, Down, Right, Left, Up}; // Arrows
 
 
-//public class AttackInputWrapper
-//{
-//    public bool Keyboard { get; set; } //uneccesary if I use my Own Axis
-//    attackInputs thisInput = attackInputs.None;
+public class AttackInputWrapper
+{
+    public bool Keyboard { get; set; } //uneccesary if I use my Own Axis
+    public attackInputs thisInput = attackInputs.None;
+    
+    public string attackLetter;
+    public AttackInputWrapper(attackInputs input)
+    {
+        thisInput = input;
+        SetLetterArbitrarily();
+    }
 
-//    AttackInputWrapper(attackInputs input)
-//    {
-//        thisInput = input;
-//    }
-//}
-public class PlatScript : MonoBehaviour {
+    void SetLetterArbitrarily()
+    {
+        switch (thisInput)
+        {
+            case attackInputs.A:
+                attackLetter = "A";
+                break;
+            case attackInputs.B:
+                attackLetter = "B";
+                break;
+            case attackInputs.X:
+                attackLetter = "X";
+                break;
+            case attackInputs.Y:
+                attackLetter = "Y";
+                break;
+            case attackInputs.None:
+                attackLetter = "-";
+                break;
+            case attackInputs.Garbage:
+                attackLetter = null;
+                break;
+            case attackInputs.Down:
+                attackLetter = "S";
+                break;
+            case attackInputs.Left:
+                attackLetter = "A";
+                break;
+            case attackInputs.Right:
+                attackLetter = "D";
+                break;
+            case attackInputs.Up:
+                attackLetter = "W";
+                break;
+        }
+
+    }
+}
+public class RosePlatScript : MonoBehaviour {
 
     //Public Variables
     public float bottomRaycastLength, enemyRaycastLength;
@@ -29,7 +69,7 @@ public class PlatScript : MonoBehaviour {
     public bool secondJump;
     public bool tryingToFall = false;
     public int score;
-    public BlaneComboScript currentEnemy;
+    public RoseComboScript currentEnemy;
 
     //Private Variables
     private LayerMask platformLayerMask, enemyLayerMask;
@@ -185,14 +225,20 @@ public class PlatScript : MonoBehaviour {
         else
             tryingToFall = false;
 
+        //if (Input.GetButtonDown("Submit"))
+        //{
+        //    Debug.Log("Fire1");
+        //}
         //Attack
         //Raycast to enemy
         rayHit = Physics2D.Raycast(new Vector2(transform.position.x + box.size.x/2, transform.position.y), Vector2.right, enemyRaycastLength, enemyLayerMask.value);
         Debug.DrawRay(new Vector2(transform.position.x + box.size.x / 2, transform.position.y), Vector2.right * enemyRaycastLength, Color.blue);
 
-        if (rayHit.collider != null && (Input.GetButtonDown("AButton") || Input.GetButtonDown("BButton") || Input.GetButtonDown("XButton") || Input.GetButtonDown("YButton")))
+        if (rayHit.collider != null && (Input.GetButtonDown("AButton") || Input.GetButtonDown("BButton") || Input.GetButtonDown("XButton")
+            || Input.GetButtonDown("YButton")))
         {
-            currentEnemy = rayHit.transform.gameObject.GetComponent<BlaneComboScript>();
+            Debug.Log("We hit a thing that was important");
+            currentEnemy = rayHit.transform.gameObject.GetComponent<RoseComboScript>();
             Debug.DrawRay(new Vector2(transform.position.x + box.size.x / 2, transform.position.y), Vector2.right * enemyRaycastLength, Color.yellow);
             CombatInput();
         }
@@ -204,31 +250,31 @@ public class PlatScript : MonoBehaviour {
         {
             //See if there is combat input
             //If multiple inputs, Garbage Input
-            if (Input.GetButtonDown("AButton"))
+            if (Input.GetButtonDown("YButton"))
             {
                 if (attackInput == attackInputs.None)
-                    attackInput = attackInputs.A;
-                else
-                    attackInput = attackInputs.Garbage;
-            }
-            if (Input.GetButtonDown("BButton"))
-            {
-                if (attackInput == attackInputs.None)
-                    attackInput = attackInputs.B;
+                    attackInput = attackInputs.Up;
                 else
                     attackInput = attackInputs.Garbage;
             }
             if (Input.GetButtonDown("XButton"))
             {
                 if (attackInput == attackInputs.None)
-                    attackInput = attackInputs.X;
+                    attackInput = attackInputs.Left;
                 else
                     attackInput = attackInputs.Garbage;
             }
-            if (Input.GetButtonDown("YButton"))
+            if (Input.GetButtonDown("AButton"))
             {
                 if (attackInput == attackInputs.None)
-                    attackInput = attackInputs.Y;
+                    attackInput = attackInputs.Down;
+                else
+                    attackInput = attackInputs.Garbage;
+            }
+            if (Input.GetButtonDown("BButton"))
+            {
+                if (attackInput == attackInputs.None)
+                    attackInput = attackInputs.Right;
                 else
                     attackInput = attackInputs.Garbage;
             }
