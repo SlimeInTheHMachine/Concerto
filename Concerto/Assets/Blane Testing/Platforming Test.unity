@@ -320,7 +320,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 481286898}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -5.92000008, z: 0}
+  m_LocalPosition: {x: 0, y: -5.69999981, z: 0}
   m_LocalScale: {x: 15, y: .394694418, z: .394694418}
   m_Children: []
   m_Father: {fileID: 0}
@@ -554,7 +554,7 @@ GameObject:
   - 61: {fileID: 1116292439}
   m_Layer: 8
   m_Name: Platform
-  m_TagString: Platform
+  m_TagString: FallthroughPlatform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -641,7 +641,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onTime: 0
-  marginOfError: .200000003
+  marginOfError: .150000006
   BeatTime: .5
 --- !u!4 &1231198787
 Transform:
@@ -913,6 +913,7 @@ GameObject:
   - 50: {fileID: 1764183641}
   - 61: {fileID: 1764183640}
   - 114: {fileID: 1764183639}
+  - 114: {fileID: 1764183644}
   m_Layer: 0
   m_Name: Ricky the Brick (1)
   m_TagString: Player
@@ -926,7 +927,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1764183638}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9ba2fa64e866164d8ed4050bc9b9cd5, type: 3}
   m_Name: 
@@ -1009,11 +1010,29 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1764183638}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.42000008, z: 0}
+  m_LocalPosition: {x: 0, y: -1.81799996, z: 0}
   m_LocalScale: {x: 6.15601063, y: 6.15602016, z: 6.15602016}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
+--- !u!114 &1764183644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1764183638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c3dc544b604d6c47b473f0fa1bcf002, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  secondJump: 0
+  tryingToFall: 0
+  enemyRaycastLength: 1.60000002
+  floorCastLength: 2
+  lerpDistance: 3
+  lerpTime: 18
+  score: 0
 --- !u!1001 &1774633377
 Prefab:
   m_ObjectHideFlags: 0
