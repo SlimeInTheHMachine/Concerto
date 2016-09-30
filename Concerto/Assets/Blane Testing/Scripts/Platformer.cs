@@ -1,6 +1,60 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+public enum attackInputs { A, B, X, Y, None, Garbage, Down, Right, Left, Up }; // Arrows
+
+
+public class AttackInputWrapper
+{
+    public bool Keyboard { get; set; } //uneccesary if I use my Own Axis
+    public attackInputs thisInput = attackInputs.None;
+
+    public string attackLetter;
+    public AttackInputWrapper(attackInputs input)
+    {
+        thisInput = input;
+        SetLetterArbitrarily();
+    }
+
+    void SetLetterArbitrarily()
+    {
+        switch (thisInput)
+        {
+            case attackInputs.A:
+                attackLetter = "A";
+                break;
+            case attackInputs.B:
+                attackLetter = "B";
+                break;
+            case attackInputs.X:
+                attackLetter = "X";
+                break;
+            case attackInputs.Y:
+                attackLetter = "Y";
+                break;
+            case attackInputs.None:
+                attackLetter = "-";
+                break;
+            case attackInputs.Garbage:
+                attackLetter = null;
+                break;
+            case attackInputs.Down:
+                attackLetter = "S";
+                break;
+            case attackInputs.Left:
+                attackLetter = "A";
+                break;
+            case attackInputs.Right:
+                attackLetter = "D";
+                break;
+            case attackInputs.Up:
+                attackLetter = "W";
+                break;
+        }
+
+    }
+}
 public class Platformer : MonoBehaviour {
 
     //Public Variables
