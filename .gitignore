@@ -30,6 +30,3 @@ sysinfo.txt
 *.unitypackage
 Concerto/Temp/
 Concerto/Library/metadata/
-Concerto/Library/UnityAssemblies/
-Concerto/Library/shadercompiler-32bit-1.log
-Concerto/Library/shadercompiler-64bit-1.log
