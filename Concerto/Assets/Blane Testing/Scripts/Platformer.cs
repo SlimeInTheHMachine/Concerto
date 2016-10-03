@@ -64,7 +64,8 @@ public class Platformer : MonoBehaviour {
     public float lerpDistance;
     public float lerpTime;
     public int score;
-    
+
+
 
     //Private Variables
     private LayerMask platformLayerMask, enemyLayerMask;
@@ -80,6 +81,31 @@ public class Platformer : MonoBehaviour {
     private bool canFall;
     private bool joyStickInput;
     private Vector2 lerpDestination;
+    private Vector2 startPos;
+    private Vector2 checkpointPos;
+
+    private GameObject[] checks;
+    private GameObject[] spikes;
+    public Vector2 LerpDestination
+    {
+        get { return lerpDestination; }
+        set { lerpDestination = value; }
+    }
+    public bool HaveMoved
+    {
+        get { return haveMoved; }
+        set { haveMoved = value; }
+    }
+    public bool Grounded
+    {
+        get { return grounded; }
+        set { grounded = value; }
+    }
+    public bool CanFall
+    {
+        get { return canFall; }
+        set { canFall = value; }
+    }
 
     // Use this for initialization
     void Start () {
@@ -94,6 +120,9 @@ public class Platformer : MonoBehaviour {
         attackInput = attackInputs.None;
         BlaneBeatMan.startBeat += Reset;
         BlaneBeatMan.endBeat += sendNoInput;
+        checks = GameObject.FindGameObjectsWithTag("Checkpoint");
+        spikes = GameObject.FindGameObjectsWithTag("Spikes");
+        startPos = transform.position;
     }
 
     void FixedUpdate()
@@ -110,8 +139,12 @@ public class Platformer : MonoBehaviour {
         {
             grounded = false;
         }
-
+        
         transform.position = Vector2.Lerp(transform.position, lerpDestination, lerpTime * Time.fixedDeltaTime);
+        if(transform.position == new Vector3(lerpDestination.x, lerpDestination.y, 0f))
+        {
+            lerpDestination = transform.position;
+        }
     }
 
     // Update is called once per frame
@@ -180,14 +213,40 @@ public class Platformer : MonoBehaviour {
         if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
             joyStickInput = false;
 
+        //Set Checkpoints 
+        setCheckpoint();
+
+        if(GameObject.Find("Finish").GetComponent<BoxCollider2D>().IsTouching(this.GetComponent<BoxCollider2D>()))
+        {
+            ResettoStart();
+        }
+
+        for (int i = 0; i < checks.Length; i++)
+        {
+            if (spikes[i].GetComponent<BoxCollider2D>().IsTouching(this.GetComponent<BoxCollider2D>()))
+            {
+                ResettoCheck();
+            }
+        }
+
         //Attack
         //Raycast to enemy
         RaycastHit2D rayHit = Physics2D.Raycast(new Vector2(transform.position.x + box.size.x/2, transform.position.y), Vector2.right, enemyRaycastLength, enemyLayerMask.value);
         Debug.Log(rayHit.collider.name + " my name is");
         if (rayHit.collider != null && (Input.GetButtonDown("AButton") || Input.GetButtonDown("BButton") || Input.GetButtonDown("XButton") || Input.GetButtonDown("YButton")))
         {
-            currentEnemy = rayHit.transform.gameObject.GetComponent<BlaneComboScript>();
-            CombatInput();
+                currentEnemy = rayHit.transform.gameObject.GetComponent<BlaneComboScript>();
+                CombatInput();
+        }
+    }
+    void setCheckpoint()
+    {
+        for (int i = 0; i < checks.Length; i++)
+        {
+            if(checks[i].GetComponent<BoxCollider2D>().IsTouching(this.GetComponent<BoxCollider2D>()))
+            { 
+                checkpointPos = transform.position;
+            }
         }
     }
 
@@ -275,5 +334,14 @@ public class Platformer : MonoBehaviour {
         haveAttacked = false;
         attackInput = attackInputs.None;
         haveMoved = false;
+    }
+    void ResettoCheck()
+    {
+        transform.position = checkpointPos;
+    }
+
+    void ResettoStart()
+    {
+        transform.position = startPos;
     }
 }

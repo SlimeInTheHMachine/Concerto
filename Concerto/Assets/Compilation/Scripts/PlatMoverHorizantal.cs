@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class PlatMoverHorizantal : MonoBehaviour {
-    bool moveForward;
+    public bool moveForward;
     public float right;
     GameObject beatManager;
 
@@ -11,21 +11,20 @@ public class PlatMoverHorizantal : MonoBehaviour {
     private double beatTime;
     private Vector3 startPos;
     private Vector3 endPos;
-
-    // Use this for initialization
-    void Start ()
+    
+    void Start()
     {
         beatManager = GameObject.Find("BeatManager");
-        beatTime = beatManager.GetComponent<BeatManager>().BeatTime;
+        beatTime = beatManager.GetComponent<BlaneBeatMan>().BeatTime;
         startTime = Time.time;
-        timeBetweenPosChange = (float)beatTime;
+        timeBetweenPosChange = (float)beatTime/2;
         moveForward = true;
         startPos = transform.position;
         endPos = new Vector3(startPos.x + right, startPos.y);
     }
-
-    void FixedUpdate()
+    public void move()
     {
+   
         if (moveForward)
         {
 

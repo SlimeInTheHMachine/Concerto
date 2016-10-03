@@ -3,30 +3,29 @@ using System.Collections;
 
 public class PlatMoverVertical : MonoBehaviour
 {
-    bool moveForward;
+    public bool moveForward;
     public float up;
     GameObject beatManager;
+    private double beatTime;
 
     private float startTime;
     private float timeBetweenPosChange;
-    private double beatTime;
     private Vector3 startPos;
     private Vector3 endPos;
 
-    // Use this for initialization
     void Start()
     {
         beatManager = GameObject.Find("BeatManager");
-        beatTime = beatManager.GetComponent<BeatManager>().BeatTime;
+        beatTime = beatManager.GetComponent<BlaneBeatMan>().BeatTime;
         startTime = Time.time;
-        timeBetweenPosChange = (float)beatTime;
+        timeBetweenPosChange = (float)beatTime/2;
         moveForward = true;
         startPos = transform.position;
-        endPos = new Vector3(startPos.x , startPos.y + up);
+        endPos = new Vector3(startPos.x, startPos.y + up);
     }
-
-    void FixedUpdate()
+    public void move()
     {
+
         if (moveForward)
         {
 
