@@ -153,7 +153,7 @@ void openTrap()
     {
         for (int i = 0; i < conPlatformsRight.Length; i++)
         {
-            conPlatformsLeft[i].GetComponent<Renderer>().material.color = Color.red;
+            conPlatformsRight[i].GetComponent<Renderer>().material.color = Color.green;
             if (conPlatformsRight[i].GetComponent<BoxCollider2D>().IsTouching(player.GetComponent<BoxCollider2D>()))
             {
                 if (player.transform.position.x != conPlatformsRight[i].transform.position.x)
