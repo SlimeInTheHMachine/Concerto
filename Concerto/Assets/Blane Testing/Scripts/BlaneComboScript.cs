@@ -8,7 +8,8 @@ public class BlaneComboScript : MonoBehaviour {
     //Public Variables
     public bool Selected = false;
     public attackInputs button1, button2, button3, button4;
-    
+    [SerializeField]
+    GameObject letter1, letter2, letter3, letter4;
     //Private Variables
     private Queue<attackInputs> combo, currentCombo;
     //temp Shake code
@@ -21,6 +22,14 @@ public class BlaneComboScript : MonoBehaviour {
     void Start () {
         //GameControl = GameObject.FindGameObjectWithTag("GameController");
         //Puts in three standard buttons
+        AttackInputWrapper btnHolder1 = new AttackInputWrapper(button1);
+        letter1.GetComponent<TextMesh>().text = btnHolder1.attackLetter;
+        AttackInputWrapper btnHolder2 = new AttackInputWrapper(button2);
+        letter2.GetComponent<TextMesh>().text = btnHolder2.attackLetter;
+        AttackInputWrapper btnHolder3 = new AttackInputWrapper(button3);
+        letter3.GetComponent<TextMesh>().text = btnHolder3.attackLetter;
+        AttackInputWrapper btnHolder4 = new AttackInputWrapper(button4);
+        letter4.GetComponent<TextMesh>().text = btnHolder4.attackLetter;
         combo = new Queue<attackInputs>();
         combo.Enqueue(button1);
         combo.Enqueue(button2);

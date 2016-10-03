@@ -2,60 +2,8 @@
 using System.Collections;
 
 
-public enum attackInputs { A, B, X, Y, None, Garbage, Down, Right, Left, Up }; // Arrows
 
-
-public class AttackInputWrapper
-{
-    public bool Keyboard { get; set; } //uneccesary if I use my Own Axis
-    public attackInputs thisInput = attackInputs.None;
-
-    public string attackLetter;
-    public AttackInputWrapper(attackInputs input)
-    {
-        thisInput = input;
-        SetLetterArbitrarily();
-    }
-
-    void SetLetterArbitrarily()
-    {
-        switch (thisInput)
-        {
-            case attackInputs.A:
-                attackLetter = "A";
-                break;
-            case attackInputs.B:
-                attackLetter = "B";
-                break;
-            case attackInputs.X:
-                attackLetter = "X";
-                break;
-            case attackInputs.Y:
-                attackLetter = "Y";
-                break;
-            case attackInputs.None:
-                attackLetter = "-";
-                break;
-            case attackInputs.Garbage:
-                attackLetter = null;
-                break;
-            case attackInputs.Down:
-                attackLetter = "S";
-                break;
-            case attackInputs.Left:
-                attackLetter = "A";
-                break;
-            case attackInputs.Right:
-                attackLetter = "D";
-                break;
-            case attackInputs.Up:
-                attackLetter = "W";
-                break;
-        }
-
-    }
-}
-public class Platformer : MonoBehaviour {
+public class RosePlatformer : MonoBehaviour {
 
     //Public Variables
     public bool secondJump;
@@ -72,7 +20,7 @@ public class Platformer : MonoBehaviour {
     private BoxCollider2D colliderBox;
     private Rect box;
     private attackInputs attackInput;
-    private BlaneComboScript currentEnemy;
+    private RoseComboScript currentEnemy;
 
     private bool haveAttacked;
     private bool haveMoved;
@@ -183,10 +131,10 @@ public class Platformer : MonoBehaviour {
         //Attack
         //Raycast to enemy
         RaycastHit2D rayHit = Physics2D.Raycast(new Vector2(transform.position.x + box.size.x/2, transform.position.y), Vector2.right, enemyRaycastLength, enemyLayerMask.value);
-        Debug.Log(rayHit.collider.name + " my name is");
+
         if (rayHit.collider != null && (Input.GetButtonDown("AButton") || Input.GetButtonDown("BButton") || Input.GetButtonDown("XButton") || Input.GetButtonDown("YButton")))
         {
-            currentEnemy = rayHit.transform.gameObject.GetComponent<BlaneComboScript>();
+            currentEnemy = rayHit.transform.gameObject.GetComponent<RoseComboScript>();
             CombatInput();
         }
     }
