@@ -12,6 +12,7 @@ public class BlaneComboScript : MonoBehaviour {
     GameObject letter1, letter2, letter3, letter4;
     //Private Variables
     private Queue<attackInputs> combo, currentCombo;
+    int lettersLeft = 4;
     //temp Shake code
     private float shake;
     private float shakeAmount = 0.1f;
@@ -42,6 +43,31 @@ public class BlaneComboScript : MonoBehaviour {
         //BeatManager.onBeat += InputCheck;
     }
 
+    void ResetQueue()
+    {
+        currentCombo = new Queue<attackInputs>(combo);
+        if(lettersLeft == 1)
+        {
+            letter3.GetComponent<MeshRenderer>().enabled = true;
+            lettersLeft += 1;
+        }
+        if (lettersLeft == 2)
+        {
+            letter2.GetComponent<MeshRenderer>().enabled = true;
+            lettersLeft += 1;
+        }
+        if (lettersLeft == 3)
+        {
+            letter1.GetComponent<MeshRenderer>().enabled = true;
+            lettersLeft += 1;
+        }
+        //lettersLeft = 4;
+        if (lettersLeft != 4)
+        {
+            lettersLeft = 4;
+        }
+        
+    }
     // Update is called once per frame
     void Update ()
     {
@@ -64,7 +90,7 @@ public class BlaneComboScript : MonoBehaviour {
         //Reset on mess up
         if (input == attackInputs.Garbage)
         {
-            currentCombo = new Queue<attackInputs>(combo);
+            ResetQueue();
             return false;
         }
         else
@@ -74,10 +100,23 @@ public class BlaneComboScript : MonoBehaviour {
                 currentCombo.Dequeue();
                 shake = 0.05f;
                 OGPos = transform.position;
+                lettersLeft--;
+                if (lettersLeft == 1)
+                {
+                    letter3.GetComponent<MeshRenderer>().enabled = false;
+                }
+                if (lettersLeft == 2)
+                {
+                    letter2.GetComponent<MeshRenderer>().enabled = false;
+                }
+                if (lettersLeft == 3)
+                {
+                    letter1.GetComponent<MeshRenderer>().enabled = false;
+                }
             }
             else
             {
-                currentCombo = new Queue<attackInputs>(combo);
+                ResetQueue();
                 return false;
             }
             if (currentCombo.Count == 0)
