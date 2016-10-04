@@ -221,7 +221,7 @@ public class Platformer : MonoBehaviour {
             ResettoStart();
         }
 
-        for (int i = 0; i < checks.Length; i++)
+        for (int i = 0; i < spikes.Length; i++)
         {
             if (spikes[i].GetComponent<BoxCollider2D>().IsTouching(this.GetComponent<BoxCollider2D>()))
             {
@@ -245,7 +245,8 @@ public class Platformer : MonoBehaviour {
         {
             if(checks[i].GetComponent<BoxCollider2D>().IsTouching(this.GetComponent<BoxCollider2D>()))
             { 
-                checkpointPos = transform.position;
+                checkpointPos = new Vector2(transform.position.x - lerpDistance, transform.position.y+lerpDistance);
+                checks[i].transform.position = new Vector2(checks[i].transform.position.x, 1000f);
             }
         }
     }
@@ -337,11 +338,11 @@ public class Platformer : MonoBehaviour {
     }
     void ResettoCheck()
     {
-        transform.position = checkpointPos;
+        transform.position = new Vector3(checkpointPos.x,checkpointPos.y,0f);
     }
 
     void ResettoStart()
     {
-        transform.position = startPos;
+        transform.position = new Vector3(startPos.x, startPos.y, 0f);
     }
 }
