@@ -82,7 +82,7 @@ public class Platformer : MonoBehaviour {
     private bool joyStickInput;
     private Vector2 lerpDestination;
     private Vector2 startPos;
-    private Vector2 checkpointPos;
+    public Vector2 checkpointPos;
 
     private GameObject[] checks;
     private GameObject[] spikes;
@@ -232,7 +232,6 @@ public class Platformer : MonoBehaviour {
         //Attack
         //Raycast to enemy
         RaycastHit2D rayHit = Physics2D.Raycast(new Vector2(transform.position.x + box.size.x/2, transform.position.y), Vector2.right, enemyRaycastLength, enemyLayerMask.value);
-        Debug.Log(rayHit.collider.name + " my name is");
         if (rayHit.collider != null && (Input.GetButtonDown("AButton") || Input.GetButtonDown("BButton") || Input.GetButtonDown("XButton") || Input.GetButtonDown("YButton")))
         {
                 currentEnemy = rayHit.transform.gameObject.GetComponent<BlaneComboScript>();
@@ -245,7 +244,7 @@ public class Platformer : MonoBehaviour {
         {
             if(checks[i].GetComponent<BoxCollider2D>().IsTouching(this.GetComponent<BoxCollider2D>()))
             { 
-                checkpointPos = new Vector2(transform.position.x - lerpDistance, transform.position.y+lerpDistance);
+                checkpointPos = new Vector2(checks[i].transform.position.x, checks[i].transform.position.y);
                 checks[i].transform.position = new Vector2(checks[i].transform.position.x, 1000f);
             }
         }
@@ -339,10 +338,12 @@ public class Platformer : MonoBehaviour {
     void ResettoCheck()
     {
         transform.position = new Vector3(checkpointPos.x,checkpointPos.y,0f);
+        lerpDestination = new Vector2(checkpointPos.x, checkpointPos.y);
     }
 
     void ResettoStart()
     {
         transform.position = new Vector3(startPos.x, startPos.y, 0f);
+        lerpDestination = new Vector2(startPos.x, startPos.y);
     }
 }

@@ -6,9 +6,10 @@ public class PlatManager : MonoBehaviour
 
     //Variables
     private GameObject[] platforms;
+    private GameObject[] platforms2;
     private GameObject[] movPlatformsVer;
     private GameObject[] movPlatformsHor;
-    private GameObject[] trapPlatforms;
+    //private GameObject[] trapPlatforms;
     private GameObject[] spikes;
     private GameObject[] conPlatformsLeft;
     private GameObject[] fallThroughPlatforms;
@@ -40,9 +41,10 @@ public class PlatManager : MonoBehaviour
 
         //Get List of platforms
         platforms = GameObject.FindGameObjectsWithTag("Platform");
+        platforms2 = GameObject.FindGameObjectsWithTag("Platform2");
         movPlatformsVer = GameObject.FindGameObjectsWithTag("MovingVertical");
         movPlatformsHor = GameObject.FindGameObjectsWithTag("MovingHorizantal");
-        trapPlatforms = GameObject.FindGameObjectsWithTag("TrapDoor");
+        //trapPlatforms = GameObject.FindGameObjectsWithTag("TrapDoor");
         fallThroughPlatforms = GameObject.FindGameObjectsWithTag("FallthroughPlatform");
         spikes = GameObject.FindGameObjectsWithTag("Spikes");
         conPlatformsLeft = GameObject.FindGameObjectsWithTag("ConveyorLeft");
@@ -53,12 +55,12 @@ public class PlatManager : MonoBehaviour
     void Start()
     {
         platColors = new Color[6];
-        platColors[0] = ConvertColor(23, 127, 117);
-        platColors[1] = ConvertColor(33, 182, 168);
-        platColors[2] = ConvertColor(127, 23, 105);
-        platColors[3] = ConvertColor(255, 203, 244);
-        platColors[4] = ConvertColor(182, 149, 33);
-        platColors[5] = ConvertColor(255, 244, 203);
+        platColors[0] = ConvertColor(255, 203, 244);
+        platColors[1] = ConvertColor(23, 127, 117);
+        //platColors[0] = ConvertColor(33, 182, 168);
+        //platColors[0] = ConvertColor(127, 23, 105);
+        //platColors[4] = ConvertColor(182, 149, 33);
+        //platColors[5] = ConvertColor(255, 244, 203);
 
          beatManager = GameObject.Find("BeatManager");
         beatTime = beatManager.GetComponent<BlaneBeatMan>().BeatTime;
@@ -70,6 +72,7 @@ public class PlatManager : MonoBehaviour
         BlaneBeatMan.onBeat += movePlatVert;
         BlaneBeatMan.onBeat += beatCount;
         BlaneBeatMan.onBeat += colorSpikes;
+        BlaneBeatMan.onBeat += colorFallThrough;
 
     }
 
@@ -83,11 +86,21 @@ public class PlatManager : MonoBehaviour
     {
         for (int i = 0; i < platforms.Length; i++)
         {
-            platforms[i].GetComponent<Renderer>().material.color = platColors[Random.Range(0, 5)];//new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f));
+            if (platforms[i].GetComponent<Renderer>().material.color != platColors[1])
+            { platforms[i].GetComponent<Renderer>().material.color = platColors[1]; }
+            else if (platforms[i].GetComponent<Renderer>().material.color != platColors[0])
+            { platforms[i].GetComponent<Renderer>().material.color = platColors[0];}
+        }
 
-
+        for (int i = 0; i < platforms2.Length; i++)
+        {
+            if (platforms2[i].GetComponent<Renderer>().material.color != platColors[0])
+            { platforms2[i].GetComponent<Renderer>().material.color = platColors[0]; }
+            else if (platforms2[i].GetComponent<Renderer>().material.color != platColors[1])
+            { platforms2[i].GetComponent<Renderer>().material.color = platColors[1]; }
         }
     }
+
 
     void colorSpikes()
     {
@@ -98,9 +111,13 @@ public class PlatManager : MonoBehaviour
     }
     void colorFallThrough()
     {
+        Color color = Color.magenta;
+        color.a = 0.1f;
         for (int i = 0; i < fallThroughPlatforms.Length; i++)
         {
-            fallThroughPlatforms[i].GetComponent<Renderer>().material.color = Color.white;
+            
+            fallThroughPlatforms[i].GetComponent<Renderer>().material.color = color;
+            
         }
     }
     void beatCount()
@@ -114,17 +131,17 @@ public class PlatManager : MonoBehaviour
         return new Color(r/255.0f, g/255.0f, b/255.0f);
     }
 
-void openTrap()
-    {
-        for (int i = 0; i < trapPlatforms.Length; i++)
-        {
-            if (beatCounter == beatPerMove)
-            {
-                player.GetComponent<Platformer>().Grounded = false;
-                player.GetComponent<Platformer>().CanFall = true;
-            }
-        }
-    }
+//void openTrap()
+//    {
+//        for (int i = 0; i < trapPlatforms.Length; i++)
+//        {
+//            if (beatCounter == beatPerMove)
+//            {
+//                player.GetComponent<Platformer>().Grounded = false;
+//                player.GetComponent<Platformer>().CanFall = true;
+//            }
+//        }
+//    }
 
 
 
