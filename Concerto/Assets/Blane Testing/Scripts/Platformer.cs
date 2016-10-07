@@ -52,20 +52,17 @@ public class AttackInputWrapper
                 attackLetter = "W";
                 break;
         }
-
     }
 }
 public class Platformer : MonoBehaviour {
 
     //Public Variables
-    public bool secondJump;
+    public bool aerialMove;
     public bool tryingToFall = false;
     public float enemyRaycastLength, floorCastLength;
     public float lerpDistance;
     public float lerpTime;
     public int score;
-
-
 
     //Private Variables
     private LayerMask platformLayerMask, enemyLayerMask;
@@ -133,7 +130,7 @@ public class Platformer : MonoBehaviour {
         if (rayHit.collider != null)
         {
             grounded = true;
-            secondJump = true;
+            aerialMove = true;
         }
         else
         {
@@ -168,11 +165,11 @@ public class Platformer : MonoBehaviour {
                     }
                     else
                     {
-                        if (secondJump)
+                        if (aerialMove)
                         {
                             lerpDestination = new Vector2(transform.position.x, transform.position.y + lerpDistance);
                             haveMoved = true;
-                            secondJump = false;
+                            aerialMove = false;
                             joyStickInput = false;
                         }
                     }
@@ -193,25 +190,27 @@ public class Platformer : MonoBehaviour {
                 }
                 else if (Input.GetAxis("Horizontal") > 0)
                 {
-                    lerpDestination = new Vector2(transform.position.x + lerpDistance, transform.position.y);
-                    haveMoved = true;
-                    joyStickInput = false;
+                    if (aerialMove)
+                    {
+                        lerpDestination = new Vector2(transform.position.x + lerpDistance, transform.position.y);
+                        haveMoved = true;
+                        joyStickInput = false;
+                        aerialMove = false;
+                    }
                 }
                 else if (Input.GetAxis("Horizontal") < 0)
                 {
-                    lerpDestination = new Vector2(transform.position.x - lerpDistance, transform.position.y);
-                    haveMoved = true;
-                    joyStickInput = false;
+                    if (aerialMove)
+                    {
+                        lerpDestination = new Vector2(transform.position.x - lerpDistance, transform.position.y);
+                        haveMoved = true;
+                        joyStickInput = false;
+                        aerialMove = false;
+                    }
                 }
             }    
         }
-        else
-        {
-            //other effects for failure to meet X Req
-        }
 
-        if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
-            joyStickInput = false;
 
         //Set Checkpoints 
         setCheckpoint();
