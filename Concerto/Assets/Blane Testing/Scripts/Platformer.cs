@@ -239,12 +239,15 @@ public class Platformer : MonoBehaviour {
     }
     void setCheckpoint()
     {
-        for (int i = 0; i < checks.Length; i++)
+        if (checks != null)
         {
-            if(checks[i].GetComponent<BoxCollider2D>().IsTouching(this.GetComponent<BoxCollider2D>()))
-            { 
-                checkpointPos = new Vector2(checks[i].transform.position.x, checks[i].transform.position.y);
-                checks[i].transform.position = new Vector2(checks[i].transform.position.x, 1000f);
+            for (int i = 0; i < checks.Length; i++)
+            {
+                if (checks[i].GetComponent<BoxCollider2D>().IsTouching(this.GetComponent<BoxCollider2D>()))
+                {
+                    checkpointPos = new Vector2(checks[i].transform.position.x, checks[i].transform.position.y);
+                    checks[i].transform.position = new Vector2(checks[i].transform.position.x, 1000f);
+                }
             }
         }
     }
