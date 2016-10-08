@@ -236,10 +236,15 @@ public class Platformer : MonoBehaviour {
         //Attack
         //Raycast to enemy
         RaycastHit2D rayHit = Physics2D.Raycast(new Vector2(transform.position.x + box.size.x/2, transform.position.y), Vector2.right, enemyRaycastLength, enemyLayerMask.value);
+        Debug.DrawRay(new Vector2(transform.position.x + box.size.x / 2, transform.position.y), Vector2.right, Color.red);
         if (rayHit.collider != null && (Input.GetButtonDown("AButton") || Input.GetButtonDown("BButton") || Input.GetButtonDown("XButton") || Input.GetButtonDown("YButton")))
         {
                 currentEnemy = rayHit.transform.gameObject.GetComponent<ComboScript>();
                 CombatInput();
+            if (!currentEnemy.GetComponent<ComboScript>().Selected)
+            {
+                currentEnemy.GetComponent<ComboScript>().Selected = true;
+            }
         }
     }
     void setCheckpoint()
