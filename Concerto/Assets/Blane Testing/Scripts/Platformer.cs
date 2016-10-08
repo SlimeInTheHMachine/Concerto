@@ -120,6 +120,7 @@ public class Platformer : MonoBehaviour {
         checks = GameObject.FindGameObjectsWithTag("Checkpoint");
         spikes = GameObject.FindGameObjectsWithTag("Spikes");
         startPos = transform.position;
+        checkpointPos = startPos;
     }
 
     void FixedUpdate()
@@ -214,12 +215,13 @@ public class Platformer : MonoBehaviour {
 
         //Set Checkpoints 
         setCheckpoint();
-
-        if(GameObject.Find("Finish").GetComponent<BoxCollider2D>().IsTouching(this.GetComponent<BoxCollider2D>()))
+        if (GameObject.Find("Finish") != null)
         {
-            ResettoStart();
+            if (GameObject.Find("Finish").GetComponent<BoxCollider2D>().IsTouching(this.GetComponent<BoxCollider2D>()))
+            {
+                ResettoStart();
+            }
         }
-
         for (int i = 0; i < spikes.Length; i++)
         {
             if (spikes[i].GetComponent<BoxCollider2D>().IsTouching(this.GetComponent<BoxCollider2D>()))

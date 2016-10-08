@@ -65,14 +65,21 @@ public class PlatManager : MonoBehaviour
          beatManager = GameObject.Find("BeatManager");
         beatTime = beatManager.GetComponent<BlaneBeatMan>().BeatTime;
         beatCounter = 0;
-        BlaneBeatMan.onBeat += changeColors;
-        BlaneBeatMan.onBeat += movePlayerLeft;
-        BlaneBeatMan.onBeat += movePlayerRight;
-        BlaneBeatMan.onBeat += movePlatHor;
-        BlaneBeatMan.onBeat += movePlatVert;
-        BlaneBeatMan.onBeat += beatCount;
-        BlaneBeatMan.onBeat += colorSpikes;
-        BlaneBeatMan.onBeat += colorFallThrough;
+        if (platforms != null)
+        {BlaneBeatMan.onBeat += changeColors; }
+        if (conPlatformsLeft!= null)
+        { BlaneBeatMan.onBeat += movePlayerLeft; }
+        if (conPlatformsRight != null)
+        { BlaneBeatMan.onBeat += movePlayerRight; }
+        if (movPlatformsHor != null)
+        { BlaneBeatMan.onBeat += movePlatHor; }
+        if (movPlatformsVer != null)
+        { BlaneBeatMan.onBeat += movePlatVert; }
+        if (spikes != null)
+        { BlaneBeatMan.onBeat += colorSpikes; }
+        if (fallThroughPlatforms != null)
+        { BlaneBeatMan.onBeat += colorFallThrough; }
+         BlaneBeatMan.onBeat += beatCount; 
 
     }
 
@@ -91,13 +98,15 @@ public class PlatManager : MonoBehaviour
             else if (platforms[i].GetComponent<Renderer>().material.color != platColors[0])
             { platforms[i].GetComponent<Renderer>().material.color = platColors[0];}
         }
-
-        for (int i = 0; i < platforms2.Length; i++)
+        if (platforms2 != null)
         {
-            if (platforms2[i].GetComponent<Renderer>().material.color != platColors[0])
-            { platforms2[i].GetComponent<Renderer>().material.color = platColors[0]; }
-            else if (platforms2[i].GetComponent<Renderer>().material.color != platColors[1])
-            { platforms2[i].GetComponent<Renderer>().material.color = platColors[1]; }
+            for (int i = 0; i < platforms2.Length; i++)
+            {
+                if (platforms2[i].GetComponent<Renderer>().material.color != platColors[0])
+                { platforms2[i].GetComponent<Renderer>().material.color = platColors[0]; }
+                else if (platforms2[i].GetComponent<Renderer>().material.color != platColors[1])
+                { platforms2[i].GetComponent<Renderer>().material.color = platColors[1]; }
+            }
         }
     }
 
