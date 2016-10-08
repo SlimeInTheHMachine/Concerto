@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Platform
   - FallthroughPlatform
+  - Checkpoint
+  - Spikes
   layers:
   - Default
   - TransparentFX

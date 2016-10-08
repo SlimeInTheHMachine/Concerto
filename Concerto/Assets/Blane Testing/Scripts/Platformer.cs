@@ -222,11 +222,14 @@ public class Platformer : MonoBehaviour {
                 ResettoStart();
             }
         }
-        for (int i = 0; i < spikes.Length; i++)
+        if (spikes != null)
         {
-            if (spikes[i].GetComponent<BoxCollider2D>().IsTouching(this.GetComponent<BoxCollider2D>()))
+            for (int i = 0; i < spikes.Length; i++)
             {
-                ResettoCheck();
+                if (spikes[i].GetComponent<BoxCollider2D>().IsTouching(this.GetComponent<BoxCollider2D>()))
+                {
+                    ResettoCheck();
+                }
             }
         }
 
