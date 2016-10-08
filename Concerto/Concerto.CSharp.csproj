@@ -69,29 +69,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Blane Testing\Scripts\BlaneBeatAnim.cs" />
-    <Compile Include="Assets\Blane Testing\Scripts\BlaneBeatMan.cs" />
-    <Compile Include="Assets\Blane Testing\Scripts\BlaneComboScript.cs" />
-    <Compile Include="Assets\Blane Testing\Scripts\CamBehavior.cs" />
-    <Compile Include="Assets\Blane Testing\Scripts\EnemyManager.cs" />
-    <Compile Include="Assets\Blane Testing\Scripts\OnBeat.cs" />
-    <Compile Include="Assets\Blane Testing\Scripts\Platformer.cs" />
-    <Compile Include="Assets\Blane Testing\Scripts\RoseComboScript.cs" />
-    <Compile Include="Assets\Blane Testing\Scripts\RosePlatScript.cs" />
-    <Compile Include="Assets\Compilation\Scripts\Beat.cs" />
-    <Compile Include="Assets\Compilation\Scripts\BeatAnimationScript.cs" />
-    <Compile Include="Assets\Compilation\Scripts\BeatManager.cs" />
-    <Compile Include="Assets\Compilation\Scripts\Camera_Behavior.cs" />
-    <Compile Include="Assets\Compilation\Scripts\Enemy_Combo_Script.cs" />
-    <Compile Include="Assets\Compilation\Scripts\PlatMoverHorizantal.cs" />
-    <Compile Include="Assets\Compilation\Scripts\PlatMoverVertical.cs" />
-    <Compile Include="Assets\Peta Bread\Scripts\Bar.cs" />
-    <Compile Include="Assets\Rose Testing\Scripts\EnemyComboScript.cs" />
-    <Compile Include="Assets\Rose Testing\Scripts\OnBeatRose.cs" />
-    <Compile Include="Assets\Rose Testing\Scripts\RoseInputScript.cs" />
-    <Compile Include="Assets\Rose Testing\Scripts\RosePlatformer.cs" />
-    <Compile Include="Assets\Stef Testing\Scripts\PlatManager.cs" />
-    <Compile Include="Assets\Stef Testing\Scripts\Platforming_Script2.cs" />
+    <Compile Include="Assets\Scripts\Beat\BeatAnimationScript.cs" />
+    <Compile Include="Assets\Scripts\Beat\BeatMan.cs" />
+    <Compile Include="Assets\Scripts\Camera\CamBehavior.cs" />
+    <Compile Include="Assets\Scripts\Enemies\ComboScript.cs" />
+    <Compile Include="Assets\Scripts\Enemies\EnemyMan.cs" />
+    <Compile Include="Assets\Scripts\Platforms\PlatManager.cs" />
+    <Compile Include="Assets\Scripts\Platforms\PlatMoverHorizantal.cs" />
+    <Compile Include="Assets\Scripts\Platforms\PlatMoverVertical.cs" />
+    <Compile Include="Assets\Scripts\Player\Platformer.cs" />
+    <Compile Include="Assets\Scripts\Testing\RoseInputScript.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
