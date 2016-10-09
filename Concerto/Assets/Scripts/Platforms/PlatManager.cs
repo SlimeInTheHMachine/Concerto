@@ -3,7 +3,6 @@ using System.Collections;
 
 public class PlatManager : MonoBehaviour
 {
-
     //Variables
     private GameObject[] platforms;
     private GameObject[] platforms2;
@@ -16,6 +15,10 @@ public class PlatManager : MonoBehaviour
     private GameObject[] conPlatformsRight;
     private Color[] platColors;
     public GameObject player;
+    BoxCollider2D playerCollider;
+    Platformer playerScript;
+    public Color color1;
+    public Color color2;
 
     GameObject beatManager;
     private double beatTime;
@@ -39,6 +42,10 @@ public class PlatManager : MonoBehaviour
             //If so (somehow), destroy this object.
             Destroy(gameObject);
 
+
+        playerCollider = player.GetComponent<BoxCollider2D>();
+        playerScript = player.GetComponent<Platformer>();
+
         //Get List of platforms
         platforms = GameObject.FindGameObjectsWithTag("Platform");
         platforms2 = GameObject.FindGameObjectsWithTag("Platform2");
@@ -57,28 +64,26 @@ public class PlatManager : MonoBehaviour
         platColors = new Color[6];
         platColors[0] = ConvertColor(255, 203, 244);
         platColors[1] = ConvertColor(23, 127, 117);
-        //platColors[0] = ConvertColor(33, 182, 168);
-        //platColors[0] = ConvertColor(127, 23, 105);
-        //platColors[4] = ConvertColor(182, 149, 33);
-        //platColors[5] = ConvertColor(255, 244, 203);
 
-         beatManager = GameObject.Find("BeatManager");
+        beatManager = GameObject.Find("BeatManager");
         beatTime = beatManager.GetComponent<BeatMan>().BeatTime;
         beatCounter = 0;
+
+        //Checks to see if the types of platforms can be found and then adds their behaviors accordingly
         if (platforms != null)
-        {BeatMan.onBeat += changeColors; }
+        {BeatMan.onBeat += platformBehavior; }
         if (conPlatformsLeft!= null)
-        { BeatMan.onBeat += movePlayerLeft; }
+        { BeatMan.onBeat += leftConveyorBehavior; }
         if (conPlatformsRight != null)
-        { BeatMan.onBeat += movePlayerRight; }
+        { BeatMan.onBeat += rightConveyorBehavior; }
         if (movPlatformsHor != null)
-        { BeatMan.onBeat += movePlatHor; }
+        { BeatMan.onBeat += horPlatBehavior; }
         if (movPlatformsVer != null)
-        { BeatMan.onBeat += movePlatVert; }
+        { BeatMan.onBeat += vertPlatBehavior; }
         if (spikes != null)
-        { BeatMan.onBeat += colorSpikes; }
+        { BeatMan.onBeat += spikeBehavior; }
         if (fallThroughPlatforms != null)
-        { BeatMan.onBeat += colorFallThrough; }
+        { BeatMan.onBeat += fallThroughBehavior; }
          BeatMan.onBeat += beatCount; 
 
     }
@@ -89,19 +94,37 @@ public class PlatManager : MonoBehaviour
         //Call the update of every platform
 
     }
-    void changeColors()
+
+    // Changes the colors of the platforms
+    void platformBehavior()
     {
+        //Changes the colors of the first type of platform
         for (int i = 0; i < platforms.Length; i++)
         {
+            if(platforms[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
+            {
+                //Ensure the player is in the center of the square
+                setPlayerPos(platforms[i]);
+            }
+            //Alternates the color between two possiblities
             if (platforms[i].GetComponent<Renderer>().material.color != platColors[1])
             { platforms[i].GetComponent<Renderer>().material.color = platColors[1]; }
             else if (platforms[i].GetComponent<Renderer>().material.color != platColors[0])
             { platforms[i].GetComponent<Renderer>().material.color = platColors[0];}
         }
+
+        //Checks to see whether a second type of normal platform exists
         if (platforms2 != null)
         {
+        //Changes the colors of the first type of platform
             for (int i = 0; i < platforms2.Length; i++)
             {
+                if (platforms2[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
+                {
+                    //Ensure the player is in the center of the square
+                    setPlayerPos(platforms2[i]);
+                }
+                //Alternates the color between two possiblities
                 if (platforms2[i].GetComponent<Renderer>().material.color != platColors[0])
                 { platforms2[i].GetComponent<Renderer>().material.color = platColors[0]; }
                 else if (platforms2[i].GetComponent<Renderer>().material.color != platColors[1])
@@ -109,28 +132,39 @@ public class PlatManager : MonoBehaviour
             }
         }
     }
-
-
-    void colorSpikes()
+    
+    void spikeBehavior()
     {
         for (int i = 0; i < spikes.Length; i++)
         {
+            if (spikes[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
+            {
+                //Ensure the player is in the center of the square
+                setPlayerPos(spikes[i]);
+            }
+            //Changes Platform Color
             spikes[i].GetComponent<Renderer>().material.color = Color.red;
         }
     }
-    void colorFallThrough()
+    void fallThroughBehavior()
     {
         Color color = Color.magenta;
         color.a = 0.1f;
         for (int i = 0; i < fallThroughPlatforms.Length; i++)
         {
-            
+            if (fallThroughPlatforms[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
+            {
+                //Ensure the player is in the center of the square
+                setPlayerPos(fallThroughPlatforms[i]);
+            }
+            //Changes Platform Color
             fallThroughPlatforms[i].GetComponent<Renderer>().material.color = color;
             
         }
     }
     void beatCount()
     {
+        //Sets a counter for actions that only occur every other beat
         beatCounter++;
         if (beatCounter == 2)
             beatCounter = 0;
@@ -146,109 +180,134 @@ public class PlatManager : MonoBehaviour
 //        {
 //            if (beatCounter == beatPerMove)
 //            {
-//                player.GetComponent<Platformer>().Grounded = false;
-//                player.GetComponent<Platformer>().CanFall = true;
+//                playerScript.Grounded = false;
+//                playerScript.CanFall = true;
 //            }
 //        }
 //    }
 
 
 
-    void movePlayerLeft()
+    void leftConveyorBehavior()
     {
         for (int i = 0; i < conPlatformsLeft.Length; i++)
         {
+            //Changes Platform Color
             conPlatformsLeft[i].GetComponent<Renderer>().material.color = Color.yellow;
-            if (conPlatformsLeft[i].GetComponent<BoxCollider2D>().IsTouching(player.GetComponent<BoxCollider2D>()))
+            if (conPlatformsLeft[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
             {
-                if (player.transform.position.x != conPlatformsLeft[i].transform.position.x)
+                //Ensure the player is in the center of the square
+                setPlayerPos(conPlatformsLeft[i]);
+
+                //Checks to see if the player has already moved, and shoots them backward if not
+                if (playerScript.HaveMoved == false)
                 {
-                    player.transform.position = new Vector2(conPlatformsLeft[i].transform.position.x + 0.086f, player.transform.position.y);
-                }
-                if (player.GetComponent<Platformer>().HaveMoved == false)
-                {
-                    player.GetComponent<Platformer>().LerpDestination = new Vector2(player.transform.position.x - player.GetComponent<Platformer>().lerpDistance, player.GetComponent<Platformer>().transform.position.y);
-                    player.GetComponent<Platformer>().HaveMoved = true;
-                    player.transform.position = Vector2.Lerp(player.transform.position, player.GetComponent<Platformer>().LerpDestination, player.GetComponent<Platformer>().lerpTime * Time.fixedDeltaTime);
+                    playerScript.LerpDestination = new Vector2(player.transform.position.x - playerScript.lerpDistance, playerScript.transform.position.y);
+                    playerScript.HaveMoved = true;
+                    player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                 }
             }
         }
     }
 
-    void movePlayerRight()
+    void rightConveyorBehavior()
     {
         for (int i = 0; i < conPlatformsRight.Length; i++)
         {
+            //Changes Platform Color
             conPlatformsRight[i].GetComponent<Renderer>().material.color = Color.green;
-            if (conPlatformsRight[i].GetComponent<BoxCollider2D>().IsTouching(player.GetComponent<BoxCollider2D>()))
+            if (conPlatformsRight[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
             {
-                if (player.transform.position.x != conPlatformsRight[i].transform.position.x)
+                //Ensure the player is in the center of the square
+                setPlayerPos(conPlatformsRight[i]);
+
+                //Checks to see if the player has already moved, and shoots them forward if not
+                if (playerScript.HaveMoved == false)
                 {
-                    player.transform.position = new Vector2(conPlatformsRight[i].transform.position.x + 0.086f, player.transform.position.y);
-                }
-                if (player.GetComponent<Platformer>().HaveMoved == false)
-                {
-                    player.GetComponent<Platformer>().LerpDestination = new Vector2(player.transform.position.x + player.GetComponent<Platformer>().lerpDistance, player.GetComponent<Platformer>().transform.position.y);
-                    player.GetComponent<Platformer>().HaveMoved = true;
-                    player.transform.position = Vector2.Lerp(player.transform.position, player.GetComponent<Platformer>().LerpDestination, player.GetComponent<Platformer>().lerpTime * Time.fixedDeltaTime);
+                    playerScript.LerpDestination = new Vector2(player.transform.position.x + playerScript.lerpDistance, playerScript.transform.position.y);
+                    playerScript.HaveMoved = true;
+                    player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                 }
             }
         }
     }
     
-    void movePlatVert()
+    void vertPlatBehavior()
     {
         for (int i = 0; i < movPlatformsVer.Length; i++)
         {
+            //Changes Platform Color
             movPlatformsVer[i].GetComponent<Renderer>().material.color = Color.cyan;
+
+            //Sets this behavior to occur every other beat
             if (beatCounter == beatPerMove)
             {
-                if (movPlatformsVer[i].GetComponent<BoxCollider2D>().IsTouching(player.GetComponent<BoxCollider2D>()))
+                if (movPlatformsVer[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
                 {
-                    if (movPlatformsVer[i].GetComponent<PlatMoverVertical>().moveForward)
+                    //Ensure the player is in the center of the square
+                    setPlayerPos(movPlatformsVer[i]);
+
+                    //Lerps the Player in the direction the platform is moving in when the platform moves
+                    if (movPlatformsVer[i].GetComponent<PlatMover>().moveForward)
                     {
-                        //player.transform.SetParent(movPlatformsVer[i].transform);
-                        player.GetComponent<Platformer>().LerpDestination = new Vector2(player.transform.position.x, player.transform.position.y + movPlatformsVer[i].GetComponent<PlatMoverVertical>().up);
-                        player.GetComponent<Platformer>().HaveMoved = true;
-                        player.transform.position = Vector2.Lerp(player.transform.position, player.GetComponent<Platformer>().LerpDestination, player.GetComponent<Platformer>().lerpTime * Time.fixedDeltaTime);
+                        playerScript.LerpDestination = new Vector2(player.transform.position.x, player.transform.position.y + movPlatformsVer[i].GetComponent<PlatMover>().up);
+                        playerScript.HaveMoved = true;
+                        player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                     }
                     else
                     {
-                        player.GetComponent<Platformer>().LerpDestination = new Vector2(player.transform.position.x, player.transform.position.y - movPlatformsVer[i].GetComponent<PlatMoverVertical>().up);
-                        player.GetComponent<Platformer>().HaveMoved = true;
-                        player.transform.position = Vector2.Lerp(player.transform.position, player.GetComponent<Platformer>().LerpDestination, player.GetComponent<Platformer>().lerpTime * Time.fixedDeltaTime);
+                        playerScript.LerpDestination = new Vector2(player.transform.position.x, player.transform.position.y - movPlatformsVer[i].GetComponent<PlatMover>().up);
+                        playerScript.HaveMoved = true;
+                        player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                     }
                 }
-                movPlatformsVer[i].GetComponent<PlatMoverVertical>().move();
+                //Lerps the Platform
+                movPlatformsVer[i].GetComponent<PlatMover>().moveVer();
             }
         }
     }
 
-    void movePlatHor()
+    void horPlatBehavior()
     {
         for (int i = 0; i < movPlatformsHor.Length; i++)
         {
+            //Changes Platform Color
             movPlatformsHor[i].GetComponent<Renderer>().material.color = Color.blue;
+
+            //Sets this behavior to occur every other beat
             if (beatCounter == beatPerMove)
             {
-                if (movPlatformsHor[i].GetComponent<BoxCollider2D>().IsTouching(player.GetComponent<BoxCollider2D>()))
+                if (movPlatformsHor[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
                 {
-                        //player.transform.SetParent(movPlatformsHor[i].transform);
-                        if (movPlatformsHor[i].GetComponent<PlatMoverHorizantal>().moveForward)
-                        {
-                            player.GetComponent<Platformer>().LerpDestination = new Vector2(player.transform.position.x + movPlatformsHor[i].GetComponent<PlatMoverHorizantal>().right, player.transform.position.y);
-                            player.GetComponent<Platformer>().HaveMoved = true;
-                            player.transform.position = Vector2.Lerp(player.transform.position, player.GetComponent<Platformer>().LerpDestination, player.GetComponent<Platformer>().lerpTime * Time.fixedDeltaTime);
-                        }
-                        else
-                        {
-                            player.GetComponent<Platformer>().LerpDestination = new Vector2(player.transform.position.x - movPlatformsHor[i].GetComponent<PlatMoverHorizantal>().right, player.transform.position.y);
-                            player.GetComponent<Platformer>().HaveMoved = true;
-                            player.transform.position = Vector2.Lerp(player.transform.position, player.GetComponent<Platformer>().LerpDestination, player.GetComponent<Platformer>().lerpTime * Time.fixedDeltaTime);
-                        }
+                    //Ensure the player is in the center of the square
+                    setPlayerPos(movPlatformsHor[i]);
+
+                    //Lerps the Player in the direction the platform is moving in when the platform moves
+                    if (movPlatformsHor[i].GetComponent<PlatMover>().moveForward)
+                    {
+                        playerScript.LerpDestination = new Vector2(player.transform.position.x + movPlatformsHor[i].GetComponent<PlatMover>().right, player.transform.position.y);
+                        playerScript.HaveMoved = true;
+                        player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                     }
-                movPlatformsHor[i].GetComponent<PlatMoverHorizantal>().move();
+                    else
+                    {
+                        playerScript.LerpDestination = new Vector2(player.transform.position.x - movPlatformsHor[i].GetComponent<PlatMover>().right, player.transform.position.y);
+                        playerScript.HaveMoved = true;
+                        player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
+                    }
+                }
+                //Lerps the Platform
+                movPlatformsHor[i].GetComponent<PlatMover>().moveHor();
             }
+        }
+    }
+
+    void setPlayerPos( GameObject platform)
+    {
+        //Sets the player position to be in the center and just above the platform they are currently touching
+        if (platform.GetComponent<BoxCollider2D>().IsTouching(playerCollider))
+        {
+            player.transform.position = new Vector2(platform.transform.position.x + 0.086f, platform.transform.position.y + 0.889f);
         }
     }
 }
