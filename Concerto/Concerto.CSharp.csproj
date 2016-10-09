@@ -75,8 +75,7 @@
     <Compile Include="Assets\Scripts\Enemies\ComboScript.cs" />
     <Compile Include="Assets\Scripts\Enemies\EnemyMan.cs" />
     <Compile Include="Assets\Scripts\Platforms\PlatManager.cs" />
-    <Compile Include="Assets\Scripts\Platforms\PlatMoverHorizantal.cs" />
-    <Compile Include="Assets\Scripts\Platforms\PlatMoverVertical.cs" />
+    <Compile Include="Assets\Scripts\Platforms\PlatMover.cs" />
     <Compile Include="Assets\Scripts\Player\Platformer.cs" />
     <Compile Include="Assets\Scripts\Testing\RoseInputScript.cs" />
   </ItemGroup>
