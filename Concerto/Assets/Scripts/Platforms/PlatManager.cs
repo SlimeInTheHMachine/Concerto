@@ -16,6 +16,10 @@ public class PlatManager : MonoBehaviour
     private GameObject[] conPlatformsRight;
     private Color[] platColors;
     public GameObject player;
+    BoxCollider2D playerCollider;
+    Platformer playerScript;
+    public Color color1;
+    public Color color2;
 
     GameObject beatManager;
     private double beatTime;
@@ -39,6 +43,10 @@ public class PlatManager : MonoBehaviour
             //If so (somehow), destroy this object.
             Destroy(gameObject);
 
+
+        playerCollider = player.GetComponent<BoxCollider2D>();
+        playerScript = player.GetComponent<Platformer>();
+
         //Get List of platforms
         platforms = GameObject.FindGameObjectsWithTag("Platform");
         platforms2 = GameObject.FindGameObjectsWithTag("Platform2");
@@ -55,14 +63,10 @@ public class PlatManager : MonoBehaviour
     void Start()
     {
         platColors = new Color[6];
-        platColors[0] = ConvertColor(255, 203, 244);
-        platColors[1] = ConvertColor(23, 127, 117);
-        //platColors[0] = ConvertColor(33, 182, 168);
-        //platColors[0] = ConvertColor(127, 23, 105);
-        //platColors[4] = ConvertColor(182, 149, 33);
-        //platColors[5] = ConvertColor(255, 244, 203);
+        platColors[0] = color1;
+        platColors[1] = color2;
 
-         beatManager = GameObject.Find("BeatManager");
+        beatManager = GameObject.Find("BeatManager");
         beatTime = beatManager.GetComponent<BeatMan>().BeatTime;
         beatCounter = 0;
         if (platforms != null)
@@ -91,8 +95,13 @@ public class PlatManager : MonoBehaviour
     }
     void changeColors()
     {
+        
         for (int i = 0; i < platforms.Length; i++)
         {
+            if(platforms[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
+            {
+                setPlayerPos(platforms[i]);
+            }
             if (platforms[i].GetComponent<Renderer>().material.color != platColors[1])
             { platforms[i].GetComponent<Renderer>().material.color = platColors[1]; }
             else if (platforms[i].GetComponent<Renderer>().material.color != platColors[0])
@@ -102,6 +111,10 @@ public class PlatManager : MonoBehaviour
         {
             for (int i = 0; i < platforms2.Length; i++)
             {
+                if (platforms2[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
+                {
+                    setPlayerPos(platforms2[i]);
+                }
                 if (platforms2[i].GetComponent<Renderer>().material.color != platColors[0])
                 { platforms2[i].GetComponent<Renderer>().material.color = platColors[0]; }
                 else if (platforms2[i].GetComponent<Renderer>().material.color != platColors[1])
@@ -115,6 +128,10 @@ public class PlatManager : MonoBehaviour
     {
         for (int i = 0; i < spikes.Length; i++)
         {
+            if (spikes[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
+            {
+                setPlayerPos(spikes[i]);
+            }
             spikes[i].GetComponent<Renderer>().material.color = Color.red;
         }
     }
@@ -124,7 +141,10 @@ public class PlatManager : MonoBehaviour
         color.a = 0.1f;
         for (int i = 0; i < fallThroughPlatforms.Length; i++)
         {
-            
+            if (fallThroughPlatforms[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
+            {
+                setPlayerPos(fallThroughPlatforms[i]);
+            }
             fallThroughPlatforms[i].GetComponent<Renderer>().material.color = color;
             
         }
@@ -146,8 +166,8 @@ public class PlatManager : MonoBehaviour
 //        {
 //            if (beatCounter == beatPerMove)
 //            {
-//                player.GetComponent<Platformer>().Grounded = false;
-//                player.GetComponent<Platformer>().CanFall = true;
+//                playerScript.Grounded = false;
+//                playerScript.CanFall = true;
 //            }
 //        }
 //    }
@@ -159,17 +179,14 @@ public class PlatManager : MonoBehaviour
         for (int i = 0; i < conPlatformsLeft.Length; i++)
         {
             conPlatformsLeft[i].GetComponent<Renderer>().material.color = Color.yellow;
-            if (conPlatformsLeft[i].GetComponent<BoxCollider2D>().IsTouching(player.GetComponent<BoxCollider2D>()))
+            if (conPlatformsLeft[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
             {
-                if (player.transform.position.x != conPlatformsLeft[i].transform.position.x)
+                setPlayerPos(conPlatformsLeft[i]);
+                if (playerScript.HaveMoved == false)
                 {
-                    player.transform.position = new Vector2(conPlatformsLeft[i].transform.position.x + 0.086f, player.transform.position.y);
-                }
-                if (player.GetComponent<Platformer>().HaveMoved == false)
-                {
-                    player.GetComponent<Platformer>().LerpDestination = new Vector2(player.transform.position.x - player.GetComponent<Platformer>().lerpDistance, player.GetComponent<Platformer>().transform.position.y);
-                    player.GetComponent<Platformer>().HaveMoved = true;
-                    player.transform.position = Vector2.Lerp(player.transform.position, player.GetComponent<Platformer>().LerpDestination, player.GetComponent<Platformer>().lerpTime * Time.fixedDeltaTime);
+                    playerScript.LerpDestination = new Vector2(player.transform.position.x - playerScript.lerpDistance, playerScript.transform.position.y);
+                    playerScript.HaveMoved = true;
+                    player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                 }
             }
         }
@@ -180,17 +197,14 @@ public class PlatManager : MonoBehaviour
         for (int i = 0; i < conPlatformsRight.Length; i++)
         {
             conPlatformsRight[i].GetComponent<Renderer>().material.color = Color.green;
-            if (conPlatformsRight[i].GetComponent<BoxCollider2D>().IsTouching(player.GetComponent<BoxCollider2D>()))
+            if (conPlatformsRight[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
             {
-                if (player.transform.position.x != conPlatformsRight[i].transform.position.x)
+                setPlayerPos(conPlatformsRight[i]);
+                if (playerScript.HaveMoved == false)
                 {
-                    player.transform.position = new Vector2(conPlatformsRight[i].transform.position.x + 0.086f, player.transform.position.y);
-                }
-                if (player.GetComponent<Platformer>().HaveMoved == false)
-                {
-                    player.GetComponent<Platformer>().LerpDestination = new Vector2(player.transform.position.x + player.GetComponent<Platformer>().lerpDistance, player.GetComponent<Platformer>().transform.position.y);
-                    player.GetComponent<Platformer>().HaveMoved = true;
-                    player.transform.position = Vector2.Lerp(player.transform.position, player.GetComponent<Platformer>().LerpDestination, player.GetComponent<Platformer>().lerpTime * Time.fixedDeltaTime);
+                    playerScript.LerpDestination = new Vector2(player.transform.position.x + playerScript.lerpDistance, playerScript.transform.position.y);
+                    playerScript.HaveMoved = true;
+                    player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                 }
             }
         }
@@ -203,20 +217,21 @@ public class PlatManager : MonoBehaviour
             movPlatformsVer[i].GetComponent<Renderer>().material.color = Color.cyan;
             if (beatCounter == beatPerMove)
             {
-                if (movPlatformsVer[i].GetComponent<BoxCollider2D>().IsTouching(player.GetComponent<BoxCollider2D>()))
+                if (movPlatformsVer[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
                 {
+                    setPlayerPos(movPlatformsVer[i]);
                     if (movPlatformsVer[i].GetComponent<PlatMoverVertical>().moveForward)
                     {
                         //player.transform.SetParent(movPlatformsVer[i].transform);
-                        player.GetComponent<Platformer>().LerpDestination = new Vector2(player.transform.position.x, player.transform.position.y + movPlatformsVer[i].GetComponent<PlatMoverVertical>().up);
-                        player.GetComponent<Platformer>().HaveMoved = true;
-                        player.transform.position = Vector2.Lerp(player.transform.position, player.GetComponent<Platformer>().LerpDestination, player.GetComponent<Platformer>().lerpTime * Time.fixedDeltaTime);
+                        playerScript.LerpDestination = new Vector2(player.transform.position.x, player.transform.position.y + movPlatformsVer[i].GetComponent<PlatMoverVertical>().up);
+                        playerScript.HaveMoved = true;
+                        player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                     }
                     else
                     {
-                        player.GetComponent<Platformer>().LerpDestination = new Vector2(player.transform.position.x, player.transform.position.y - movPlatformsVer[i].GetComponent<PlatMoverVertical>().up);
-                        player.GetComponent<Platformer>().HaveMoved = true;
-                        player.transform.position = Vector2.Lerp(player.transform.position, player.GetComponent<Platformer>().LerpDestination, player.GetComponent<Platformer>().lerpTime * Time.fixedDeltaTime);
+                        playerScript.LerpDestination = new Vector2(player.transform.position.x, player.transform.position.y - movPlatformsVer[i].GetComponent<PlatMoverVertical>().up);
+                        playerScript.HaveMoved = true;
+                        player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                     }
                 }
                 movPlatformsVer[i].GetComponent<PlatMoverVertical>().move();
@@ -231,24 +246,32 @@ public class PlatManager : MonoBehaviour
             movPlatformsHor[i].GetComponent<Renderer>().material.color = Color.blue;
             if (beatCounter == beatPerMove)
             {
-                if (movPlatformsHor[i].GetComponent<BoxCollider2D>().IsTouching(player.GetComponent<BoxCollider2D>()))
+                if (movPlatformsHor[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
                 {
-                        //player.transform.SetParent(movPlatformsHor[i].transform);
-                        if (movPlatformsHor[i].GetComponent<PlatMoverHorizantal>().moveForward)
-                        {
-                            player.GetComponent<Platformer>().LerpDestination = new Vector2(player.transform.position.x + movPlatformsHor[i].GetComponent<PlatMoverHorizantal>().right, player.transform.position.y);
-                            player.GetComponent<Platformer>().HaveMoved = true;
-                            player.transform.position = Vector2.Lerp(player.transform.position, player.GetComponent<Platformer>().LerpDestination, player.GetComponent<Platformer>().lerpTime * Time.fixedDeltaTime);
-                        }
-                        else
-                        {
-                            player.GetComponent<Platformer>().LerpDestination = new Vector2(player.transform.position.x - movPlatformsHor[i].GetComponent<PlatMoverHorizantal>().right, player.transform.position.y);
-                            player.GetComponent<Platformer>().HaveMoved = true;
-                            player.transform.position = Vector2.Lerp(player.transform.position, player.GetComponent<Platformer>().LerpDestination, player.GetComponent<Platformer>().lerpTime * Time.fixedDeltaTime);
-                        }
+                    setPlayerPos(movPlatformsHor[i]);
+                    if (movPlatformsHor[i].GetComponent<PlatMoverHorizantal>().moveForward)
+                    {
+                        playerScript.LerpDestination = new Vector2(player.transform.position.x + movPlatformsHor[i].GetComponent<PlatMoverHorizantal>().right, player.transform.position.y);
+                        playerScript.HaveMoved = true;
+                        player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
+                    }
+                    else
+                    {
+                        playerScript.LerpDestination = new Vector2(player.transform.position.x - movPlatformsHor[i].GetComponent<PlatMoverHorizantal>().right, player.transform.position.y);
+                        playerScript.HaveMoved = true;
+                        player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
+                    }
                     }
                 movPlatformsHor[i].GetComponent<PlatMoverHorizantal>().move();
             }
+        }
+    }
+
+    void setPlayerPos( GameObject platform)
+    {
+        if (platform.GetComponent<BoxCollider2D>().IsTouching(playerCollider))
+        {
+            player.transform.position = new Vector2(platform.transform.position.x + 0.086f, platform.transform.position.y + 0.889f);
         }
     }
 }
