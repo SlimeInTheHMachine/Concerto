@@ -18,9 +18,18 @@ public class ComboScript : MonoBehaviour {
     private float shakeAmount = 0.1f;
     private float decreaseFactor = 0.5f;
     private Vector2 OGPos;
-
+    private LayerMask enemyLayerMask;
+    private Rect box;
+    private bool playerInRange = false;
+    private int attackCounter;
+    private GameObject playerObject;
+    private Vector2 lerpDestination;
     // Use this for initialization
     void Start () {
+        attackCounter = 0;
+        BoxCollider2D colliderBox = GetComponent<BoxCollider2D>();
+        box = new Rect(colliderBox.bounds.min.x, colliderBox.bounds.min.y, colliderBox.bounds.size.x, colliderBox.bounds.size.y);
+        enemyLayerMask = LayerMask.GetMask("Player");
         //GameControl = GameObject.FindGameObjectWithTag("GameController");
         //Puts in three standard buttons
         AttackInputWrapper btnHolder1 = new AttackInputWrapper(button1);
@@ -68,9 +77,45 @@ public class ComboScript : MonoBehaviour {
         }
         
     }
-    // Update is called once per frame
-    void Update ()
+
+    void FixedUpdate()
     {
+        
+        RaycastHit2D rayHit = Physics2D.Raycast(new Vector2(transform.position.x - box.size.x / 2, transform.position.y - box.size.y / 4), -Vector2.right, 3, enemyLayerMask.value);
+        Debug.DrawRay(new Vector2(transform.position.x - box.size.x / 2, transform.position.y - box.size.y / 4), -Vector2.right, Color.red);
+        if (rayHit.collider != null)
+        {
+            playerInRange = true;
+            //I see no problem with this :^) -Rose
+            playerObject = rayHit.collider.gameObject;
+        }
+        else
+        {
+            playerInRange = false;
+        }
+    }
+    /// <summary>
+    /// Has a number of windups equal to the max number of spots + 1
+    /// </summary>
+    void Attack()
+    {
+        if(attackCounter == 5)
+        {
+            Debug.Log("Attacking");
+            EnemyClash();
+            attackCounter = 0;
+        }
+        else
+        {
+            Debug.Log("Getting Ready to Attack");
+            ++attackCounter;
+        }
+    }
+    // Update is called once per frame
+    public void EnemyUpdate ()
+    {
+        if (playerInRange)
+            Attack();
         //Movement
         if (shake > 0)
         {
@@ -85,6 +130,18 @@ public class ComboScript : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Called by the enemy to initate a clash if the player misses enough beats
+    /// </summary>
+    public void EnemyClash()
+    {
+        playerObject.GetComponent<Platformer>().LerpDestination= new Vector2(playerObject.transform.position.x - 2.5f, playerObject.transform.position.y);
+        ////normal of this to Enemy
+        //if (Vector2.Dot(transform.position, currentEnemy.GetComponent<Rigidbody2D>().transform.position) < 0)
+        //lerpDestination = new Vector2(transform.position.x - 2.5f, transform.position.y);
+        //else
+        //    lerpDestination = new Vector2(transform.position.x + lerpDistance, transform.position.y);
+    }
     public bool checkInput(attackInputs input)
     {
         //Reset on mess up

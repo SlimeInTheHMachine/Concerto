@@ -8,6 +8,12 @@ TagManager:
   - FallthroughPlatform
   - Checkpoint
   - Spikes
+  - Platform2
+  - ConveyorLeft
+  - MovingHorizantal
+  - MovingVertical
+  - ConveyorRight
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -19,7 +25,7 @@ TagManager:
   - 
   - Platform
   - Enemy
-  - 
+  - Player
   - 
   - 
   - 
