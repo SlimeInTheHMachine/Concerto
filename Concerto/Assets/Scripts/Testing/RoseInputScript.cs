@@ -60,7 +60,7 @@ public class RoseInputScript : MonoBehaviour {
             if (attackInput == attackInputs.None)
                 attackInput = attackInputs.Garbage;
         }
-        if (currentEnemy.GetComponent<ComboScript>().checkInput(attackInput))
+        if (currentEnemy.GetComponent<ComboScript>().CheckInput(attackInput))
         {
             //clash code here
             //Clash();

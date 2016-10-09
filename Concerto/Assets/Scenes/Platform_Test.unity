@@ -2591,11 +2591,10 @@ GameObject:
   m_Component:
   - 4: {fileID: 768596485}
   - 212: {fileID: 768596484}
-  - 50: {fileID: 768596483}
   - 61: {fileID: 768596482}
   - 114: {fileID: 768596481}
   m_Layer: 0
-  m_Name: Ricky the Brick (1)
+  m_Name: Ricky the Brick
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2614,12 +2613,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aerialMove: 0
   tryingToFall: 0
-  enemyRaycastLength: 1.60000002
-  floorCastLength: 2
+  enemyRaycastLength: 3.5
+  moveCastLength: 2
   lerpDistance: 2.5
   lerpTime: 18
   score: 0
-  checkpointPos: {x: 0, y: 0}
 --- !u!61 &768596482
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2633,22 +2631,6 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: .140000001, y: .140000001}
---- !u!50 &768596483
-Rigidbody2D:
-  serializedVersion: 2
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 768596479}
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: .0500000007
-  m_GravityScale: 2
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
 --- !u!212 &768596484
 SpriteRenderer:
   m_ObjectHideFlags: 0
