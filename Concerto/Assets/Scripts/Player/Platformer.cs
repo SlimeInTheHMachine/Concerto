@@ -116,9 +116,10 @@ public class Platformer : MonoBehaviour {
             grounded = false;
             canFall = true;
         }
-        
-        //Update next location to move to.
-        transform.position = Vector2.Lerp(transform.position, lerpDestination, lerpTime * Time.fixedDeltaTime);
+
+        //Update next location to move to //Supersmooth lerp t = (lerpTime * Time.fixedDeltaTime),  (lerp = t*t*t * (t * (6f*t - 15f) + 10f))
+        float lerp = ((lerpTime * Time.fixedDeltaTime) * (lerpTime * Time.fixedDeltaTime) * (lerpTime * Time.fixedDeltaTime)) * ((lerpTime * Time.fixedDeltaTime) * (6f * (lerpTime * Time.fixedDeltaTime) - 15f) + 10f);
+        transform.position = Vector2.Lerp(transform.position, lerpDestination, lerp);
         //move if we're not there
         if(transform.position == new Vector3(lerpDestination.x, lerpDestination.y, 0f))
         {

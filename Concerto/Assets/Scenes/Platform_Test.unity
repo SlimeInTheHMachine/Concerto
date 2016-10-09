@@ -480,6 +480,10 @@ Prefab:
       propertyPath: m_LocalScale.x
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 177092, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
   m_IsPrefabParent: 0
@@ -1282,8 +1286,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f902da97c0fe2a479f022f9a5906676, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveForward: 0
-  right: -2
 --- !u!61 &331806559
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2246,8 +2248,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 768596479}
-  color1: {r: .528708935, g: .731266201, b: .933823526, a: 0}
-  color2: {r: .977941155, g: .19415009, b: .859020948, a: 0}
+  color1: {r: 0, g: 0, b: 0, a: 0}
+  color2: {r: 0, g: 0, b: 0, a: 0}
   beatCounter: 0
   beatPerMove: 1
 --- !u!4 &639698392
@@ -2448,6 +2450,10 @@ Prefab:
     - target: {fileID: 415246, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
       propertyPath: m_LocalScale.x
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 177092, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
@@ -2790,6 +2796,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 177092, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
   m_IsPrefabParent: 0
@@ -2909,6 +2919,10 @@ Prefab:
     - target: {fileID: 415246, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
       propertyPath: m_LocalScale.x
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 177092, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
@@ -3732,10 +3746,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1124406145}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f902da97c0fe2a479f022f9a5906676, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a5507870744f2645a52dabecc7c0edf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   moveForward: 0
+  up: -2.5
   right: -2.5
 --- !u!61 &1124406147
 BoxCollider2D:
@@ -3857,11 +3872,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1183233180}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 431dedb00c08b0d4796331645ddf5329, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a5507870744f2645a52dabecc7c0edf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   moveForward: 0
   up: 5
+  right: 5
 --- !u!61 &1183233182
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4996,11 +5012,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1510941648}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 431dedb00c08b0d4796331645ddf5329, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a5507870744f2645a52dabecc7c0edf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   moveForward: 0
   up: -2.5
+  right: -2.5
 --- !u!61 &1510941650
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5100,6 +5117,10 @@ Prefab:
     - target: {fileID: 415246, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
       propertyPath: m_LocalScale.x
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 177092, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
@@ -6879,6 +6900,10 @@ Prefab:
     - target: {fileID: 415246, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
       propertyPath: m_LocalScale.x
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 177092, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
