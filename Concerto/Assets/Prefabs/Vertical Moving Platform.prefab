@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 422562}
   - 212: {fileID: 21226160}
   - 61: {fileID: 6141298}
-  - 114: {fileID: 11438296}
+  - 114: {fileID: 11410876}
   m_Layer: 8
   m_Name: Vertical Moving Platform
   m_TagString: MovingVertical
@@ -43,7 +43,7 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: 2.4000001, y: 2.4000001}
---- !u!114 &11438296
+--- !u!114 &11410876
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -51,11 +51,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 156094}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 431dedb00c08b0d4796331645ddf5329, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a5507870744f2645a52dabecc7c0edf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   moveForward: 0
-  up: 5
+  up: 2.5
+  right: 0
 --- !u!212 &21226160
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -95,6 +96,10 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
+    - target: {fileID: 0}
+      propertyPath: up
+      value: 2.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 156094}

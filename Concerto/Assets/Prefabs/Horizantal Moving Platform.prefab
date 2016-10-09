@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 431888}
   - 212: {fileID: 21271896}
   - 61: {fileID: 6140324}
-  - 114: {fileID: 11419868}
+  - 114: {fileID: 11421022}
   m_Layer: 8
   m_Name: Horizantal Moving Platform
   m_TagString: MovingHorizantal
@@ -43,7 +43,7 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: 2.4000001, y: 2.4000001}
---- !u!114 &11419868
+--- !u!114 &11421022
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -51,11 +51,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 151346}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f902da97c0fe2a479f022f9a5906676, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a5507870744f2645a52dabecc7c0edf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveForward: 1
-  right: -2.5
+  moveForward: 0
+  up: 0
+  right: 2.5
 --- !u!212 &21271896
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -83,7 +84,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 717548d5cfbc36147a0d99950f209684, type: 3}
-  m_Color: {r: .752941251, g: .752941251, b: .752941251, a: 1}
+  m_Color: {r: .760784388, g: .760784388, b: .760784388, a: 1}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -95,6 +96,22 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
+    - target: {fileID: 0}
+      propertyPath: right
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Color.r
+      value: .760784388
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Color.g
+      value: .760784388
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Color.b
+      value: .760784388
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 151346}
