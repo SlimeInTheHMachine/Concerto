@@ -100,8 +100,6 @@ public class Platformer : MonoBehaviour {
             Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.left * enemyRaycastLength, Color.blue);
         }
 
-
-
             //Physics related stuff
             //Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + box.size.y / 2), Vector2.down * moveCastLength, Color.red);
             if (rayDown.collider != null)
@@ -110,6 +108,8 @@ public class Platformer : MonoBehaviour {
             aerialMove = true;
             if (rayDown.collider.tag == "FallthroughPlatform")
                 canFall = true;
+            else
+                canFall = false;
         }
         else
         {
