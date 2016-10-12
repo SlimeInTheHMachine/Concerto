@@ -323,11 +323,10 @@ public class Platformer : MonoBehaviour {
     /// </summary>
     void Clash()
     {
-        //normal of this to Enemy
-        if(Vector2.Dot(transform.position, currentEnemy.GetComponent<Rigidbody2D>().transform.position) < 0)
-            lerpDestination = new Vector2(transform.position.x - lerpDistance, transform.position.y );
-        else
+        if (flipped)
             lerpDestination = new Vector2(transform.position.x + lerpDistance, transform.position.y);
+        else
+            lerpDestination = new Vector2(transform.position.x - lerpDistance, transform.position.y);
     }
 
     /// <summary>
