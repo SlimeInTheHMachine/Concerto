@@ -204,7 +204,7 @@ public class PlatManager : MonoBehaviour
                 {
                     playerScript.LerpDestination = new Vector2(player.transform.position.x - playerScript.lerpDistance, playerScript.transform.position.y);
                     playerScript.HaveMoved = true;
-                    player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
+                    //player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                 }
             }
         }
@@ -226,7 +226,7 @@ public class PlatManager : MonoBehaviour
                 {
                     playerScript.LerpDestination = new Vector2(player.transform.position.x + playerScript.lerpDistance, playerScript.transform.position.y);
                     playerScript.HaveMoved = true;
-                    player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
+                   // player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                 }
             }
         }
@@ -252,13 +252,13 @@ public class PlatManager : MonoBehaviour
                     {
                         playerScript.LerpDestination = new Vector2(player.transform.position.x, player.transform.position.y + movPlatformsVer[i].GetComponent<PlatMover>().up);
                         playerScript.HaveMoved = true;
-                        player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
+                      //  player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                     }
                     else
                     {
                         playerScript.LerpDestination = new Vector2(player.transform.position.x, player.transform.position.y - movPlatformsVer[i].GetComponent<PlatMover>().up);
                         playerScript.HaveMoved = true;
-                        player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
+                       // player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                     }
                 }
                 //Lerps the Platform
@@ -287,13 +287,13 @@ public class PlatManager : MonoBehaviour
                     {
                         playerScript.LerpDestination = new Vector2(player.transform.position.x + movPlatformsHor[i].GetComponent<PlatMover>().right, player.transform.position.y);
                         playerScript.HaveMoved = true;
-                        player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
+                       // player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                     }
                     else
                     {
                         playerScript.LerpDestination = new Vector2(player.transform.position.x - movPlatformsHor[i].GetComponent<PlatMover>().right, player.transform.position.y);
                         playerScript.HaveMoved = true;
-                        player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
+                       // player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                     }
                 }
                 //Lerps the Platform
@@ -304,10 +304,11 @@ public class PlatManager : MonoBehaviour
 
     void setPlayerPos( GameObject platform)
     {
-        //Sets the player position to be in the center and just above the platform they are currently touching
+        //Sets the player Lerpposition to be in the center and just above the platform they are currently touching
+        //Issue that makes it so you cant move before on beat due to platform currently having priority
         if (platform.GetComponent<BoxCollider2D>().IsTouching(playerCollider))
         {
-            player.transform.position = new Vector2(platform.transform.position.x + 0.086f, platform.transform.position.y + 0.889f);
+            playerScript.LerpDestination = new Vector2(platform.transform.position.x, platform.transform.position.y + player.GetComponent<BoxCollider2D>().size.y/2 + platform.GetComponent<BoxCollider2D>().bounds.size.y/2);
         }
     }
 }

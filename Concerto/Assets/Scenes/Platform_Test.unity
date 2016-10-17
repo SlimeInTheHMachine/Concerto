@@ -2520,6 +2520,7 @@ GameObject:
   - 61: {fileID: 768596482}
   - 114: {fileID: 768596481}
   - 50: {fileID: 768596480}
+  - 95: {fileID: 768596483}
   m_Layer: 0
   m_Name: Ricky the Brick
   m_TagString: Player
@@ -2542,7 +2543,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 7
 --- !u!114 &768596481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2573,7 +2574,24 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: .140000001, y: .140000001}
+  m_Size: {x: 1, y: 1.29999995}
+--- !u!95 &768596483
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 768596479}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fe27f7ad9d94efb40b898167c580fc8e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!212 &768596484
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2600,7 +2618,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 20df26f8e29c2e84598de4a40be41d13, type: 3}
   m_Color: {r: .509000003, g: .172000006, b: .0795847699, a: 1}
 --- !u!4 &768596485
 Transform:
@@ -2609,8 +2627,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 768596479}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.58599997, y: -1.61099994, z: 0}
-  m_LocalScale: {x: 6.1560111, y: 6.15601969, z: 6.15601969}
+  m_LocalPosition: {x: 1.58599997, y: -1.37, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 12
@@ -5210,7 +5228,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onTime: 0
   marginOfError: .150000006
-  BeatTime: .5
+  beatTime: 2
 --- !u!4 &1544343289
 Transform:
   m_ObjectHideFlags: 0
@@ -5786,6 +5804,66 @@ Transform:
   m_LocalScale: {x: 1, y: .394694448, z: .394694418}
   m_Children: []
   m_Father: {fileID: 2089093042}
+  m_RootOrder: 14
+--- !u!1 &1676022727
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1676022729}
+  - 108: {fileID: 1676022728}
+  m_Layer: 0
+  m_Name: Directional light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!108 &1676022728
+Light:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1676022727}
+  m_Enabled: 1
+  serializedVersion: 6
+  m_Type: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 8
+  m_Range: 10
+  m_SpotAngle: 30
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_Strength: 1
+    m_Bias: .0500000007
+    m_NormalBias: .400000006
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_Lightmapping: 4
+  m_BounceIntensity: 1
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+  m_AreaSize: {x: 1, y: 1}
+--- !u!4 &1676022729
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1676022727}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.17999983, y: 1.38999999, z: -12.3900003}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
   m_RootOrder: 14
 --- !u!1 &1688411639
 GameObject:

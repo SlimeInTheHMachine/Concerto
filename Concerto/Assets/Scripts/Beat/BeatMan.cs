@@ -8,7 +8,7 @@ public class BeatMan : MonoBehaviour
     //Keeps a running track of time passing
     private float timeCounter;
     //the time in seconds for a beat.
-    public double BeatTime;
+    public double beatTime;
 
     private bool started, hitBeat;
 	
@@ -19,6 +19,11 @@ public class BeatMan : MonoBehaviour
 	{
 		get { return timeCounter;}
 	}
+
+    public double BeatTime
+    {
+        get { return beatTime; }
+    }
 	
 	//function to call on the beat
 	public delegate void BeatFunction();
@@ -58,23 +63,14 @@ public class BeatMan : MonoBehaviour
 		//DontDestroyOnLoad(gameObject);
 	}
 
-	// Use this for initialization
-	void Start ()
-	{
-        //Add the beatTimer function to the onBeat event
-        startBeat += beatTimer1;
-        onBeat += beatTimer2;
-        endBeat += beatTimer3;
-    }
-
 	void FixedUpdate()
 	{
 		//Keep track of more time passing
 		timeCounter += Time.fixedDeltaTime;
-        //Debug.Log(timeCounter);
+        Debug.Log(timeCounter);
 
         //Beginning of Beat - Margin
-        if (!started && timeCounter >= (float)BeatTime - marginOfError && timeCounter < (float)BeatTime)
+        if (!started && timeCounter >= (float)beatTime - marginOfError && timeCounter < (float)beatTime)
         {
             onTime = true;
             started = true;
@@ -82,38 +78,21 @@ public class BeatMan : MonoBehaviour
         }
 
         //Actual Beat
-        if (!hitBeat && timeCounter >= (float)BeatTime && timeCounter < (float)BeatTime + marginOfError)
+        if (!hitBeat && timeCounter >= (float)beatTime && timeCounter < (float)beatTime + marginOfError)
 		{
 			onBeat();
             hitBeat = true;
 		}
 
         //End of Beat + Margin
-        if (timeCounter >= (float)BeatTime + marginOfError )
+        if (timeCounter >= (float)beatTime + marginOfError )
         {
-            timeCounter -= (float)BeatTime + marginOfError;
+            Debug.Log(timeCounter);
+            timeCounter = 0;
             endBeat();
             onTime = false;
             started = false;
             hitBeat = false;
         }
-    }
-
-    private void beatTimer1()
-    {
-        //if (onTime)
-        //  Debug.Log("Start Beat at " + Time.fixedTime);
-    }
-
-    private void beatTimer2()
-    {
-        //if(onTime)
-        //   Debug.Log("Beat Plays at " + Time.fixedTime);
-    }
-
-    private void beatTimer3()
-    {
-        //if (onTime)
-        //   Debug.Log("End Beat at " + Time.fixedTime);
     }
 }

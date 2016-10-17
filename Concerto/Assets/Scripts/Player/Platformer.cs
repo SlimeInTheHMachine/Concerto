@@ -61,6 +61,12 @@ public class Platformer : MonoBehaviour {
         set { canFall = value; }
     }
 
+    //Called before all start functions
+    void Awake()
+    {
+
+    }
+
     // Use this for initialization
     void Start () {
         //Layermask for platforms, used for raycasting
@@ -77,10 +83,20 @@ public class Platformer : MonoBehaviour {
         startPos = transform.position;
         checkpointPos = startPos;
         mashingMove = 0;
+
+        //Animation Nonsense
+        //6 Frame Anim at 12 Frame per sec
+        //(6 frame / beatTime) / 12 = X frames in Beattime 
+        float firstStep = (6.0f / (float)BeatMan.instance.BeatTime);
+        float secondStep = firstStep / 12.0f;
+        Debug.Log(secondStep);
+        GetComponent<Animator>().SetFloat("SpeedMultiplier", secondStep);
+
     }
 
     void FixedUpdate()
     {
+
         //Raycasts
         rayUp = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.up, moveCastLength, platformLayerMask.value);
         Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.up * moveCastLength, Color.blue);
