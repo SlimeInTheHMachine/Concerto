@@ -56,6 +56,8 @@ public class PlatManager : MonoBehaviour
         spikes = GameObject.FindGameObjectsWithTag("Spikes");
         conPlatformsLeft = GameObject.FindGameObjectsWithTag("ConveyorLeft");
         conPlatformsRight = GameObject.FindGameObjectsWithTag("ConveyorRight");
+
+       
     }
 
     // Use this for initialization

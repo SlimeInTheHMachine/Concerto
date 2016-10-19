@@ -2520,7 +2520,7 @@ GameObject:
   - 61: {fileID: 768596482}
   - 114: {fileID: 768596481}
   - 50: {fileID: 768596480}
-  - 95: {fileID: 768596483}
+  - 114: {fileID: 768596483}
   m_Layer: 0
   m_Name: Ricky the Brick
   m_TagString: Player
@@ -2575,23 +2575,28 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: 1, y: 1.29999995}
---- !u!95 &768596483
-Animator:
-  serializedVersion: 3
+--- !u!114 &768596483
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 768596479}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: fe27f7ad9d94efb40b898167c580fc8e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a38724f5115a90143adf5dc8086c21b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animations:
+  - name: Idle
+    frames:
+    - {fileID: 21300006, guid: 20df26f8e29c2e84598de4a40be41d13, type: 3}
+    - {fileID: 21300002, guid: 20df26f8e29c2e84598de4a40be41d13, type: 3}
+    - {fileID: 21300000, guid: 20df26f8e29c2e84598de4a40be41d13, type: 3}
+    - {fileID: 21300000, guid: 20df26f8e29c2e84598de4a40be41d13, type: 3}
+    - {fileID: 21300002, guid: 20df26f8e29c2e84598de4a40be41d13, type: 3}
+    framesPerSec: 2.5
+    loop: 1
+  currentFrame: 0
 --- !u!212 &768596484
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5227,7 +5232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onTime: 0
-  marginOfError: .150000006
+  marginOfError: .00999999978
   beatTime: 2
 --- !u!4 &1544343289
 Transform:
