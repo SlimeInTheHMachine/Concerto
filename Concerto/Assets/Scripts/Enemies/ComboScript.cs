@@ -23,7 +23,12 @@ public class ComboScript : MonoBehaviour {
     private bool playerInRange = false;
     private int attackCounter;
     private GameObject playerObject;
+    public float lerpDistance;
     private Vector2 lerpDestination;
+    public float lerpTime;
+
+    int moveCounter = 0; //2 beats of nothing
+    bool lastMoveLeft = false;
     // Use this for initialization
     void Start () {
         attackCounter = 0;
@@ -50,6 +55,7 @@ public class ComboScript : MonoBehaviour {
         OGPos = transform.position;
         //Per enemy? //NOOOOOOOOOOOOO //Enemy Manager
         //BeatManager.onBeat += InputCheck;
+        lerpDestination = this.transform.position;
     }
 
     void ResetQueue()
@@ -93,6 +99,13 @@ public class ComboScript : MonoBehaviour {
         {
             playerInRange = false;
         }
+
+
+        transform.position = Vector2.Lerp(transform.position, lerpDestination, lerpTime * Time.fixedDeltaTime);
+        if (transform.position == new Vector3(lerpDestination.x, lerpDestination.y, 0f))
+        {
+            lerpDestination = transform.position;
+        }
     }
     /// <summary>
     /// Has a number of windups equal to the max number of spots + 1
@@ -111,12 +124,41 @@ public class ComboScript : MonoBehaviour {
             ++attackCounter;
         }
     }
+
+    /// <summary>
+    /// Moves the enemy back and forth 1 square for now
+    /// Proof of concept?
+    /// </summary>
+    void Move()
+    {
+        if (lastMoveLeft) //has to move right
+        {
+            lerpDestination = new Vector2(transform.position.x + lerpDistance, transform.position.y);
+            lastMoveLeft = false;
+        }else
+        {
+            lerpDestination = new Vector2(transform.position.x - lerpDistance, transform.position.y);
+            lastMoveLeft = true;
+        }
+        moveCounter = 0;
+    }
     // Update is called once per frame
     public void EnemyUpdate ()
     {
         if (playerInRange)
             Attack();
-        //Movement
+        else
+        {
+            //Movement
+            if(moveCounter >= 2)
+            {
+                Move();
+            }else
+            {
+                moveCounter++;
+            }
+        }
+
         if (shake > 0)
         {
             Vector2 shakeOffset = UnityEngine.Random.insideUnitCircle * shakeAmount;
@@ -126,7 +168,7 @@ public class ComboScript : MonoBehaviour {
         else
         {
             shake = 0.0f;
-            transform.position = OGPos;
+           //-* transform.position = OGPos;
         }
     }
 
