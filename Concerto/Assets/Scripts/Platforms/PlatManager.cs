@@ -8,12 +8,11 @@ public class PlatManager : MonoBehaviour
     private GameObject[] platforms2;
     private GameObject[] movPlatformsVer;
     private GameObject[] movPlatformsHor;
-    //private GameObject[] trapPlatforms;
     private GameObject[] spikes;
     private GameObject[] conPlatformsLeft;
     private GameObject[] fallThroughPlatforms;
     private GameObject[] conPlatformsRight;
-    private Color[] platColors;
+
     public GameObject player;
     BoxCollider2D playerCollider;
     Platformer playerScript;
@@ -51,7 +50,6 @@ public class PlatManager : MonoBehaviour
         platforms2 = GameObject.FindGameObjectsWithTag("Platform2");
         movPlatformsVer = GameObject.FindGameObjectsWithTag("MovingVertical");
         movPlatformsHor = GameObject.FindGameObjectsWithTag("MovingHorizantal");
-        //trapPlatforms = GameObject.FindGameObjectsWithTag("TrapDoor");
         fallThroughPlatforms = GameObject.FindGameObjectsWithTag("FallthroughPlatform");
         spikes = GameObject.FindGameObjectsWithTag("Spikes");
         conPlatformsLeft = GameObject.FindGameObjectsWithTag("ConveyorLeft");
@@ -63,10 +61,6 @@ public class PlatManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        platColors = new Color[6];
-        platColors[0] = ConvertColor(255, 203, 244);
-        platColors[1] = ConvertColor(23, 127, 117);
-
         beatManager = GameObject.Find("BeatManager");
         beatTime = beatManager.GetComponent<BeatMan>().BeatTime;
         beatCounter = 0;
@@ -90,13 +84,6 @@ public class PlatManager : MonoBehaviour
 
     }
 
-     //Update is called once per frame
-    void Update()
-    {
-        //Call the update of every platform
-
-    }
-
     // Changes the colors of the platforms
     void platformBehavior()
     {
@@ -109,10 +96,10 @@ public class PlatManager : MonoBehaviour
                 setPlayerPos(platforms[i]);
             }
             //Alternates the color between two possiblities
-            if (platforms[i].GetComponent<Renderer>().material.color != platColors[1])
-            { platforms[i].GetComponent<Renderer>().material.color = platColors[1]; }
-            else if (platforms[i].GetComponent<Renderer>().material.color != platColors[0])
-            { platforms[i].GetComponent<Renderer>().material.color = platColors[0];}
+            if (platforms[i].GetComponent<SpriteRenderer>().color != color1)
+            { platforms[i].GetComponent<SpriteRenderer>().color = color1; }
+            else if (platforms[i].GetComponent<SpriteRenderer>().color != color2)
+            { platforms[i].GetComponent<SpriteRenderer>().color = color2;}
         }
 
         //Checks to see whether a second type of normal platform exists
@@ -127,10 +114,10 @@ public class PlatManager : MonoBehaviour
                     setPlayerPos(platforms2[i]);
                 }
                 //Alternates the color between two possiblities
-                if (platforms2[i].GetComponent<Renderer>().material.color != platColors[0])
-                { platforms2[i].GetComponent<Renderer>().material.color = platColors[0]; }
-                else if (platforms2[i].GetComponent<Renderer>().material.color != platColors[1])
-                { platforms2[i].GetComponent<Renderer>().material.color = platColors[1]; }
+                if (platforms[i].GetComponent<SpriteRenderer>().color != color1)
+                { platforms[i].GetComponent<SpriteRenderer>().color = color1; }
+                else if (platforms[i].GetComponent<SpriteRenderer>().color != color2)
+                { platforms[i].GetComponent<SpriteRenderer>().color = color2; }
             }
         }
     }
@@ -175,20 +162,6 @@ public class PlatManager : MonoBehaviour
     {
         return new Color(r/255.0f, g/255.0f, b/255.0f);
     }
-
-//void openTrap()
-//    {
-//        for (int i = 0; i < trapPlatforms.Length; i++)
-//        {
-//            if (beatCounter == beatPerMove)
-//            {
-//                playerScript.Grounded = false;
-//                playerScript.CanFall = true;
-//            }
-//        }
-//    }
-
-
 
     void leftConveyorBehavior()
     {
