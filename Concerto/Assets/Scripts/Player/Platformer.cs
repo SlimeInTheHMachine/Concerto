@@ -127,9 +127,9 @@ public class Platformer : MonoBehaviour {
         //Update next location to move to //Supersmooth lerp t = (lerpTime * Time.fixedDeltaTime),  (lerp = t*t*t * (t * (6f*t - 15f) + 10f))
         float lerp = ((lerpTime * Time.fixedDeltaTime) * (lerpTime * Time.fixedDeltaTime) * (lerpTime * Time.fixedDeltaTime)) * ((lerpTime * Time.fixedDeltaTime) * ((6f * (lerpTime * Time.fixedDeltaTime)) - 15f) + 10f);
         //move if we're not there
-        if(transform.position != new Vector3(lerpDestination.x, lerpDestination.y, transform.position.z))
+        if (transform.position != new Vector3(lerpDestination.x, lerpDestination.y, transform.position.z))
         {
-            transform.position = Vector2.Lerp(lerpDestination, transform.position, lerp);
+            transform.position = Vector2.Lerp(transform.position, lerpDestination, lerp);
         }
     }
 
@@ -253,6 +253,8 @@ public class Platformer : MonoBehaviour {
                 currentEnemy = enemyRayHit.transform.gameObject.GetComponent<ComboScript>();
                 CombatInput();
         }
+
+        
     }
 
     /// <summary>

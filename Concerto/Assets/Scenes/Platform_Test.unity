@@ -2561,7 +2561,7 @@ MonoBehaviour:
   enemyRaycastLength: 3.5
   moveCastLength: 2
   lerpDistance: 2.5
-  lerpTime: 1000
+  lerpTime: 18
   score: 0
   lerpDestination: {x: 0, y: 0}
 --- !u!61 &768596482
@@ -5332,13 +5332,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onTime: 0
-  timeBetweenBeats: 2
-  inputMarginOfError: .29999999999999999
+  timeBetweenBeats: 1
+  inputMarginOfError: 0
+  maxInputMarginOfError: .20000000000000001
+  minInputMarginOfError: .10000000000000001
   nextBeat: 0
-  timeElapsed: 0
-  accurateTimeElapsed: 0
-  averagedTime: 0
-  acceptableMarginOfError: .050000000000000003
 --- !u!4 &1544343289
 Transform:
   m_ObjectHideFlags: 0

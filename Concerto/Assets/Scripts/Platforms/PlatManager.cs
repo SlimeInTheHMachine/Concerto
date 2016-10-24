@@ -79,6 +79,7 @@ public class PlatManager : MonoBehaviour
         {
             BeatMan.onBeat += platformBehavior;
             //Changes Platform Color
+            
             for (int i = 0; i < platforms.Length; i++)
             {
                 platformSpriteRens[i].color = color1;
@@ -87,6 +88,7 @@ public class PlatManager : MonoBehaviour
             {
                 platformSpriteRens[i].color = color2;
             }
+            
         }
         if (conPlatformsLeft!= null)
         {

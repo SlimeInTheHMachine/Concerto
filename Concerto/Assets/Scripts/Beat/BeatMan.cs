@@ -9,23 +9,8 @@ public class BeatMan : MonoBehaviour
     //the time in seconds for a beat.
     public double timeBetweenBeats;
     public double inputMarginOfError;
+    public double maxInputMarginOfError, minInputMarginOfError;
     public double nextBeat;
-    //Keeps a running track of time passing
-    public float timeElapsed;
-    public double accurateTimeElapsed;
-    public double averagedTime;
-    public double acceptableMarginOfError;
-
-    
-    
-	
-    /// <summary>
-    /// Gets the timeElapsed
-    /// </summary>
-	public float TimeCounter
-	{
-		get { return timeElapsed;}
-	}
 
     public double BeatTime
     {
@@ -65,22 +50,20 @@ public class BeatMan : MonoBehaviour
 		else if (instance != this)
 			//If so (somehow), destroy this object.
 			Destroy(gameObject);
-
-        
-        
-		//Sets this to not be destroyed when reloading scene
-		//DontDestroyOnLoad(gameObject);
 	}
 
     void Start()
     {
-        nextBeat = timeBetweenBeats + Time.time;
+        nextBeat = timeBetweenBeats + Time.time + Time.fixedDeltaTime;
+        inputMarginOfError = timeBetweenBeats * 0.25;
+        if (inputMarginOfError > maxInputMarginOfError)
+            inputMarginOfError = maxInputMarginOfError;
+        else if(inputMarginOfError < minInputMarginOfError)
+            inputMarginOfError = minInputMarginOfError;
     }
 
 	void FixedUpdate()
 	{
-		//Keep track of more time passing
-		timeElapsed += Time.deltaTime;
        // Debug.Log(timeElapsed);
 
         //Beginning of Beat - Margin
@@ -103,7 +86,6 @@ public class BeatMan : MonoBehaviour
         if (Time.time >= nextBeat + inputMarginOfError )
         {
             Debug.Log(nextBeat);
-            Debug.Log(timeElapsed);
             Debug.Log(Time.time);
             nextBeat += timeBetweenBeats;
             
@@ -112,10 +94,5 @@ public class BeatMan : MonoBehaviour
             started = false;
             hitBeat = false;
         }
-    }
-
-    void Update()
-    {
-
     }
 }
