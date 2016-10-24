@@ -73,7 +73,7 @@ public class OnBeatAnimator : MonoBehaviour
         //make animations happen on the beat
         for (int i = 0; i < animations.Count(); i++)
         {
-            animations[i].animDuration = BeatMan.instance.beatTime;
+            animations[i].animDuration = (float)BeatMan.instance.BeatTime;
         }
         //play the first animation
         if (animations.Count > 0)

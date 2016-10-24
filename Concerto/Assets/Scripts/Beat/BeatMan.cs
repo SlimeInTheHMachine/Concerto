@@ -4,26 +4,32 @@ using System.Collections;
 public class BeatMan : MonoBehaviour
 {
     public bool onTime;
-    public float marginOfError;
-    //Keeps a running track of time passing
-    private float timeCounter;
-    //the time in seconds for a beat.
-    public float beatTime;
-
     private bool started, hitBeat;
-    private float nextBeat;
+
+    //the time in seconds for a beat.
+    public double timeBetweenBeats;
+    public double inputMarginOfError;
+    public double nextBeat;
+    //Keeps a running track of time passing
+    public float timeElapsed;
+    public double accurateTimeElapsed;
+    public double averagedTime;
+    public double acceptableMarginOfError;
+
+    
+    
 	
     /// <summary>
-    /// Gets the timeCounter
+    /// Gets the timeElapsed
     /// </summary>
 	public float TimeCounter
 	{
-		get { return timeCounter;}
+		get { return timeElapsed;}
 	}
 
-    public float BeatTime
+    public double BeatTime
     {
-        get { return beatTime; }
+        get { return timeBetweenBeats; }
     }
 	
 	//function to call on the beat
@@ -59,19 +65,26 @@ public class BeatMan : MonoBehaviour
 		else if (instance != this)
 			//If so (somehow), destroy this object.
 			Destroy(gameObject);
-        nextBeat = Time.time + beatTime;
+
+        
+        
 		//Sets this to not be destroyed when reloading scene
 		//DontDestroyOnLoad(gameObject);
 	}
 
+    void Start()
+    {
+        nextBeat = timeBetweenBeats + Time.time;
+    }
+
 	void FixedUpdate()
 	{
 		//Keep track of more time passing
-		timeCounter += Time.fixedDeltaTime;
-       // Debug.Log(timeCounter);
+		timeElapsed += Time.deltaTime;
+       // Debug.Log(timeElapsed);
 
         //Beginning of Beat - Margin
-        if (!started && timeCounter >= nextBeat - marginOfError)
+        if (!started && Time.time >= nextBeat - inputMarginOfError)
         {
             onTime = true;
             started = true;
@@ -79,7 +92,7 @@ public class BeatMan : MonoBehaviour
         }
 
         //Actual Beat
-        if (!hitBeat && timeCounter >= nextBeat)
+        if (!hitBeat && Time.time >= nextBeat)
 		{
             hitBeat = true;
             onBeat();
@@ -87,14 +100,22 @@ public class BeatMan : MonoBehaviour
 		}
 
         //End of Beat + Margin
-        if (timeCounter >= nextBeat + marginOfError )
+        if (Time.time >= nextBeat + inputMarginOfError )
         {
-            Debug.Log(timeCounter);
-            nextBeat = Time.time + beatTime;
+            Debug.Log(nextBeat);
+            Debug.Log(timeElapsed);
+            Debug.Log(Time.time);
+            nextBeat += timeBetweenBeats;
+            
             endBeat();
             onTime = false;
             started = false;
             hitBeat = false;
         }
+    }
+
+    void Update()
+    {
+
     }
 }

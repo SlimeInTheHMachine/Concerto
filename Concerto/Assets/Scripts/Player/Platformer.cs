@@ -34,7 +34,7 @@ public class Platformer : MonoBehaviour {
     private bool joyStickInput;
     private int mashingMove;
     private bool flipped;
-    private Vector2 lerpDestination;
+    public Vector2 lerpDestination;
     private Vector2 startPos;
     private Vector2 checkpointPos;
 
@@ -125,12 +125,11 @@ public class Platformer : MonoBehaviour {
         }
 
         //Update next location to move to //Supersmooth lerp t = (lerpTime * Time.fixedDeltaTime),  (lerp = t*t*t * (t * (6f*t - 15f) + 10f))
-        float lerp = ((lerpTime * Time.fixedDeltaTime) * (lerpTime * Time.fixedDeltaTime) * (lerpTime * Time.fixedDeltaTime)) * ((lerpTime * Time.fixedDeltaTime) * (6f * (lerpTime * Time.fixedDeltaTime) - 15f) + 10f);
-        transform.position = Vector2.Lerp(transform.position, lerpDestination, lerp);
+        float lerp = ((lerpTime * Time.fixedDeltaTime) * (lerpTime * Time.fixedDeltaTime) * (lerpTime * Time.fixedDeltaTime)) * ((lerpTime * Time.fixedDeltaTime) * ((6f * (lerpTime * Time.fixedDeltaTime)) - 15f) + 10f);
         //move if we're not there
-        if(transform.position == new Vector3(lerpDestination.x, lerpDestination.y, 0f))
+        if(transform.position != new Vector3(lerpDestination.x, lerpDestination.y, transform.position.z))
         {
-            lerpDestination = transform.position;
+            transform.position = Vector2.Lerp(lerpDestination, transform.position, lerp);
         }
     }
 
@@ -212,11 +211,11 @@ public class Platformer : MonoBehaviour {
             //If mashing move shake and don't move next beat
             if (joyStickInput && (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0))
             {
-                shake = 30f;
-                if (BeatMan.instance.onTime)
-                    mashingMove = 3;
-                else
-                    mashingMove = 2;
+               // shake = 30f;
+                //if (BeatMan.instance.onTime)
+                  //  mashingMove = 3;
+                //else
+                    //mashingMove = 2;
             }
         }
 

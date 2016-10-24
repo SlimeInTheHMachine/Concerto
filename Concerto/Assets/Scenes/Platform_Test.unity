@@ -2233,8 +2233,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 768596479}
-  color1: {r: .528708935, g: .731266201, b: .933823526, a: 0}
-  color2: {r: .977941155, g: .19415009, b: .859020948, a: 0}
+  color1: {r: .528708935, g: .731266201, b: .933823526, a: 1}
+  color2: {r: .635294139, g: 0, b: .635294139, a: 1}
   beatCounter: 0
   beatPerMove: 1
 --- !u!4 &639698392
@@ -2561,8 +2561,9 @@ MonoBehaviour:
   enemyRaycastLength: 3.5
   moveCastLength: 2
   lerpDistance: 2.5
-  lerpTime: 18
+  lerpTime: 1000
   score: 0
+  lerpDestination: {x: 0, y: 0}
 --- !u!61 &768596482
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5331,8 +5332,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onTime: 0
-  marginOfError: .00999999978
-  beatTime: 2
+  timeBetweenBeats: 2
+  inputMarginOfError: .29999999999999999
+  nextBeat: 0
+  timeElapsed: 0
+  accurateTimeElapsed: 0
+  averagedTime: 0
+  acceptableMarginOfError: .050000000000000003
 --- !u!4 &1544343289
 Transform:
   m_ObjectHideFlags: 0
