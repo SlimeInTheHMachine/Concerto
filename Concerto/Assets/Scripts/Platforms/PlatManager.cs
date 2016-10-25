@@ -24,6 +24,7 @@ public class PlatManager : MonoBehaviour
     private GameObject[] platforms;
     private GameObject[] platforms2;
     private SpriteRenderer[] platformSpriteRens;
+    private SpriteRenderer[] platMoverRens;
     private BoxCollider2D[] platformCols;
     //Get all relevent components
     private GameObject[] movPlatformsVer;
@@ -64,10 +65,11 @@ public class PlatManager : MonoBehaviour
         fallThroughPlatforms = GameObject.FindGameObjectsWithTag("FallthroughPlatform");
         spikes = GameObject.FindGameObjectsWithTag("Spikes");
         conPlatformsLeft = GameObject.FindGameObjectsWithTag("ConveyorLeft");
-        conPlatformsRight = GameObject.FindGameObjectsWithTag("ConveyorRight"); 
+        conPlatformsRight = GameObject.FindGameObjectsWithTag("ConveyorRight");
 
         //Get the spriteRenderers of each platform that changed colors
         platformSpriteRens = new SpriteRenderer[platforms.Length + platforms2.Length];
+        platMoverRens = new SpriteRenderer[movPlatformsVer.Length + movPlatformsHor.Length];
 
         //Get Colliders to check against the player Collider
         platformCols = new BoxCollider2D[platforms.Length + platforms2.Length];
@@ -89,6 +91,15 @@ public class PlatManager : MonoBehaviour
         {
             platformSpriteRens[i] = platforms2[i - platforms.Length].GetComponent<SpriteRenderer>();
         }
+        for (int i = 0; i < movPlatformsVer.Length; i++)
+        {
+            platMoverRens[i] = movPlatformsVer[i].GetComponent<SpriteRenderer>();
+        }
+        for (int i = movPlatformsVer.Length; i < platMovers.Length; i++)
+        {
+            platMoverRens[i] = movPlatformsHor[i - movPlatformsVer.Length].GetComponent<SpriteRenderer>();
+        }
+
         for (int i = 0; i < platforms.Length; i++)
         {
             platformCols[i] = platforms[i].GetComponent<BoxCollider2D>();
@@ -281,6 +292,21 @@ public class PlatManager : MonoBehaviour
     {
         for (int i = 0; i < movPlatformsVer.Length; i++)
         {
+            if ((platMovers[i].up >0))
+            {
+                if (platMovers[i].moveForward)
+                    platMoverRens[i].sprite = platMovers[i].sprite1;
+                else
+                    platMoverRens[i].sprite = platMovers[i].sprite2;
+            }
+            else
+            {
+                if (platMovers[i].moveForward)
+                    platMoverRens[i].sprite = platMovers[i].sprite2;
+                else
+                    platMoverRens[i].sprite = platMovers[i].sprite1;
+            }
+
             //Sets this behavior to occur every other beat
             if (beatCounter == beatPerMove)
             {
@@ -294,13 +320,13 @@ public class PlatManager : MonoBehaviour
                     {
                         playerScript.LerpDestination = new Vector2(player.transform.position.x, player.transform.position.y + platMovers[i].up);
                         playerScript.HaveMoved = true;
-                      //  player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
+                        //  player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                     }
                     else
                     {
                         playerScript.LerpDestination = new Vector2(player.transform.position.x, player.transform.position.y - platMovers[i].up);
                         playerScript.HaveMoved = true;
-                       // player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
+                        // player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                     }
                 }
                 //Lerps the Platform
@@ -313,6 +339,20 @@ public class PlatManager : MonoBehaviour
     {
         for (int i = 0; i < movPlatformsHor.Length; i++)
         {
+            if ((platMovers[i].right > 0))
+            {
+                if (platMovers[i + movPlatformsVer.Length].moveForward)
+                    platMoverRens[i + movPlatformsVer.Length].sprite = platMovers[i + movPlatformsVer.Length].sprite1;
+                else
+                    platMoverRens[i + movPlatformsVer.Length].sprite = platMovers[i + movPlatformsVer.Length].sprite2;
+            }
+            else
+            {
+                if (platMovers[i + movPlatformsVer.Length].moveForward)
+                    platMoverRens[i + movPlatformsVer.Length].sprite = platMovers[i + movPlatformsVer.Length].sprite2;
+                else
+                    platMoverRens[i + movPlatformsVer.Length].sprite = platMovers[i + movPlatformsVer.Length].sprite1;
+            }
             //Sets this behavior to occur every other beat
             if (beatCounter == beatPerMove)
             {
