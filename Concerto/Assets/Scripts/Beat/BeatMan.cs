@@ -64,8 +64,6 @@ public class BeatMan : MonoBehaviour
 
 	void FixedUpdate()
 	{
-       // Debug.Log(timeElapsed);
-
         //Beginning of Beat - Margin
         if (!started && Time.time >= nextBeat - inputMarginOfError)
         {
@@ -79,14 +77,12 @@ public class BeatMan : MonoBehaviour
 		{
             hitBeat = true;
             onBeat();
-            Debug.Log("ONBEAT");
+            //Debug.Log("ONBEAT");
 		}
 
         //End of Beat + Margin
         if (Time.time >= nextBeat + inputMarginOfError )
         {
-            Debug.Log(nextBeat);
-            Debug.Log(Time.time);
             nextBeat += timeBetweenBeats;
             
             endBeat();

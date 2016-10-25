@@ -44,8 +44,7 @@ public class PlatManager : MonoBehaviour
             //If so (somehow), destroy this object.
             Destroy(gameObject);
 
-        playerCollider = player.GetComponent<BoxCollider2D>();
-        playerScript = player.GetComponent<Platformer>();
+        
 
         //Get List of platforms
         platforms = GameObject.FindGameObjectsWithTag("Platform");
@@ -71,6 +70,9 @@ public class PlatManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        player = GameObject.FindGameObjectsWithTag("Player")[0];
+        playerCollider = player.GetComponent<BoxCollider2D>();
+        playerScript = player.GetComponent<Platformer>();
         beatManager = GameObject.Find("BeatManager");
         beatCounter = 0;
 
