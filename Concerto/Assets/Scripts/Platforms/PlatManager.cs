@@ -24,14 +24,23 @@ public class PlatManager : MonoBehaviour
     private GameObject[] platforms;
     private GameObject[] platforms2;
     private SpriteRenderer[] platformSpriteRens;
+    private BoxCollider2D[] platformCols;
     //Get all relevent components
     private GameObject[] movPlatformsVer;
+    private BoxCollider2D[] movPlatformsVerCols;
     private GameObject[] movPlatformsHor;
+    private BoxCollider2D[] movPlatformsHorCols;
     private GameObject[] spikes;
+    private BoxCollider2D[] spikeCols;
     private GameObject[] conPlatformsLeft;
+    private BoxCollider2D[] conPlatformsLeftCols;
     private GameObject[] fallThroughPlatforms;
+    private BoxCollider2D[] fallThroughPlatformsCols;
     private GameObject[] conPlatformsRight;
+    private BoxCollider2D[] conPlatformsRightCols;
+    private PlatMover[] platMovers;
     private GameObject platToMoveTo;
+
 
     //Awake the object (Before Start)
     void Awake()
@@ -50,9 +59,29 @@ public class PlatManager : MonoBehaviour
         //Get List of platforms
         platforms = GameObject.FindGameObjectsWithTag("Platform");
         platforms2 = GameObject.FindGameObjectsWithTag("Platform2");
+        movPlatformsVer = GameObject.FindGameObjectsWithTag("MovingVertical");
+        movPlatformsHor = GameObject.FindGameObjectsWithTag("MovingHorizantal");
+        fallThroughPlatforms = GameObject.FindGameObjectsWithTag("FallthroughPlatform");
+        spikes = GameObject.FindGameObjectsWithTag("Spikes");
+        conPlatformsLeft = GameObject.FindGameObjectsWithTag("ConveyorLeft");
+        conPlatformsRight = GameObject.FindGameObjectsWithTag("ConveyorRight"); 
+
         //Get the spriteRenderers of each platform that changed colors
         platformSpriteRens = new SpriteRenderer[platforms.Length + platforms2.Length];
-        for(int i = 0; i < platforms.Length; i++)
+
+        //Get Colliders to check against the player Collider
+        platformCols = new BoxCollider2D[platforms.Length + platforms2.Length];
+        movPlatformsVerCols = new BoxCollider2D[movPlatformsVer.Length];
+        movPlatformsHorCols = new BoxCollider2D[movPlatformsHor.Length];
+        conPlatformsLeftCols = new BoxCollider2D[conPlatformsLeft.Length];
+        conPlatformsRightCols = new BoxCollider2D[conPlatformsRight.Length];
+        fallThroughPlatformsCols = new BoxCollider2D[fallThroughPlatforms.Length];
+        spikeCols = new BoxCollider2D[spikes.Length];
+
+        //Gets the Horizantal Platform Movers
+        platMovers = new PlatMover[movPlatformsVer.Length + movPlatformsHor.Length];
+
+        for (int i = 0; i < platforms.Length; i++)
         {
             platformSpriteRens[i] = platforms[i].GetComponent<SpriteRenderer>();
         }
@@ -60,12 +89,51 @@ public class PlatManager : MonoBehaviour
         {
             platformSpriteRens[i] = platforms2[i - platforms.Length].GetComponent<SpriteRenderer>();
         }
-        movPlatformsVer = GameObject.FindGameObjectsWithTag("MovingVertical");
-        movPlatformsHor = GameObject.FindGameObjectsWithTag("MovingHorizantal");
-        fallThroughPlatforms = GameObject.FindGameObjectsWithTag("FallthroughPlatform");
-        spikes = GameObject.FindGameObjectsWithTag("Spikes");
-        conPlatformsLeft = GameObject.FindGameObjectsWithTag("ConveyorLeft");
-        conPlatformsRight = GameObject.FindGameObjectsWithTag("ConveyorRight"); 
+        for (int i = 0; i < platforms.Length; i++)
+        {
+            platformCols[i] = platforms[i].GetComponent<BoxCollider2D>();
+        }
+        for (int i = platforms.Length; i < platformSpriteRens.Length; i++)
+        {
+            platformCols[i] = platforms2[i - platforms.Length].GetComponent<BoxCollider2D>();
+        }
+        for (int i = 0; i < movPlatformsVer.Length; i++)
+        {
+            movPlatformsVerCols[i] = movPlatformsVer[i].GetComponent<BoxCollider2D>();
+        }
+        for (int i = 0; i < movPlatformsHor.Length; i++)
+        {
+            movPlatformsHorCols[i] = movPlatformsHor[i].GetComponent<BoxCollider2D>();
+        }
+        for (int i = 0; i < spikes.Length; i++)
+        {
+            spikeCols[i] = spikes[i].GetComponent<BoxCollider2D>();
+        }
+        for (int i = 0; i < conPlatformsLeft.Length; i++)
+        {
+            conPlatformsLeftCols[i] = conPlatformsLeft[i].GetComponent<BoxCollider2D>();
+        }
+        for (int i = 0; i < conPlatformsRight.Length; i++)
+        {
+            conPlatformsRightCols[i] = conPlatformsRight[i].GetComponent<BoxCollider2D>();
+        }
+        for (int i = 0; i < fallThroughPlatforms.Length; i++)
+        {
+            fallThroughPlatformsCols[i] = fallThroughPlatforms[i].GetComponent<BoxCollider2D>();
+        }
+        for (int i = 0; i < platMovers.Length; i++)
+        {
+            if (i < movPlatformsVer.Length)
+            {
+                //Ensure the player is in the center of the square
+                platMovers[i] = movPlatformsVer[i].GetComponent<PlatMover>();
+            }
+            else
+            {
+                if (platforms2 != null)
+                    platMovers[i] = movPlatformsHor[i - movPlatformsVer.Length].GetComponent<PlatMover>();
+            }
+        }
     }
 
     // Use this for initialization
@@ -92,13 +160,13 @@ public class PlatManager : MonoBehaviour
         }
         if (conPlatformsLeft!= null)
         {
-            BeatMan.onBeat += leftConveyorBehavior;
+            BeatMan.endBeat += leftConveyorBehavior;
             for(int i = 0; i < conPlatformsLeft.Length; i++)
                 conPlatformsLeft[i].GetComponent<SpriteRenderer>().color = Color.yellow;
         }
         if (conPlatformsRight != null)
         {
-            BeatMan.onBeat += rightConveyorBehavior;
+            BeatMan.endBeat += rightConveyorBehavior;
             for (int i = 0; i < conPlatformsRight.Length; i++)
                 conPlatformsRight[i].GetComponent<SpriteRenderer>().color = Color.green;
         }
@@ -116,21 +184,21 @@ public class PlatManager : MonoBehaviour
         }
         if (spikes != null)
         {
-            BeatMan.onBeat += spikeBehavior;
+            //BeatMan.onBeat += spikeBehavior;
             for (int i = 0; i < spikes.Length; i++)
                 spikes[i].GetComponent<SpriteRenderer>().color = Color.red;
 
         }
         if (fallThroughPlatforms != null)
         {
-            BeatMan.onBeat += fallThroughBehavior;
+            //BeatMan.onBeat += fallThroughBehavior;
             Color color = Color.magenta;
             color.a = 0.1f;
             //Changes Platform Color
             for (int i = 0; i < fallThroughPlatforms.Length; i++)
                 fallThroughPlatforms[i].GetComponent<SpriteRenderer>().color = color;
         }
-        //BeatMan.startBeat += setPlayerPos;
+        BeatMan.endBeat += setPlayerPos;
         BeatMan.onBeat += beatCount;
     }
 
@@ -148,49 +216,21 @@ public class PlatManager : MonoBehaviour
         }
 
         //Checks to see whether normal platform exists
-        for (int i = 0; i < platforms.Length; i++)
+        for (int i = 0; i < platformCols.Length; i++)
         {
-            if(platforms[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
+            if(platformCols[i].IsTouching(playerCollider))
             {
-                //Ensure the player is in the center of the square
-                platToMoveTo = platforms[i];
-            }
-        }
-
-        //Checks to see whether a second type of normal platform exists
-        if (platforms2 != null)
-        {
-        //Changes the colors of the first type of platform
-            for (int i = 0; i < platforms2.Length; i++)
-            {
-                if (platforms2[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
+                if (i < platforms.Length)
                 {
                     //Ensure the player is in the center of the square
-                    platToMoveTo = platforms2[i];
+                    platToMoveTo = platforms[i];
+                }
+                else
+                {
+                    if (platforms2 != null)
+                        platToMoveTo = platforms2[i - platforms.Length];
                 }
             }
-        }
-    }
-    
-    void spikeBehavior()
-    {
-        for (int i = 0; i < spikes.Length; i++)
-        {
-            if (spikes[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
-            {
-                //Ensure the player is in the center of the square
-                platToMoveTo = spikes[i];
-            }
-
-        }
-    }
-    void fallThroughBehavior()
-    {
-        for (int i = 0; i < fallThroughPlatforms.Length; i++)
-        {
-            if (fallThroughPlatforms[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
-                //Ensure the player is in the center of the square
-                platToMoveTo = fallThroughPlatforms[i];
         }
     }
 
@@ -207,11 +247,8 @@ public class PlatManager : MonoBehaviour
         for (int i = 0; i < conPlatformsLeft.Length; i++)
         {
             
-            if (conPlatformsLeft[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
+            if (conPlatformsLeftCols[i].IsTouching(playerCollider))
             {
-                //Ensure the player is in the center of the square
-                platToMoveTo = conPlatformsLeft[i];
-
                 //Checks to see if the player has already moved, and shoots them backward if not
                 if (playerScript.HaveMoved == false)
                 {
@@ -227,11 +264,8 @@ public class PlatManager : MonoBehaviour
     {
         for (int i = 0; i < conPlatformsRight.Length; i++)
         {
-            if (conPlatformsRight[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
+            if (conPlatformsRightCols[i].IsTouching(playerCollider))
             {
-                //Ensure the player is in the center of the square
-                platToMoveTo = conPlatformsRight[i];
-
                 //Checks to see if the player has already moved, and shoots them forward if not
                 if (playerScript.HaveMoved == false)
                 {
@@ -250,27 +284,27 @@ public class PlatManager : MonoBehaviour
             //Sets this behavior to occur every other beat
             if (beatCounter == beatPerMove)
             {
-                if (movPlatformsVer[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
+                if (movPlatformsVerCols[i].IsTouching(playerCollider))
                 {
                     //Ensure the player is in the center of the square
                     platToMoveTo = movPlatformsVer[i];
 
                     //Lerps the Player in the direction the platform is moving in when the platform moves
-                    if (movPlatformsVer[i].GetComponent<PlatMover>().moveForward)
+                    if (platMovers[i].moveForward)
                     {
-                        playerScript.LerpDestination = new Vector2(player.transform.position.x, player.transform.position.y + movPlatformsVer[i].GetComponent<PlatMover>().up);
+                        playerScript.LerpDestination = new Vector2(player.transform.position.x, player.transform.position.y + platMovers[i].up);
                         playerScript.HaveMoved = true;
                       //  player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                     }
                     else
                     {
-                        playerScript.LerpDestination = new Vector2(player.transform.position.x, player.transform.position.y - movPlatformsVer[i].GetComponent<PlatMover>().up);
+                        playerScript.LerpDestination = new Vector2(player.transform.position.x, player.transform.position.y - platMovers[i].up);
                         playerScript.HaveMoved = true;
                        // player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                     }
                 }
                 //Lerps the Platform
-                movPlatformsVer[i].GetComponent<PlatMover>().moveVer();
+                platMovers[i].moveVer();
             }
         }
     }
@@ -282,27 +316,27 @@ public class PlatManager : MonoBehaviour
             //Sets this behavior to occur every other beat
             if (beatCounter == beatPerMove)
             {
-                if (movPlatformsHor[i].GetComponent<BoxCollider2D>().IsTouching(playerCollider))
+                if (movPlatformsHorCols[i].IsTouching(playerCollider))
                 {
                     //Ensure the player is in the center of the square
                     platToMoveTo = movPlatformsHor[i];
 
                     //Lerps the Player in the direction the platform is moving in when the platform moves
-                    if (movPlatformsHor[i].GetComponent<PlatMover>().moveForward)
+                    if (platMovers[i + movPlatformsVer.Length].moveForward)
                     {
-                        playerScript.LerpDestination = new Vector2(player.transform.position.x + movPlatformsHor[i].GetComponent<PlatMover>().right, player.transform.position.y);
+                        playerScript.LerpDestination = new Vector2(player.transform.position.x + platMovers[i + movPlatformsVer.Length].right, player.transform.position.y);
                         playerScript.HaveMoved = true;
                        // player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                     }
                     else
                     {
-                        playerScript.LerpDestination = new Vector2(player.transform.position.x - movPlatformsHor[i].GetComponent<PlatMover>().right, player.transform.position.y);
+                        playerScript.LerpDestination = new Vector2(player.transform.position.x - platMovers[i + movPlatformsVer.Length].right, player.transform.position.y);
                         playerScript.HaveMoved = true;
                        // player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                     }
                 }
                 //Lerps the Platform
-                movPlatformsHor[i].GetComponent<PlatMover>().moveHor();
+                platMovers[i + movPlatformsVer.Length].moveHor();
             }
         }
     }
@@ -313,7 +347,7 @@ public class PlatManager : MonoBehaviour
         //Issue that makes it so you cant move before on beat due to platform currently having priority
         if (platToMoveTo != null && platToMoveTo.GetComponent<BoxCollider2D>().IsTouching(playerCollider))
         {
-            playerScript.LerpDestination = new Vector2(platToMoveTo.transform.position.x, platToMoveTo.transform.position.y + player.GetComponent<BoxCollider2D>().size.y/2 + platToMoveTo.GetComponent<BoxCollider2D>().bounds.size.y/2);
+            playerScript.LerpDestination = new Vector2(platToMoveTo.transform.position.x, platToMoveTo.transform.position.y + playerCollider.size.y/2 + platToMoveTo.GetComponent<BoxCollider2D>().bounds.size.y/2);
             platToMoveTo = null;
         }
     }
