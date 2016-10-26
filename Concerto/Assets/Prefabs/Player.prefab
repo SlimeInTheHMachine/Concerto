@@ -27,7 +27,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 158370}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 57.7380714, y: -17.6151047, z: 0}
+  m_LocalPosition: {x: 4.44537115, y: -3.40481949, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -96,9 +96,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aerialMove: 0
   tryingToFall: 0
-  enemyRaycastLength: 3.5
-  moveCastLength: 2
-  lerpDistance: 2.5
+  enemyRaycastLength: 1
+  moveCastLength: 1
+  lerpDistance: 1
   lerpTime: 18
   score: 0
   lerpDestination: {x: 0, y: 0}
