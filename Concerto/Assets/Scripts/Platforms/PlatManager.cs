@@ -386,7 +386,6 @@ public class PlatManager : MonoBehaviour
     void setPlayerPos()
     {
         //Sets the player Lerpposition to be in the center and just above the platform they are currently touching
-        //Issue that makes it so you cant move before on beat due to platform currently having priority
         if (platToMoveTo != null && platToMoveTo.GetComponent<BoxCollider2D>().IsTouching(playerCollider))
         {
             playerScript.LerpDestination = new Vector2(platToMoveTo.transform.position.x, platToMoveTo.transform.position.y + playerCollider.size.y/2 + platToMoveTo.GetComponent<BoxCollider2D>().bounds.size.y/2);
