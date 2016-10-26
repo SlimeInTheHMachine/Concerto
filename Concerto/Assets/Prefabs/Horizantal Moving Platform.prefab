@@ -25,7 +25,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 151346}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 14.1762638, y: .365198612, z: 0}
+  m_LocalPosition: {x: 23.9396629, y: -5.54978037, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -56,7 +56,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveForward: 0
   up: 0
-  right: 2.5
+  right: 1
   sprite1: {fileID: 21300000, guid: ade87be34dbf1bf42b0350aba386a1b9, type: 3}
   sprite2: {fileID: 21300000, guid: 6c30fd373a5c0234099a5124934f6747, type: 3}
 --- !u!212 &21271896
@@ -100,7 +100,7 @@ Prefab:
       objectReference: {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
     - target: {fileID: 0}
       propertyPath: right
-      value: 2.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Color.r

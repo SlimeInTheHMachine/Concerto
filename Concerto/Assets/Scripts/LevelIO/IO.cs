@@ -101,7 +101,6 @@ public class IO : MonoBehaviour {
                     }
                     for (int i = 0; i < nonSpaces.Length; i++)
                     {
-                        Debug.Log(nonSpaces[i]);
                         //Handling
                         tileChars[i, lineNum] = nonSpaces[i];
                     }

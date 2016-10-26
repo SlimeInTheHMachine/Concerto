@@ -211,7 +211,7 @@ public class PlatManager : MonoBehaviour
             for (int i = 0; i < fallThroughPlatforms.Length; i++)
                 fallThroughPlatforms[i].GetComponent<SpriteRenderer>().color = color;
         }
-        BeatMan.endBeat += setPlayerPos;
+        BeatMan.startBeat += setPlayerPos;
         BeatMan.onBeat += beatCount;
     }
 
@@ -388,7 +388,7 @@ public class PlatManager : MonoBehaviour
         //Sets the player Lerpposition to be in the center and just above the platform they are currently touching
         if (platToMoveTo != null && platToMoveTo.GetComponent<BoxCollider2D>().IsTouching(playerCollider))
         {
-            playerScript.LerpDestination = new Vector2(platToMoveTo.transform.position.x, platToMoveTo.transform.position.y + playerCollider.size.y/2 + platToMoveTo.GetComponent<BoxCollider2D>().bounds.size.y/2);
+            playerScript.LerpDestination = new Vector2(platToMoveTo.transform.position.x, platToMoveTo.transform.position.y + player.GetComponent<SpriteRenderer>().sprite.bounds.size.y/2 + platToMoveTo.GetComponent<BoxCollider2D>().bounds.size.y/2);
             platToMoveTo = null;
         }
     }

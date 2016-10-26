@@ -55,7 +55,7 @@ public class BeatMan : MonoBehaviour
     void Start()
     {
         nextBeat = timeBetweenBeats + Time.time + Time.fixedDeltaTime;
-        inputMarginOfError = timeBetweenBeats * 0.25;
+        inputMarginOfError = timeBetweenBeats * 0.2;
         if (inputMarginOfError > maxInputMarginOfError)
             inputMarginOfError = maxInputMarginOfError;
         else if(inputMarginOfError < minInputMarginOfError)

@@ -92,19 +92,22 @@ public class Platformer : MonoBehaviour {
         rayUp = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.up, moveCastLength, platformLayerMask.value);
         Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.up * moveCastLength, Color.blue);
         rayRight = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.right, moveCastLength, platformLayerMask.value);
+        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.right * moveCastLength, Color.blue);
         rayDown = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.down, moveCastLength, platformLayerMask.value);
+        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.down * moveCastLength, Color.blue);
         rayLeft = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.left, moveCastLength, platformLayerMask.value);
+        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.left * moveCastLength, Color.blue);
 
         //Raycast to enemy in front
         if (!flipped)
         {
             enemyRayHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.right, enemyRaycastLength, enemyLayerMask.value);
-            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.right * enemyRaycastLength, Color.blue);
+            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.right * enemyRaycastLength, Color.red);
         }
         else
         {
             enemyRayHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.left, enemyRaycastLength, enemyLayerMask.value);
-            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.left * enemyRaycastLength, Color.blue);
+            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.left * enemyRaycastLength, Color.red);
         }
 
             //Physics related stuff
@@ -211,11 +214,11 @@ public class Platformer : MonoBehaviour {
             //If mashing move shake and don't move next beat
             if (joyStickInput && (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0))
             {
-               // shake = 30f;
-                //if (BeatMan.instance.onTime)
-                  //  mashingMove = 3;
-                //else
-                    //mashingMove = 2;
+                shake = 30f;
+                if (BeatMan.instance.onTime)
+                    mashingMove = 3;
+                else
+                    mashingMove = 2;
             }
         }
 
@@ -401,5 +404,6 @@ public class Platformer : MonoBehaviour {
         else
             flipped = true;
         //Flip sprite
+        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
 }
