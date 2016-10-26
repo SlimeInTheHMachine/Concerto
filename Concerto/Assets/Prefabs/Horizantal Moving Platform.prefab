@@ -57,6 +57,8 @@ MonoBehaviour:
   moveForward: 0
   up: 0
   right: 2.5
+  sprite1: {fileID: 0}
+  sprite2: {fileID: 0}
 --- !u!212 &21271896
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -83,7 +85,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 717548d5cfbc36147a0d99950f209684, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e0de090f721b1d84a9fde324c69fa1c9, type: 3}
   m_Color: {r: .760784388, g: .760784388, b: .760784388, a: 1}
 --- !u!1001 &100100000
 Prefab:
@@ -112,6 +114,11 @@ Prefab:
       propertyPath: m_Color.b
       value: .760784388
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e0de090f721b1d84a9fde324c69fa1c9,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 151346}
