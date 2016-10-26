@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Animation\OnBeatAnimator.cs" />
+    <Compile Include="Assets\Scripts\Audio\AudioMan.cs" />
     <Compile Include="Assets\Scripts\Beat\BeatAnimationScript.cs" />
     <Compile Include="Assets\Scripts\Beat\BeatMan.cs" />
     <Compile Include="Assets\Scripts\Camera\CamBehavior.cs" />
