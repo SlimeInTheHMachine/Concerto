@@ -1,74 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-
 public enum attackInputs { A, B, X, Y, None, Garbage, Down, Right, Left, Up }; // Arrows
 
-
-public class AttackInputWrapper
-{
-    public bool Keyboard { get; set; } //uneccesary if I use my Own Axis
-    public attackInputs thisInput = attackInputs.None;
-
-    public string attackLetter;
-    public AttackInputWrapper(attackInputs input)
-    {
-        thisInput = input;
-        SetLetterArbitrarily();
-    }
-
-    void SetLetterArbitrarily()
-    {
-        switch (thisInput)
-        {
-            case attackInputs.A:
-                attackLetter = "A";
-                break;
-            case attackInputs.B:
-                attackLetter = "B";
-                break;
-            case attackInputs.X:
-                attackLetter = "X";
-                break;
-            case attackInputs.Y:
-                attackLetter = "Y";
-                break;
-            case attackInputs.None:
-                attackLetter = "-";
-                break;
-            case attackInputs.Garbage:
-                attackLetter = null;
-                break;
-            case attackInputs.Down:
-                attackLetter = "S";
-                break;
-            case attackInputs.Left:
-                attackLetter = "A";
-                break;
-            case attackInputs.Right:
-                attackLetter = "D";
-                break;
-            case attackInputs.Up:
-                attackLetter = "W";
-                break;
-        }
-    }
-}
 public class Platformer : MonoBehaviour {
 
     //Public Variables
     public bool aerialMove;
-    public bool tryingToFall = false;
-    public float enemyRaycastLength, floorCastLength;
+    public bool tryingToFall;
+    public float enemyRaycastLength, moveCastLength;
     public float lerpDistance;
     public float lerpTime;
     public int score;
 
     //Private Variables
     private LayerMask platformLayerMask, enemyLayerMask;
-    private Rigidbody2D rig;
     private BoxCollider2D colliderBox;
     private Rect box;
+    private RaycastHit2D rayUp;
+    private RaycastHit2D rayRight;
+    private RaycastHit2D rayDown;
+    private RaycastHit2D rayLeft;
+    private RaycastHit2D enemyRayHit;
+    private float shake;
+
     private attackInputs attackInput;
     private ComboScript currentEnemy;
 
@@ -77,9 +32,11 @@ public class Platformer : MonoBehaviour {
     private bool grounded;
     private bool canFall;
     private bool joyStickInput;
+    private int mashingMove;
+    private bool flipped;
     private Vector2 lerpDestination;
     private Vector2 startPos;
-    public Vector2 checkpointPos;
+    private Vector2 checkpointPos;
 
     private GameObject[] checks;
     private GameObject[] spikes;
@@ -104,13 +61,17 @@ public class Platformer : MonoBehaviour {
         set { canFall = value; }
     }
 
+    //Called before all start functions
+    void Awake()
+    {
+
+    }
+
     // Use this for initialization
     void Start () {
         //Layermask for platforms, used for raycasting
         platformLayerMask = LayerMask.GetMask("Platform");
         enemyLayerMask = LayerMask.GetMask("Enemy");
-        rig = GetComponent<Rigidbody2D>();
-        rig.gravityScale = 0;
         colliderBox = GetComponent<BoxCollider2D>();
         box = new Rect(colliderBox.bounds.min.x, colliderBox.bounds.min.y, colliderBox.bounds.size.x, colliderBox.bounds.size.y);
         lerpDestination = transform.position;
@@ -121,24 +82,52 @@ public class Platformer : MonoBehaviour {
         spikes = GameObject.FindGameObjectsWithTag("Spikes");
         startPos = transform.position;
         checkpointPos = startPos;
+        mashingMove = 0;
     }
 
     void FixedUpdate()
     {
-        //Physics related stuff
-        RaycastHit2D rayHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + box.size.y / 2), Vector2.down, floorCastLength, platformLayerMask.value);
-        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + box.size.y / 2), Vector2.down * floorCastLength, Color.red);
-        if (rayHit.collider != null)
+
+        //Raycasts
+        rayUp = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.up, moveCastLength, platformLayerMask.value);
+        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.up * moveCastLength, Color.blue);
+        rayRight = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.right, moveCastLength, platformLayerMask.value);
+        rayDown = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.down, moveCastLength, platformLayerMask.value);
+        rayLeft = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.left, moveCastLength, platformLayerMask.value);
+
+        //Raycast to enemy in front
+        if (!flipped)
+        {
+            enemyRayHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.right, enemyRaycastLength, enemyLayerMask.value);
+            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.right * enemyRaycastLength, Color.blue);
+        }
+        else
+        {
+            enemyRayHit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.left, enemyRaycastLength, enemyLayerMask.value);
+            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.left * enemyRaycastLength, Color.blue);
+        }
+
+            //Physics related stuff
+            //Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + box.size.y / 2), Vector2.down * moveCastLength, Color.red);
+            if (rayDown.collider != null)
         {
             grounded = true;
             aerialMove = true;
+            if (rayDown.collider.tag == "FallthroughPlatform")
+                canFall = true;
+            else
+                canFall = false;
         }
         else
         {
             grounded = false;
+            canFall = true;
         }
-        
-        transform.position = Vector2.Lerp(transform.position, lerpDestination, lerpTime * Time.fixedDeltaTime);
+
+        //Update next location to move to //Supersmooth lerp t = (lerpTime * Time.fixedDeltaTime),  (lerp = t*t*t * (t * (6f*t - 15f) + 10f))
+        float lerp = ((lerpTime * Time.fixedDeltaTime) * (lerpTime * Time.fixedDeltaTime) * (lerpTime * Time.fixedDeltaTime)) * ((lerpTime * Time.fixedDeltaTime) * (6f * (lerpTime * Time.fixedDeltaTime) - 15f) + 10f);
+        transform.position = Vector2.Lerp(transform.position, lerpDestination, lerp);
+        //move if we're not there
         if(transform.position == new Vector3(lerpDestination.x, lerpDestination.y, 0f))
         {
             lerpDestination = transform.position;
@@ -147,16 +136,17 @@ public class Platformer : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        box = new Rect(colliderBox.bounds.min.x, colliderBox.bounds.min.y, colliderBox.bounds.size.x, colliderBox.bounds.size.y);
-
+        //Make sure joystick has returned to neutral state from last intput
         if (Input.GetAxis("Vertical") == 0 && Input.GetAxis("Horizontal") == 0)
             joyStickInput = true;
 
-        if (BeatMan.instance.onTime)
+        
+        if (BeatMan.instance.onTime && !haveMoved) //Won't work off beat, but won't kill a combo offbeat either currently
         {
-            if(!haveMoved && joyStickInput)
+            if(joyStickInput && mashingMove == 0) //Only move once per beat.
             {
-                if (Input.GetAxis("Vertical") > 0)
+                //Jump
+                if (Input.GetAxis("Vertical") > 0 && rayUp.collider == null)
                 {
                     if(grounded)
                     {
@@ -166,6 +156,7 @@ public class Platformer : MonoBehaviour {
                     }
                     else
                     {
+                        //Double Jump
                         if (aerialMove)
                         {
                             lerpDestination = new Vector2(transform.position.x, transform.position.y + lerpDistance);
@@ -175,13 +166,9 @@ public class Platformer : MonoBehaviour {
                         }
                     }
                 }
+                //Fall
                 else if (Input.GetAxis("Vertical") < 0)
-                {
-                    RaycastHit2D ray = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + box.size.y / 2), Vector2.down, floorCastLength, platformLayerMask.value);
-                    if ((ray.collider != null && ray.collider.tag == "FallthroughPlatform") || !grounded)
-                        canFall = true;
-                    else
-                        canFall = false;
+                {   
                     if(canFall)
                     {
                         lerpDestination = new Vector2(transform.position.x, transform.position.y - lerpDistance);
@@ -189,27 +176,55 @@ public class Platformer : MonoBehaviour {
                         joyStickInput = false;
                     }
                 }
-                else if (Input.GetAxis("Horizontal") > 0)
+                //Right
+                else if (Input.GetAxis("Horizontal") > 0 && rayRight.collider == null)
                 {
+                    //Don't need to have a seperate aerialCheck because it will be set back to true on the ground
                     if (aerialMove)
                     {
                         lerpDestination = new Vector2(transform.position.x + lerpDistance, transform.position.y);
                         haveMoved = true;
                         joyStickInput = false;
                         aerialMove = false;
+
+                        if (flipped)
+                            Flip();
                     }
                 }
-                else if (Input.GetAxis("Horizontal") < 0)
-                {
+                //Left
+                else if (Input.GetAxis("Horizontal") < 0 && rayLeft.collider == null)
+                { 
                     if (aerialMove)
                     {
                         lerpDestination = new Vector2(transform.position.x - lerpDistance, transform.position.y);
                         haveMoved = true;
                         joyStickInput = false;
                         aerialMove = false;
+
+                        if (!flipped)
+                            Flip();
                     }
                 }
             }    
+        }
+        else
+        {
+            //If mashing move shake and don't move next beat
+            if (joyStickInput && (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0))
+            {
+                shake = 30f;
+                if (BeatMan.instance.onTime)
+                    mashingMove = 3;
+                else
+                    mashingMove = 2;
+            }
+        }
+
+        //Shake
+        if (shake > 0f)
+        {
+            Vector2 shakeOffset = UnityEngine.Random.insideUnitCircle * 0.05f;
+            transform.position = transform.position + new Vector3(shakeOffset.x, shakeOffset.y, 0f);
         }
 
 
@@ -219,7 +234,7 @@ public class Platformer : MonoBehaviour {
         {
             if (GameObject.Find("Finish").GetComponent<BoxCollider2D>().IsTouching(this.GetComponent<BoxCollider2D>()))
             {
-                ResettoStart();
+                //Need end condition
             }
         }
         if (spikes != null)
@@ -234,14 +249,16 @@ public class Platformer : MonoBehaviour {
         }
 
         //Attack
-        //Raycast to enemy
-        RaycastHit2D rayHit = Physics2D.Raycast(new Vector2(transform.position.x + box.size.x/2, transform.position.y), Vector2.right, enemyRaycastLength, enemyLayerMask.value);
-        if (rayHit.collider != null && (Input.GetButtonDown("AButton") || Input.GetButtonDown("BButton") || Input.GetButtonDown("XButton") || Input.GetButtonDown("YButton")))
+        if (enemyRayHit.collider != null && (Input.GetButtonDown("AButton") || Input.GetButtonDown("BButton") || Input.GetButtonDown("XButton") || Input.GetButtonDown("YButton")))
         {
-                currentEnemy = rayHit.transform.gameObject.GetComponent<ComboScript>();
+                currentEnemy = enemyRayHit.transform.gameObject.GetComponent<ComboScript>();
                 CombatInput();
         }
     }
+
+    /// <summary>
+    /// Set the checkpoint to respawn at
+    /// </summary>
     void setCheckpoint()
     {
         if (checks != null)
@@ -257,6 +274,9 @@ public class Platformer : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Parse attack inputs and send it to the enemy
+    /// </summary>
     void CombatInput()
     {
         //See if there is combat input
@@ -295,33 +315,37 @@ public class Platformer : MonoBehaviour {
             attackInput = attackInputs.Garbage;
 
         //Clash back if you mess up
-        if(!currentEnemy.checkInput(attackInput))
+        if(!currentEnemy.CheckInput(attackInput))
         {
             //clash code here
             Clash();
             currentEnemy = null;
         }
-
+        //We've attempted to attack this beat
         haveAttacked = true;    
     }
 
+    /// <summary>
+    /// Bounce away from enemy
+    /// </summary>
     void Clash()
     {
-        //normal of this to Enemy
-        if(Vector2.Dot(transform.position, currentEnemy.GetComponent<Rigidbody2D>().transform.position) < 0)
-            lerpDestination = new Vector2(transform.position.x - lerpDistance, transform.position.y );
-        else
+        if (flipped)
             lerpDestination = new Vector2(transform.position.x + lerpDistance, transform.position.y);
+        else
+            lerpDestination = new Vector2(transform.position.x - lerpDistance, transform.position.y);
     }
 
-    //Not Firing in time
+    /// <summary>
+    /// In the event of no input, clash away from enemy and break combo or fall if in the air
+    /// </summary>
     void sendNoInput()
     {
         //Null Attack
         if (currentEnemy != null && !haveAttacked)
         {
             attackInput = attackInputs.None;
-            if (!currentEnemy.checkInput(attackInput))
+            if (!currentEnemy.CheckInput(attackInput))
             {
                 Clash();
                 currentEnemy = null;
@@ -330,27 +354,51 @@ public class Platformer : MonoBehaviour {
         haveAttacked = true;
 
         //Null Move
+        //if not grounded and you haven't moved or mashing move
         if(!grounded && !haveMoved)
         {
             lerpDestination = new Vector2(transform.position.x, transform.position.y - lerpDistance);
         }
+
+        if(mashingMove > 0)
+            mashingMove--;
     }
 
+    /// <summary>
+    /// Reset controls at the end of the beat
+    /// </summary>
     void Reset()
     {
         haveAttacked = false;
         attackInput = attackInputs.None;
         haveMoved = false;
+        if (mashingMove == 0)
+        {
+            shake = 0f;
+        }
+        else
+            mashingMove--;
     }
+
+    /// <summary>
+    /// Respawn on death
+    /// </summary>
     void ResettoCheck()
     {
         transform.position = new Vector3(checkpointPos.x,checkpointPos.y,0f);
         lerpDestination = new Vector2(checkpointPos.x, checkpointPos.y);
     }
 
-    void ResettoStart()
+    /// <summary>
+    /// Flip the character, right default
+    /// </summary>
+    void Flip()
     {
-        transform.position = new Vector3(startPos.x, startPos.y, 0f);
-        lerpDestination = new Vector2(startPos.x, startPos.y);
+        //Change Flip Boolean
+        if (flipped)
+            flipped = false;
+        else
+            flipped = true;
+        //Flip sprite
     }
 }

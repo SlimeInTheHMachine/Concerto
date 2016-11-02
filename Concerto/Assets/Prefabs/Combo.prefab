@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 443954}
   - 23: {fileID: 2390712}
   - 102: {fileID: 10244150}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Letter1 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,7 +27,7 @@ GameObject:
   - 4: {fileID: 416908}
   - 23: {fileID: 2342884}
   - 102: {fileID: 10213788}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Letter1 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - 4: {fileID: 411386}
   - 23: {fileID: 2310044}
   - 102: {fileID: 10292826}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Letter1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61,7 +61,7 @@ GameObject:
   - 4: {fileID: 464830}
   - 23: {fileID: 2375160}
   - 102: {fileID: 10269376}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Letter1 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,10 +77,11 @@ GameObject:
   m_Component:
   - 4: {fileID: 415246}
   - 212: {fileID: 21266374}
-  - 114: {fileID: 11417320}
-  m_Layer: 0
+  - 61: {fileID: 6102152}
+  - 114: {fileID: 11498016}
+  m_Layer: 9
   m_Name: Combo
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -104,7 +105,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 177092}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.80000019, y: -1.26999998, z: 0}
+  m_LocalPosition: {x: 5.96876287, y: -1.19605029, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children:
   - {fileID: 411386}
@@ -167,9 +168,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -193,9 +192,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -219,9 +216,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -245,14 +240,25 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
+--- !u!61 &6102152
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 177092}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Size: {x: .5, y: .5}
 --- !u!102 &10213788
 TextMesh:
   serializedVersion: 3
@@ -337,7 +343,7 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
---- !u!114 &11417320
+--- !u!114 &11498016
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -348,7 +354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa295d510c32f084583e69784408694d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Selected: 1
+  Selected: 0
   button1: 0
   button2: 0
   button3: 0
@@ -375,9 +381,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}

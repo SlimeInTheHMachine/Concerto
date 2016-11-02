@@ -10,7 +10,7 @@ public class EnemyMan : MonoBehaviour {
     protected EnemyMan() { }
     //static instance of EnemyManager
     public static EnemyMan instance = null;
-
+    
     //Awake the object (Before Start)
     void Awake()
     {
@@ -28,10 +28,17 @@ public class EnemyMan : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-	    
-        
-	}
+
+        BeatMan.startBeat += UpdateEnemies;
+    }
 	
+    void UpdateEnemies()
+    {
+        foreach(GameObject enemy in enemies)
+        {
+            enemy.GetComponent<ComboScript>().EnemyUpdate();
+        }
+    }
 	// Update is called once per frame
 	void Update () {
 	    //Call the update of every enemy
