@@ -15,12 +15,15 @@ public class PlatMover : MonoBehaviour
     private Vector3 endPosHor;
     private Vector3 endPosVer;
 
+    public Sprite sprite1;
+    public Sprite sprite2;
+
     void Start()
     {
         beatManager = GameObject.Find("BeatManager");
         beatTime = beatManager.GetComponent<BeatMan>().BeatTime;
         startTime = Time.time;
-        timeBetweenPosChange = (float)beatTime / 2;
+        timeBetweenPosChange = (float)beatTime;
         moveForward = true;
         startPos = transform.position;
         endPosVer = new Vector3(startPos.x, startPos.y + up);

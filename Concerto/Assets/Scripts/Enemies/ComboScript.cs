@@ -3,6 +3,56 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+public class AttackInputWrapper
+{
+    public bool Keyboard { get; set; } //uneccesary if I use my Own Axis
+    public attackInputs thisInput = attackInputs.None;
+
+    public string attackLetter;
+    public AttackInputWrapper(attackInputs input)
+    {
+        thisInput = input;
+        SetLetterArbitrarily();
+    }
+
+    void SetLetterArbitrarily()
+    {
+        switch (thisInput)
+        {
+            case attackInputs.A:
+                attackLetter = "A";
+                break;
+            case attackInputs.B:
+                attackLetter = "B";
+                break;
+            case attackInputs.X:
+                attackLetter = "X";
+                break;
+            case attackInputs.Y:
+                attackLetter = "Y";
+                break;
+            case attackInputs.None:
+                attackLetter = "-";
+                break;
+            case attackInputs.Garbage:
+                attackLetter = null;
+                break;
+            case attackInputs.Down:
+                attackLetter = "S";
+                break;
+            case attackInputs.Left:
+                attackLetter = "A";
+                break;
+            case attackInputs.Right:
+                attackLetter = "D";
+                break;
+            case attackInputs.Up:
+                attackLetter = "W";
+                break;
+        }
+    }
+}
+
 public class ComboScript : MonoBehaviour {
 
     //Public Variables
@@ -184,7 +234,7 @@ public class ComboScript : MonoBehaviour {
         //else
         //    lerpDestination = new Vector2(transform.position.x + lerpDistance, transform.position.y);
     }
-    public bool checkInput(attackInputs input)
+    public bool CheckInput(attackInputs input)
     {
         //Reset on mess up
         if (input == attackInputs.Garbage)

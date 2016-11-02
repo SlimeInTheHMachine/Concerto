@@ -25,8 +25,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 151346}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13.0749207, y: 8.64390755, z: 0}
-  m_LocalScale: {x: 1, y: .394694418, z: .394694418}
+  m_LocalPosition: {x: 23.9396629, y: -5.54978037, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -42,7 +42,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: 2.4000001, y: 2.4000001}
+  m_Size: {x: 1, y: 1}
 --- !u!114 &11421022
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -56,7 +56,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveForward: 0
   up: 0
-  right: 2.5
+  right: 1
+  sprite1: {fileID: 21300000, guid: ade87be34dbf1bf42b0350aba386a1b9, type: 3}
+  sprite2: {fileID: 21300000, guid: 6c30fd373a5c0234099a5124934f6747, type: 3}
 --- !u!212 &21271896
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -83,7 +85,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 717548d5cfbc36147a0d99950f209684, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ade87be34dbf1bf42b0350aba386a1b9, type: 3}
   m_Color: {r: .760784388, g: .760784388, b: .760784388, a: 1}
 --- !u!1001 &100100000
 Prefab:
@@ -98,7 +100,7 @@ Prefab:
       objectReference: {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
     - target: {fileID: 0}
       propertyPath: right
-      value: 2.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Color.r
@@ -112,6 +114,21 @@ Prefab:
       propertyPath: m_Color.b
       value: .760784388
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e0de090f721b1d84a9fde324c69fa1c9,
+        type: 3}
+    - target: {fileID: 0}
+      propertyPath: sprite1
+      value: 
+      objectReference: {fileID: 21300000, guid: ade87be34dbf1bf42b0350aba386a1b9,
+        type: 3}
+    - target: {fileID: 0}
+      propertyPath: sprite2
+      value: 
+      objectReference: {fileID: 21300000, guid: 6c30fd373a5c0234099a5124934f6747,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 151346}
