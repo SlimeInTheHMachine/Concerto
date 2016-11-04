@@ -77,7 +77,7 @@ public class BeatMan : MonoBehaviour
 		{
             hitBeat = true;
             onBeat();
-            //Debug.Log("ONBEAT");
+            Debug.Log("ONBEAT");
 		}
 
         //End of Beat + Margin

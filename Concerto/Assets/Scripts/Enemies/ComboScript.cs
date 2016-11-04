@@ -141,6 +141,7 @@ public class ComboScript : MonoBehaviour {
         Debug.DrawRay(new Vector2(transform.position.x - box.size.x / 2, transform.position.y - box.size.y / 4), -Vector2.right, Color.red);
         if (rayHit.collider != null)
         {
+            Debug.Log("Hitting Player");
             playerInRange = true;
             //I see no problem with this :^) -Rose
             playerObject = rayHit.collider.gameObject;
@@ -195,6 +196,7 @@ public class ComboScript : MonoBehaviour {
     // Update is called once per frame
     public void EnemyUpdate ()
     {
+        Debug.Log("Update");
         if (playerInRange)
             Attack();
         else

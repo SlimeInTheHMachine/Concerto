@@ -23,19 +23,22 @@ public class EnemyMan : MonoBehaviour {
             Destroy(gameObject);
 
         //Get List of enemies
-        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+       
     }
 
     // Use this for initialization
     void Start () {
 
-        BeatMan.startBeat += UpdateEnemies;
+        BeatMan.onBeat += UpdateEnemies;
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
     }
 	
     void UpdateEnemies()
     {
+        Debug.Log("Update Enemies");
         foreach(GameObject enemy in enemies)
         {
+            Debug.Log("Enemy name: " + enemy.name);
             enemy.GetComponent<ComboScript>().EnemyUpdate();
         }
     }
