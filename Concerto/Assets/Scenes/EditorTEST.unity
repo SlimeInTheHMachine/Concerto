@@ -151,7 +151,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 369528108}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ba44192facbabe74ca933b8b1cd2a130, type: 3}
   m_Name: 
@@ -162,10 +162,10 @@ AudioSource:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 369528108}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: d3ce68fe3aa87e0409531c8cd95136ae, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 9d7f8256ff4ee694f907e020377b6ed9, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -267,7 +267,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78aeec541956a294fa555bb6e401cd14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelFilePath: 
+  levelFilePath: levelTest
   Q: {fileID: 158574, guid: 380447916b48dde49af6b421dcd93bca, type: 2}
   W: {fileID: 118696, guid: 3c2bc2e2b9785894f8aa58f0ad858205, type: 2}
   Z: {fileID: 151346, guid: 629efe84286feee4baf6e948caae261c, type: 2}
@@ -280,6 +280,7 @@ MonoBehaviour:
   P: {fileID: 158370, guid: 279bf950bf088f940ac32b79cc91bc71, type: 2}
   E: {fileID: 177092, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
   D: {fileID: 147828, guid: 198d05bf1cb65c844af010e171f8283a, type: 2}
+  levelName: levelTwo
 --- !u!114 &423878731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -522,6 +523,14 @@ Prefab:
       propertyPath: m_Pivot.y
       value: .5
       objectReference: {fileID: 0}
+    - target: {fileID: 8276152, guid: 57a0ce2aec9a44d45b444392bc33b4f7, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8276152, guid: 57a0ce2aec9a44d45b444392bc33b4f7, type: 2}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 0377feb87c81eb540825de905bc84619, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 57a0ce2aec9a44d45b444392bc33b4f7, type: 2}
   m_IsPrefabParent: 0

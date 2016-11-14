@@ -14,6 +14,7 @@ public class Platformer : MonoBehaviour {
     public int score;
 
     //Private Variables
+    private AudioSource audioSrc;
     private LayerMask platformLayerMask, enemyLayerMask;
     private BoxCollider2D colliderBox;
     private Rect box;
@@ -83,20 +84,34 @@ public class Platformer : MonoBehaviour {
         startPos = transform.position;
         checkpointPos = startPos;
         mashingMove = 0;
+        audioSrc = GetComponent<AudioSource>();
     }
 
+    private void DrawHelperAtCenter(
+                   Vector3 direction, Color color, float scale)
+    {
+        Gizmos.color = color;
+        Vector3 destination = transform.position + direction * scale;
+        Gizmos.DrawLine(transform.position, destination);
+    }
+    void OnDrawGizmos()
+    {
+        Color color = Color.green;
+        // local forward
+        DrawHelperAtCenter(this.transform.forward, color, 2f);
+    }
     void FixedUpdate()
     {
 
         //Raycasts
         rayUp = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.up, moveCastLength, platformLayerMask.value);
-        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.up * moveCastLength, Color.blue);
+        //Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.up * moveCastLength, Color.blue);
         rayRight = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.right, moveCastLength, platformLayerMask.value);
-        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.right * moveCastLength, Color.blue);
+        //Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.right * moveCastLength, Color.blue);
         rayDown = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.down, moveCastLength, platformLayerMask.value);
-        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.down * moveCastLength, Color.blue);
+        //Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.down * moveCastLength, Color.blue);
         rayLeft = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.left, moveCastLength, platformLayerMask.value);
-        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.left * moveCastLength, Color.blue);
+        //Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.left * moveCastLength, Color.blue);
 
         //Raycast to enemy in front
         if (!flipped)
@@ -147,6 +162,7 @@ public class Platformer : MonoBehaviour {
         {
             if(joyStickInput && mashingMove == 0) //Only move once per beat.
             {
+                audioSrc.PlayOneShot(audioSrc.clip,1);
                 //Jump
                 if (Input.GetAxis("Vertical") > 0 && rayUp.collider == null)
                 {

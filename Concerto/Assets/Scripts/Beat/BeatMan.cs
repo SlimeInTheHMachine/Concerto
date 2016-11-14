@@ -62,8 +62,9 @@ public class BeatMan : MonoBehaviour
             inputMarginOfError = minInputMarginOfError;
     }
 
-	void FixedUpdate()
+    void FixedUpdate()
 	{
+       
         //Beginning of Beat - Margin
         if (!started && Time.time >= nextBeat - inputMarginOfError)
         {
