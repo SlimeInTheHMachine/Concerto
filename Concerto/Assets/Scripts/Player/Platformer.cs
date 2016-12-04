@@ -13,6 +13,8 @@ public class Platformer : MonoBehaviour {
     public float lerpTime;
     public int score;
 
+    GameObject top, bottom, right, left;
+
     //Private Variables
     private AudioSource audioSrc;
     private LayerMask platformLayerMask, enemyLayerMask;
@@ -41,6 +43,7 @@ public class Platformer : MonoBehaviour {
 
     private GameObject[] checks;
     private GameObject[] spikes;
+    private GameObject[] nodes;
     public Vector2 LerpDestination
     {
         get { return lerpDestination; }
@@ -73,6 +76,7 @@ public class Platformer : MonoBehaviour {
         //Layermask for platforms, used for raycasting
         platformLayerMask = LayerMask.GetMask("Platform");
         enemyLayerMask = LayerMask.GetMask("Enemy");
+        nodes = GameObject.FindGameObjectsWithTag("Nodes");
         colliderBox = GetComponent<BoxCollider2D>();
         box = new Rect(colliderBox.bounds.min.x, colliderBox.bounds.min.y, colliderBox.bounds.size.x, colliderBox.bounds.size.y);
         lerpDestination = transform.position;
@@ -85,6 +89,24 @@ public class Platformer : MonoBehaviour {
         checkpointPos = startPos;
         mashingMove = 0;
         audioSrc = GetComponent<AudioSource>();
+        foreach (GameObject child in transform)
+        {
+            switch (child.name)
+            {
+                case "Top Node":
+                    top = child;
+                    break;
+                case "Bottom Node":
+                    bottom = child;
+                    break;
+                case "Right Node":
+                    right = child;
+                    break;
+                case "Left Node":
+                    left = child;
+                    break;
+            }
+        }
     }
 
     private void DrawHelperAtCenter(
@@ -421,5 +443,153 @@ public class Platformer : MonoBehaviour {
             flipped = true;
         //Flip sprite
         transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+    }
+
+
+    void nodeMovement()
+    {
+        Collider[] topObjects;
+        Collider[] bottomObjects;
+        Collider[] rightObjects;
+        Collider[] leftObjects;
+        bool jump = true;
+        bool fall = false;
+        bool follow = false; 
+        bool moveLeft = true;
+        bool moveRight = true;
+        GameObject movementNodeLeft;
+        GameObject movementNodeRight;
+        GameObject movementNodeTop;
+        GameObject movementNodeBottom;
+
+        if (top != null)
+        {
+            topObjects = Physics.OverlapSphere(top.transform.position, 1);
+            foreach (Collider collider in topObjects)
+            {
+                switch (collider.tag)
+                {
+                    case "Platform":
+                    case "Platform2":
+                    case "fallThroughPlatforms":
+                    case "Moving Vertical":
+                    case "Moving Horizantal":
+                        //Prevent Jumping if a platform is above it
+                        jump = false;
+                        movementNodeTop = null;
+                        break;
+                    case "Nodes":
+                        movementNodeTop = collider.gameObject;
+                        break;
+                }
+            }
+        }
+        if (bottom != null)
+        { 
+             bottomObjects = Physics.OverlapSphere(bottom.transform.position, 1);
+            foreach (Collider collider in bottomObjects)
+            {
+                switch (collider.tag)
+                {
+                    case "fallThroughPlatforms":
+                        //Set Up Falling if there is nothing below. 
+                        
+                        follow = false;
+                        fall = true;
+                        movementNodeBottom = null;
+                        break;
+
+                    case "Moving Vertical":
+                    case "Moving Horizantal":
+                        //Move the player with the object
+                        follow = true;
+                        fall = false;
+                        movementNodeBottom = null;
+                        break;
+
+                    case "Platform":
+                    case "Platform2":
+                        //Prevent Player From falling through platforms
+                        follow = false;
+                        fall = false;
+                        movementNodeBottom = null;
+                        break;
+                    case "Nodes":
+                        movementNodeBottom = collider.gameObject;
+                        break;
+                }
+
+            }
+        }
+        if (right != null)
+        {
+             rightObjects = Physics.OverlapSphere(right.transform.position, 1);
+            foreach (Collider collider in rightObjects)
+            {
+                switch (collider.tag)
+                {
+
+                    case "Platform":
+                    case "Platform2":
+                    case "fallThroughPlatforms":
+                    case "Moving Vertical":
+                    case "Moving Horizantal":
+                        // Prevent moving into the block
+                        moveRight = false;
+                        movementNodeRight = null;
+                        break;
+                    case "Nodes":
+                        movementNodeRight = collider.gameObject;
+                        break;
+                }
+            }
+        }
+        if (left != null)
+        {
+            leftObjects = Physics.OverlapSphere(left.transform.position, 1);
+            foreach (Collider collider in leftObjects)
+            {
+                switch (collider.tag)
+                {
+                    case "Platform":
+                    case "Platform2":
+                    case "fallThroughPlatforms":
+                    case "Moving Vertical":
+                    case "Moving Horizantal":
+                        moveLeft = false;
+                        movementNodeLeft = null;
+                        break;
+                    case "Nodes":
+                        movementNodeLeft = collider.gameObject;
+                        break;
+                }
+            }
+        }
+
+        //Move the player
+        //Lerp to the node returned from the collider checks if the coresponding variable below is not null.
+        //movementNodeLeft, movementNodeRight, movementNodeTop, movementNodeBottom
+        if (jump)
+        {
+            // Allows the player to jump
+        }
+        if (fall)
+        {
+            //Allow the player to fall if in the air/ on a falling platform
+            //Position to lerp to if falling through platform  > collider.transform.GetChild(1).transform.position;
+        }
+        if (follow)
+        {
+            //Move the player along with moving platforms
+        }
+        if (moveLeft)
+        {
+            //Move if there isnt anything blocking the path 
+        }
+        if (moveRight)
+        {
+            //Move if there isnt anything blocking the path 
+        }
+
     }
 }
