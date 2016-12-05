@@ -534,6 +534,7 @@ public class Platformer : MonoBehaviour {
                     case "fallThroughPlatforms":
                     case "Moving Vertical":
                     case "Moving Horizantal":
+                    case "Enemy":
                         // Prevent moving into the block
                         moveRight = false;
                         movementNodeRight = null;
@@ -556,6 +557,7 @@ public class Platformer : MonoBehaviour {
                     case "fallThroughPlatforms":
                     case "Moving Vertical":
                     case "Moving Horizantal":
+                    case "Enemy":
                         moveLeft = false;
                         movementNodeLeft = null;
                         break;
