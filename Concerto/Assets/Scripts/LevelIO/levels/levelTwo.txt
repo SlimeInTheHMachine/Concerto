@@ -1,0 +1,31 @@
+#--
+Platform Types:
+Platform == Q
+Platform2 == W
+MovingHorizontal == Z
+MovingVertical == X
+ConveyorLeft == N
+ConveyorRight == M
+Spikes == S
+FallthroughPlatform == F
+
+Special Tiles:
+Checkpoint == C
+Player == P
+Enemy == E
+Blank == B
+Finish == D
+--#
+Size:
+11x9
+
+Level:
+B B B B B B B B B B W
+B B B B B B B B B D Q
+B Q W Q W Q W Q W Q W
+B B B B Q W Q W Q W Q
+X Q W B B Q W Q W Q W
+Q W Q W B B B B B B Q
+W Q W Q X Z B Z B B W
+Q W Q W Q W Q W Q P Q
+W Q W Q W Q W Q W Q W

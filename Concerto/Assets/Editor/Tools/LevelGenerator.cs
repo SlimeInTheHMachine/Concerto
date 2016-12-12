@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 public class LevelGenerator : EditorWindow 
 {
+    public GameObject requiredObj;
 	Texture2D map; // The Image That Generates The Map
 	
 	List<Color> colorList = new List<Color>(); // List Of Colors Present In The Image Source
@@ -97,11 +98,15 @@ public class LevelGenerator : EditorWindow
 					{
 						if(colorMap[tx,ty] == colorList[c])// find the object related to the color
 						{
-							if(prefabList[c])// if there is an object to be created
+                            obj = (GameObject)Instantiate(requiredObj, instPos, Quaternion.identity);
+                            obj.transform.parent = GameObject.Find(objectList[c]).transform;
+                            if (prefabList[c])// if there is an object to be created
 							{
 								obj = (GameObject)Instantiate(prefabList[c], instPos, Quaternion.identity);
 								obj.transform.parent = GameObject.Find(objectList[c]).transform;
-							}
+                                //obj = (GameObject)Instantiate(requiredObj, instPos, Quaternion.identity);
+                                //obj.transform.parent = GameObject.Find(objectList[c]).transform;
+                            }
 						}
 					}
 				}
@@ -142,8 +147,8 @@ public class LevelGenerator : EditorWindow
 		
 		if(GotMap()) 
 		{
-			
-			for(int i=0; i<colorList.Count; i++) // show the colors from the image, and offer the inputs
+            EditorGUILayout.ObjectField(requiredObj, typeof(Object), true);
+            for (int i=0; i<colorList.Count; i++) // show the colors from the image, and offer the inputs
 			{
 				EditorGUILayout.BeginHorizontal();
 				objectList[i] = EditorGUILayout.TextField(objectList[i]); // for the name for the folders,

@@ -72,8 +72,9 @@ public class BeatMan : MonoBehaviour
         offBeatTime = nextBeat + timeBetweenBeats / 2;
     }
 
-	void FixedUpdate()
+    void FixedUpdate()
 	{
+       
         //Beginning of Beat - Margin
         if (!started && startBeat != null && Time.time >= nextBeat - inputMarginOfError)
         {

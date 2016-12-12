@@ -57,6 +57,7 @@ public class ComboScript : MonoBehaviour {
 
     //Public Variables
     public bool Selected = false;
+    private bool flipped;
     public attackInputs button1, button2, button3, button4;
     [SerializeField]
     GameObject letter1, letter2, letter3, letter4;
@@ -77,16 +78,22 @@ public class ComboScript : MonoBehaviour {
     private Vector2 lerpDestination;
     public float lerpTime;
 
+    /// <summary>
+    /// This is te number of letters that will appear above the enemys
+    /// </summary>
+    [SerializeField]
+    int numOfLetters = 4;
+
     int moveCounter = 0; //2 beats of nothing
     bool lastMoveLeft = false;
     // Use this for initialization
     void Start () {
+       // flipped = true;
         attackCounter = 0;
         BoxCollider2D colliderBox = GetComponent<BoxCollider2D>();
         box = new Rect(colliderBox.bounds.min.x, colliderBox.bounds.min.y, colliderBox.bounds.size.x, colliderBox.bounds.size.y);
         enemyLayerMask = LayerMask.GetMask("Player");
-        //GameControl = GameObject.FindGameObjectWithTag("GameController");
-        //Puts in three standard buttons
+
         AttackInputWrapper btnHolder1 = new AttackInputWrapper(button1);
         letter1.GetComponent<TextMesh>().text = btnHolder1.attackLetter;
         AttackInputWrapper btnHolder2 = new AttackInputWrapper(button2);
@@ -96,15 +103,27 @@ public class ComboScript : MonoBehaviour {
         AttackInputWrapper btnHolder4 = new AttackInputWrapper(button4);
         letter4.GetComponent<TextMesh>().text = btnHolder4.attackLetter;
         combo = new Queue<attackInputs>();
-        combo.Enqueue(button1);
-        combo.Enqueue(button2);
-        combo.Enqueue(button3);
-        combo.Enqueue(button4);
+        if (numOfLetters >= 0)
+        {
+            combo.Enqueue(button1);
+        }
+        if (numOfLetters > 1)
+            combo.Enqueue(button2);
+        else
+            letter2.SetActive(false);
+        if (numOfLetters > 2)
+            combo.Enqueue(button3);
+        else
+            letter3.SetActive(false);
+        if (numOfLetters > 3)
+            combo.Enqueue(button4);
+        else
+            letter4.SetActive(false);
+        Debug.Log(combo.Count);
         //Deep Clone
+
         currentCombo = new Queue<attackInputs>(combo);
         OGPos = transform.position;
-        //Per enemy? //NOOOOOOOOOOOOO //Enemy Manager
-        //BeatManager.onBeat += InputCheck;
         lerpDestination = this.transform.position;
     }
 
@@ -136,9 +155,18 @@ public class ComboScript : MonoBehaviour {
 
     void FixedUpdate()
     {
-        
-        RaycastHit2D rayHit = Physics2D.Raycast(new Vector2(transform.position.x - box.size.x / 2, transform.position.y - box.size.y / 4), -Vector2.right, 3, enemyLayerMask.value);
-        Debug.DrawRay(new Vector2(transform.position.x - box.size.x / 2, transform.position.y - box.size.y / 4), -Vector2.right, Color.red);
+        RaycastHit2D rayHit;
+        if (flipped)
+            rayHit = Physics2D.Raycast(new Vector2(transform.position.x + box.size.x / 2, transform.position.y - box.size.y / 4),
+                Vector2.right, 1, enemyLayerMask.value);
+        else
+            rayHit = Physics2D.Raycast(new Vector2(transform.position.x - box.size.x / 2, transform.position.y - box.size.y / 4),
+                Vector2.left, 1, enemyLayerMask.value);
+        if(flipped)
+            Debug.DrawRay(new Vector2(transform.position.x + box.size.x / 2, transform.position.y - box.size.y / 4), Vector2.right, Color.blue);
+        else
+            Debug.DrawRay(new Vector2(transform.position.x - box.size.x / 2, transform.position.y - box.size.y / 4), Vector2.left, Color.red);
+
         if (rayHit.collider != null)
         {
             Debug.Log("Hitting Player");
@@ -163,10 +191,10 @@ public class ComboScript : MonoBehaviour {
     /// </summary>
     void Attack()
     {
-        if(attackCounter == 5)
+        if(attackCounter == numOfLetters+1)
         {
             Debug.Log("Attacking");
-            EnemyClash();
+            //EnemyClash();
             attackCounter = 0;
         }
         else
@@ -186,10 +214,13 @@ public class ComboScript : MonoBehaviour {
         {
             lerpDestination = new Vector2(transform.position.x + lerpDistance, transform.position.y);
             lastMoveLeft = false;
-        }else
+
+        }
+        else
         {
             lerpDestination = new Vector2(transform.position.x - lerpDistance, transform.position.y);
             lastMoveLeft = true;
+
         }
         moveCounter = 0;
     }
@@ -205,7 +236,10 @@ public class ComboScript : MonoBehaviour {
             if(moveCounter >= 2)
             {
                 Move();
-            }else
+                //if (flipped)
+                //    Flip();
+            }
+            else
             {
                 moveCounter++;
             }
@@ -229,15 +263,39 @@ public class ComboScript : MonoBehaviour {
     /// </summary>
     public void EnemyClash()
     {
-        playerObject.GetComponent<Platformer>().LerpDestination= new Vector2(playerObject.transform.position.x - 2.5f, playerObject.transform.position.y);
+        if (!flipped)
+        {
+            playerObject.GetComponent<Platformer>().LerpDestination = new Vector2(playerObject.transform.position.x - 1f,
+                playerObject.transform.position.y);
+        }
+        else
+        {
+            playerObject.GetComponent<Platformer>().LerpDestination = new Vector2(playerObject.transform.position.x + 1f,
+                playerObject.transform.position.y);
+        }
+       // playerObject.GetComponent<Platformer>().LerpDestination= new Vector2(playerObject.transform.position.x + 1f, playerObject.transform.position.y);
         ////normal of this to Enemy
         //if (Vector2.Dot(transform.position, currentEnemy.GetComponent<Rigidbody2D>().transform.position) < 0)
         //lerpDestination = new Vector2(transform.position.x - 2.5f, transform.position.y);
         //else
         //    lerpDestination = new Vector2(transform.position.x + lerpDistance, transform.position.y);
     }
+    /// <summary>
+    /// Flip the character, right default
+    /// </summary>
+    void Flip()
+    {
+        //Change Flip Boolean
+        if (flipped)
+            flipped = false;
+        else
+            flipped = true;
+        //Flip sprite
+        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+    }
     public bool CheckInput(attackInputs input)
     {
+        Debug.Log(currentCombo.Peek());
         //Reset on mess up
         if (input == attackInputs.Garbage)
         {

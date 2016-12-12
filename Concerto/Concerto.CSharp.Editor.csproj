@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\LevelIO\levels\levelTest.txt" />
+    <None Include="Assets\Scripts\LevelIO\levels\levelTwo.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
