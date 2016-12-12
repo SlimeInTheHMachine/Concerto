@@ -75,7 +75,7 @@ public class BeatMan : MonoBehaviour
 	void FixedUpdate()
 	{
         //Beginning of Beat - Margin
-        if (!started && Time.time >= nextBeat - inputMarginOfError)
+        if (!started && startBeat != null && Time.time >= nextBeat - inputMarginOfError)
         {
             onTime = true;
             started = true;
@@ -83,7 +83,7 @@ public class BeatMan : MonoBehaviour
         }
 
         //Actual Beat
-        if (!hitBeat && Time.time >= nextBeat)
+        if (!hitBeat && onBeat != null && Time.time >= nextBeat)
 		{
             hitBeat = true;
             onBeat();
@@ -91,7 +91,7 @@ public class BeatMan : MonoBehaviour
 		}
 
         //End of Beat + Margin
-        if (Time.time >= nextBeat + inputMarginOfError )
+        if (endBeat != null && Time.time >= nextBeat + inputMarginOfError )
         {
             nextBeat += timeBetweenBeats;
             
@@ -102,7 +102,7 @@ public class BeatMan : MonoBehaviour
             endBeat(); 
         }
 
-        if(!offBeatHit && Time.time >= offBeatTime)
+        if(!offBeatHit && offBeat != null && Time.time >= offBeatTime /*- inputMarginOfError*/)
         {
             offBeatTime = nextBeat + timeBetweenBeats / 2;
             offBeatHit = true;

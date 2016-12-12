@@ -74,13 +74,32 @@ public class Platformer : MonoBehaviour {
         set { canFall = value; }
     }
 
-    //Called before all start functions
+    //Called before all start functions, Use this for initialization of things without dependencies
     void Awake()
     {
-
+        //Sound Setup
+        beatCyclePos = 0;
+        slide = new AudioClip[] { (Resources.Load("Sounds/Dash") as AudioClip),
+            (Resources.Load("Sounds/Synth Slide") as AudioClip),
+            (Resources.Load("Sounds/Dash") as AudioClip),
+            (Resources.Load("Sounds/Synth Slide") as AudioClip) };
+        jump = new AudioClip[] { (Resources.Load("Sounds/Jump") as AudioClip),
+            (Resources.Load("Sounds/Jump") as AudioClip),
+            (Resources.Load("Sounds/Jump") as AudioClip),
+            (Resources.Load("Sounds/Jump") as AudioClip)};
+        fall = new AudioClip[] { (Resources.Load("Sounds/Fall") as AudioClip),
+            (Resources.Load("Sounds/Fall") as AudioClip),
+            (Resources.Load("Sounds/Fall") as AudioClip),
+            (Resources.Load("Sounds/Fall") as AudioClip)};
+        //clash =
+        //error =
+        //AttackA =
+        //AttackB =
+        //AttackX =
+        //AttackY = 
     }
 
-    // Use this for initialization
+    // Use this for initialization of things with dependencies
     void Start () {
         //Layermask Setup
         platformLayerMask = LayerMask.GetMask("Platform");
@@ -102,27 +121,6 @@ public class Platformer : MonoBehaviour {
         //Input Setup
         mashingMove = 0;
         attackInput = attackInputs.None;
-
-        //Sound Setup
-        beatCyclePos = 0;
-        slide = new AudioClip[] { (Resources.Load("Sounds/Dash") as AudioClip),
-            (Resources.Load("Sounds/Dash") as AudioClip),
-            (Resources.Load("Sounds/Dash") as AudioClip),
-            (Resources.Load("Sounds/Dash") as AudioClip) };
-        jump = new AudioClip[] { (Resources.Load("Sounds/Jump") as AudioClip),
-            (Resources.Load("Sounds/Jump") as AudioClip),
-            (Resources.Load("Sounds/Jump") as AudioClip),
-            (Resources.Load("Sounds/Jump") as AudioClip)};
-        fall = new AudioClip[] { (Resources.Load("Sounds/Fall") as AudioClip),
-            (Resources.Load("Sounds/Fall") as AudioClip),
-            (Resources.Load("Sounds/Fall") as AudioClip),
-            (Resources.Load("Sounds/Fall") as AudioClip)};
-        //clash =
-        //error =
-        //AttackA =
-        //AttackB =
-        //AttackX =
-        //AttackY = 
 
         //Event Setup
         BeatMan.startBeat += Reset;
