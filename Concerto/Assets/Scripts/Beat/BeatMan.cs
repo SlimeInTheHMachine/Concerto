@@ -4,13 +4,15 @@ using System.Collections;
 public class BeatMan : MonoBehaviour
 {
     public bool onTime;
-    private bool started, hitBeat;
+    public bool started, hitBeat, offBeatHit;
 
     //the time in seconds for a beat.
     public double timeBetweenBeats;
     public double inputMarginOfError;
     public double maxInputMarginOfError, minInputMarginOfError;
     public double nextBeat;
+
+    private double offBeatTime;
 
     public double BeatTime
     {
@@ -34,6 +36,12 @@ public class BeatMan : MonoBehaviour
 	/// Occurs within the margin after the beat. Subscribers must be void.
 	/// </summary>
 	public static event BeatFunction endBeat;
+
+    /// <summary>
+	/// Occurs directly between beats. Subscribers must be void.
+	/// </summary>
+	public static event BeatFunction offBeat;
+
 
     //Prevents other instances of BeatManager, since the constructor is restricted
     protected BeatMan (){}
@@ -60,6 +68,8 @@ public class BeatMan : MonoBehaviour
             inputMarginOfError = maxInputMarginOfError;
         else if(inputMarginOfError < minInputMarginOfError)
             inputMarginOfError = minInputMarginOfError;
+
+        offBeatTime = nextBeat + timeBetweenBeats / 2;
     }
 
 	void FixedUpdate()
@@ -85,10 +95,18 @@ public class BeatMan : MonoBehaviour
         {
             nextBeat += timeBetweenBeats;
             
-            endBeat();
             onTime = false;
             started = false;
             hitBeat = false;
+            offBeatHit = false;
+            endBeat(); 
+        }
+
+        if(!offBeatHit && Time.time >= offBeatTime)
+        {
+            offBeatTime = nextBeat + timeBetweenBeats / 2;
+            offBeatHit = true;
+            offBeat();
         }
     }
 }

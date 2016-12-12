@@ -124,7 +124,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 369528109}
-  - 82: {fileID: 369528111}
   - 114: {fileID: 369528110}
   - 114: {fileID: 369528112}
   - 114: {fileID: 369528113}
@@ -153,88 +152,21 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 369528108}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ba44192facbabe74ca933b8b1cd2a130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!82 &369528111
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 369528108}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
+  mainBeat: {fileID: 8300000, guid: 91c34637fdf821444a0ade24dea820ce, type: 3}
+  subBeat: {fileID: 8300000, guid: 1ca820d993672fb4daa8e8bb0c585811, type: 3}
+  alternateQuery: 1
 --- !u!114 &369528112
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 369528108}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 524d58cd8e5fe1d48a7f9072ccec4895, type: 3}
   m_Name: 
@@ -375,6 +307,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onTime: 0
+  started: 0
+  hitBeat: 0
+  offBeatHit: 0
   timeBetweenBeats: .5
   inputMarginOfError: 0
   maxInputMarginOfError: .14999999999999999
@@ -553,7 +488,16 @@ Prefab:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 11448084, guid: 57a0ce2aec9a44d45b444392bc33b4f7, type: 2}
+      propertyPath: mainBeat
+      value: 
+      objectReference: {fileID: 8300000, guid: 8e91b0149cf2feb4887a2bc9ec17f55c, type: 3}
+    - target: {fileID: 11448084, guid: 57a0ce2aec9a44d45b444392bc33b4f7, type: 2}
+      propertyPath: subBeat
+      value: 
+      objectReference: {fileID: 8300000, guid: 1ca820d993672fb4daa8e8bb0c585811, type: 3}
+    m_RemovedComponents:
+    - {fileID: 8276152, guid: 57a0ce2aec9a44d45b444392bc33b4f7, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 57a0ce2aec9a44d45b444392bc33b4f7, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1083933496
@@ -787,9 +731,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}

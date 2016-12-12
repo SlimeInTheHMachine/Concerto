@@ -12,6 +12,7 @@ public class UICirclePlain : MonoBehaviour {
 	/// The attached sound source component, with a beat sound specified as its default.
 	/// </summary>
 	private AudioSource source;
+
 	/// <summary>
 	/// The image component of this object
 	/// </summary>
@@ -48,7 +49,5 @@ public class UICirclePlain : MonoBehaviour {
 		//Debug.Log ("startAnimation() called");
 		//Play the animation in the Animator Component
 		animationComp.Play (0);
-		//Play the sound clip specified in the AudioSource component
-		source.PlayOneShot(source.clip);
 	}
 }

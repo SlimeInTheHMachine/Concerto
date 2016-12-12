@@ -13,6 +13,18 @@ public class Platformer : MonoBehaviour {
     public float lerpTime;
     public int score;
 
+    //Audio
+    public AudioClip[] slide;
+    public AudioClip[] jump;
+    public AudioClip[] fall;
+    public AudioClip error;
+    public AudioClip clash;
+    public AudioClip AttackA;
+    public AudioClip AttackB;
+    public AudioClip AttackX;
+    public AudioClip AttackY;
+
+
     //Private Variables
     private LayerMask platformLayerMask, enemyLayerMask;
     private BoxCollider2D colliderBox;
@@ -26,6 +38,7 @@ public class Platformer : MonoBehaviour {
 
     private attackInputs attackInput;
     private ComboScript currentEnemy;
+    private int beatCyclePos = 0;
 
     private bool haveAttacked;
     private bool haveMoved;
@@ -69,20 +82,51 @@ public class Platformer : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        //Layermask for platforms, used for raycasting
+        //Layermask Setup
         platformLayerMask = LayerMask.GetMask("Platform");
         enemyLayerMask = LayerMask.GetMask("Enemy");
+
+        //Collision Setup
         colliderBox = GetComponent<BoxCollider2D>();
         box = new Rect(colliderBox.bounds.min.x, colliderBox.bounds.min.y, colliderBox.bounds.size.x, colliderBox.bounds.size.y);
+
+        //Movement Setup
         lerpDestination = transform.position;
-        attackInput = attackInputs.None;
-        BeatMan.startBeat += Reset;
-        BeatMan.endBeat += sendNoInput;
+        startPos = transform.position;
+
+        //Enviro Ref Setup
         checks = GameObject.FindGameObjectsWithTag("Checkpoint");
         spikes = GameObject.FindGameObjectsWithTag("Spikes");
-        startPos = transform.position;
         checkpointPos = startPos;
+
+        //Input Setup
         mashingMove = 0;
+        attackInput = attackInputs.None;
+
+        //Sound Setup
+        beatCyclePos = 0;
+        slide = new AudioClip[] { (Resources.Load("Sounds/Dash") as AudioClip),
+            (Resources.Load("Sounds/Dash") as AudioClip),
+            (Resources.Load("Sounds/Dash") as AudioClip),
+            (Resources.Load("Sounds/Dash") as AudioClip) };
+        jump = new AudioClip[] { (Resources.Load("Sounds/Jump") as AudioClip),
+            (Resources.Load("Sounds/Jump") as AudioClip),
+            (Resources.Load("Sounds/Jump") as AudioClip),
+            (Resources.Load("Sounds/Jump") as AudioClip)};
+        fall = new AudioClip[] { (Resources.Load("Sounds/Fall") as AudioClip),
+            (Resources.Load("Sounds/Fall") as AudioClip),
+            (Resources.Load("Sounds/Fall") as AudioClip),
+            (Resources.Load("Sounds/Fall") as AudioClip)};
+        //clash =
+        //error =
+        //AttackA =
+        //AttackB =
+        //AttackX =
+        //AttackY = 
+
+        //Event Setup
+        BeatMan.startBeat += Reset;
+        BeatMan.endBeat += sendNoInput;
     }
 
     void FixedUpdate()
@@ -155,6 +199,7 @@ public class Platformer : MonoBehaviour {
                         lerpDestination = new Vector2(transform.position.x, transform.position.y + lerpDistance);
                         haveMoved = true;
                         joyStickInput = false;
+                        AudioMan.instance.AddClipToLiveQueue(jump[beatCyclePos]);
                     }
                     else
                     {
@@ -165,6 +210,7 @@ public class Platformer : MonoBehaviour {
                             haveMoved = true;
                             aerialMove = false;
                             joyStickInput = false;
+                            AudioMan.instance.AddClipToLiveQueue(jump[beatCyclePos]);
                         }
                     }
                 }
@@ -176,6 +222,7 @@ public class Platformer : MonoBehaviour {
                         lerpDestination = new Vector2(transform.position.x, transform.position.y - lerpDistance);
                         haveMoved = true;
                         joyStickInput = false;
+                        AudioMan.instance.AddClipToLiveQueue(fall[beatCyclePos]);
                     }
                 }
                 //Right
@@ -188,7 +235,7 @@ public class Platformer : MonoBehaviour {
                         haveMoved = true;
                         joyStickInput = false;
                         aerialMove = false;
-
+                        AudioMan.instance.AddClipToLiveQueue(slide[beatCyclePos]);
                         if (flipped)
                             Flip();
                     }
@@ -202,7 +249,7 @@ public class Platformer : MonoBehaviour {
                         haveMoved = true;
                         joyStickInput = false;
                         aerialMove = false;
-
+                        AudioMan.instance.AddClipToLiveQueue(slide[beatCyclePos]);
                         if (!flipped)
                             Flip();
                     }
@@ -362,6 +409,7 @@ public class Platformer : MonoBehaviour {
         if(!grounded && !haveMoved)
         {
             lerpDestination = new Vector2(transform.position.x, transform.position.y - lerpDistance);
+            AudioMan.instance.AddClipToLiveQueue(fall[beatCyclePos]);
         }
 
         if(mashingMove > 0)
@@ -382,6 +430,11 @@ public class Platformer : MonoBehaviour {
         }
         else
             mashingMove--;
+
+        if (beatCyclePos <= 2)
+            beatCyclePos++;
+        else
+            beatCyclePos = 0;
     }
 
     /// <summary>
