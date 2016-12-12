@@ -16,7 +16,6 @@ public class Platformer : MonoBehaviour {
     GameObject top, bottom, right, left;
 
     //Private Variables
-    private AudioSource audioSrc;
     private LayerMask platformLayerMask, enemyLayerMask;
     private BoxCollider2D colliderBox;
     private Rect box;
@@ -29,6 +28,18 @@ public class Platformer : MonoBehaviour {
 
     private attackInputs attackInput;
     private ComboScript currentEnemy;
+
+    //Sound Files
+    private AudioClip[] dash;
+    private AudioClip[] jump;
+    private AudioClip[] fall;
+    private AudioClip attackX;
+    private AudioClip attackY;
+    private AudioClip attackA;
+    private AudioClip attackB;
+    private AudioClip error;
+    private AudioClip clash;
+    private int beatCycleNum;
 
     private bool haveAttacked;
     private bool haveMoved;
@@ -68,8 +79,26 @@ public class Platformer : MonoBehaviour {
     //Called before all start functions
     void Awake()
     {
-
-    }
+        beatCycleNum = 0;
+        dash = new AudioClip[] { Resources.Load("Sounds/Synth Slide") as AudioClip,
+            Resources.Load("Sounds/Synth Slide") as AudioClip,
+            Resources.Load("Sounds/Synth Slide") as AudioClip,
+            Resources.Load("Sounds/Synth Slide") as AudioClip};
+        jump = new AudioClip[] { Resources.Load("Sounds/Synth Slide") as AudioClip,
+            Resources.Load("Sounds/Synth Slide") as AudioClip,
+            Resources.Load("Sounds/Synth Slide") as AudioClip,
+            Resources.Load("Sounds/Synth Slide") as AudioClip}; ;
+        fall = new AudioClip[] { Resources.Load("Sounds/Synth Slide") as AudioClip,
+            Resources.Load("Sounds/Synth Slide") as AudioClip,
+            Resources.Load("Sounds/Synth Slide") as AudioClip,
+            Resources.Load("Sounds/Synth Slide") as AudioClip};
+        //attackX;
+        //attackY;
+        //attackA;
+        //attackB;
+        //error;
+        //clash;
+}
 
     // Use this for initialization
     void Start () {
@@ -88,7 +117,6 @@ public class Platformer : MonoBehaviour {
         startPos = transform.position;
         checkpointPos = startPos;
         mashingMove = 0;
-        audioSrc = GetComponent<AudioSource>();
         foreach (GameObject child in transform)
         {
             switch (child.name)
@@ -184,7 +212,6 @@ public class Platformer : MonoBehaviour {
         {
             if(joyStickInput && mashingMove == 0) //Only move once per beat.
             {
-                audioSrc.PlayOneShot(audioSrc.clip,1);
                 //Jump
                 if (Input.GetAxis("Vertical") > 0 && rayUp.collider == null)
                 {
@@ -193,6 +220,7 @@ public class Platformer : MonoBehaviour {
                         lerpDestination = new Vector2(transform.position.x, transform.position.y + lerpDistance);
                         haveMoved = true;
                         joyStickInput = false;
+                        AudioMan.instance.AddClipToLiveQueue(jump[beatCycleNum]);
                     }
                     else
                     {
@@ -203,6 +231,7 @@ public class Platformer : MonoBehaviour {
                             haveMoved = true;
                             aerialMove = false;
                             joyStickInput = false;
+                            AudioMan.instance.AddClipToLiveQueue(jump[beatCycleNum]);
                         }
                     }
                 }
@@ -214,6 +243,7 @@ public class Platformer : MonoBehaviour {
                         lerpDestination = new Vector2(transform.position.x, transform.position.y - lerpDistance);
                         haveMoved = true;
                         joyStickInput = false;
+                        AudioMan.instance.AddClipToLiveQueue(fall[beatCycleNum]);
                     }
                 }
                 //Right
@@ -229,6 +259,8 @@ public class Platformer : MonoBehaviour {
 
                         if (flipped)
                             Flip();
+
+                        AudioMan.instance.AddClipToLiveQueue(dash[beatCycleNum]);
                     }
                 }
                 //Left
@@ -243,6 +275,8 @@ public class Platformer : MonoBehaviour {
 
                         if (!flipped)
                             Flip();
+
+                        AudioMan.instance.AddClipToLiveQueue(dash[beatCycleNum]);
                     }
                 }
             }    
@@ -257,6 +291,8 @@ public class Platformer : MonoBehaviour {
                     mashingMove = 3;
                 else
                     mashingMove = 2;
+
+                AudioMan.instance.AddClipToLiveQueue(error);
             }
         }
 
@@ -420,6 +456,11 @@ public class Platformer : MonoBehaviour {
         }
         else
             mashingMove--;
+
+        if (beatCycleNum <= 2)
+            beatCycleNum++;
+        else
+            beatCycleNum = 0;
     }
 
     /// <summary>
