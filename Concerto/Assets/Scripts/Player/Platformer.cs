@@ -40,6 +40,7 @@ public class Platformer : MonoBehaviour {
     private AudioClip error;
     private AudioClip clash;
     private int beatCycleNum;
+    private bool playedError;
 
     private bool haveAttacked;
     private bool haveMoved;
@@ -91,13 +92,14 @@ public class Platformer : MonoBehaviour {
             Resources.Load("Sounds/Synth Slide B3") as AudioClip};
 
         fall = Resources.Load("Sounds/Synth Slide C3") as AudioClip;
+        
+        //NULL FOR SOME REAAAASON?????????????
+        attackX = Resources.Load("Sounds/Synth Trumpet C3") as AudioClip;
+        attackY = Resources.Load("Sounds/Synth Trumpet D3") as AudioClip;
+        attackA = Resources.Load("Sounds/Synth Trumpet E3") as AudioClip;
+        attackB = Resources.Load("Sounds/Synth Trumpet F3") as AudioClip;
 
-        attackX = Resources.Load("Sounds/Attack C3") as AudioClip;
-        attackY = Resources.Load("Sounds/Attack D3") as AudioClip;
-        attackA = Resources.Load("Sounds/Attack E3") as AudioClip;
-        attackB = Resources.Load("Sounds/Attack F3") as AudioClip;
-
-        error = Resources.Load("Sounds/Error Sound") as AudioClip;
+        error = Resources.Load("Sounds/Attack D4") as AudioClip;
         //clash;
     }
 
@@ -206,7 +208,10 @@ public class Platformer : MonoBehaviour {
     void Update () {
         //Make sure joystick has returned to neutral state from last intput
         if (Input.GetAxis("Vertical") == 0 && Input.GetAxis("Horizontal") == 0)
+        {
             joyStickInput = true;
+            playedError = false;
+        }
 
         
         if (BeatMan.instance.onTime && !haveMoved) //Won't work off beat, but won't kill a combo offbeat either currently
@@ -293,7 +298,11 @@ public class Platformer : MonoBehaviour {
                 else
                     mashingMove = 2;
 
-                AudioMan.instance.AddClipToLiveQueue(error);
+                if (!playedError)
+                {
+                    AudioMan.instance.AddClipToLiveQueue(error);
+                    playedError = true;
+                }
             }
         }
 
@@ -360,7 +369,7 @@ public class Platformer : MonoBehaviour {
     {
         //See if there is combat input
         //If multiple inputs, Garbage Input
-        AudioClip playAudio = error;
+        AudioClip playAudio = null;
 
         if (Input.GetButtonDown("AButton"))
         {

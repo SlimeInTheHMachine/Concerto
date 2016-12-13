@@ -15,6 +15,12 @@ public class PlatManager : MonoBehaviour
     BoxCollider2D playerCollider;
     Platformer playerScript;
 
+    //Sound yo
+    private AudioClip leftMove;
+    private AudioClip rightMove;
+    private AudioClip[] movingPlats;
+
+
     public Color color1;
     public Color color2;
     public int beatCounter;
@@ -144,6 +150,12 @@ public class PlatManager : MonoBehaviour
                     platMovers[i] = movPlatformsHor[i - movPlatformsVer.Length].GetComponent<PlatMover>();
             }
         }
+
+        //where the soundy things are
+        leftMove = Resources.Load("Sounds/Bing") as AudioClip;
+        rightMove = Resources.Load("Sounds/Bing") as AudioClip;
+        movingPlats = new AudioClip[] { Resources.Load("Sounds/digibits") as AudioClip, Resources.Load("Sounds/digibits") as AudioClip };
+
     }
 
     // Use this for initialization
@@ -267,6 +279,7 @@ public class PlatManager : MonoBehaviour
                 {
                     playerScript.LerpDestination = new Vector2(player.transform.position.x - playerScript.lerpDistance, playerScript.transform.position.y);
                     playerScript.HaveMoved = true;
+                    AudioMan.instance.AddClipToLiveQueue(leftMove);
                     //player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                 }
             }
@@ -284,7 +297,8 @@ public class PlatManager : MonoBehaviour
                 {
                     playerScript.LerpDestination = new Vector2(player.transform.position.x + playerScript.lerpDistance, playerScript.transform.position.y);
                     playerScript.HaveMoved = true;
-                   // player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
+                    AudioMan.instance.AddClipToLiveQueue(rightMove);
+                    // player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                 }
             }
         }
@@ -368,17 +382,26 @@ public class PlatManager : MonoBehaviour
                     {
                         playerScript.LerpDestination = new Vector2(player.transform.position.x + platMovers[i + movPlatformsVer.Length].right, player.transform.position.y);
                         playerScript.HaveMoved = true;
-                       // player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
+                        AudioMan.instance.AddClipToLiveQueue(movingPlats[beatCounter]);
+                        // player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                     }
                     else
                     {
                         playerScript.LerpDestination = new Vector2(player.transform.position.x - platMovers[i + movPlatformsVer.Length].right, player.transform.position.y);
                         playerScript.HaveMoved = true;
-                       // player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
+                        AudioMan.instance.AddClipToLiveQueue(movingPlats[beatCounter]);
+                        // player.transform.position = Vector2.Lerp(player.transform.position, playerScript.LerpDestination, playerScript.lerpTime * Time.fixedDeltaTime);
                     }
                 }
                 //Lerps the Platform
                 platMovers[i + movPlatformsVer.Length].moveHor();
+            }
+            else
+            {
+                if (movPlatformsHorCols[i].IsTouching(playerCollider))
+                {
+                    AudioMan.instance.AddClipToLiveQueue(movingPlats[beatCounter]);
+                }
             }
         }
     }

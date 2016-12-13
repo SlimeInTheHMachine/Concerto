@@ -40,7 +40,7 @@ public class AudioMan : MonoBehaviour
         liveClipsPitch = new List<float>();
 
         clips.Add(mainBeat);
-        clips.Add(subBeat);
+        //clips.Add(subBeat);
 
         audioSrc = gameObject.AddComponent<AudioSource>();
         liveAudioSrc = gameObject.AddComponent<AudioSource>();
@@ -64,7 +64,6 @@ public class AudioMan : MonoBehaviour
                 liveAudioSrc.PlayOneShot(liveClips[i]);
             liveClips.Clear();
         }
-        
     }
 
     void PlayLongBeatAudio()

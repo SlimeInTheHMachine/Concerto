@@ -158,8 +158,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainBeat: {fileID: 8300000, guid: 1f13024e3534e3843ac0db938184d98a, type: 3}
-  subBeat: {fileID: 8300000, guid: 1ca820d993672fb4daa8e8bb0c585811, type: 3}
-  alternateQuery: 0
+  subBeat: {fileID: 8300000, guid: 1f13024e3534e3843ac0db938184d98a, type: 3}
+  alternateQuery: 1
 --- !u!114 &369528112
 MonoBehaviour:
   m_ObjectHideFlags: 0
