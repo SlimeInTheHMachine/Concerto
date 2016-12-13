@@ -32,7 +32,7 @@ public class Platformer : MonoBehaviour {
     //Sound Files
     private AudioClip[] dash;
     private AudioClip[] jump;
-    private AudioClip[] fall;
+    private AudioClip fall;
     private AudioClip attackX;
     private AudioClip attackY;
     private AudioClip attackA;
@@ -80,25 +80,26 @@ public class Platformer : MonoBehaviour {
     void Awake()
     {
         beatCycleNum = 0;
-        dash = new AudioClip[] { Resources.Load("Sounds/Synth Slide") as AudioClip,
-            Resources.Load("Sounds/Synth Slide") as AudioClip,
-            Resources.Load("Sounds/Synth Slide") as AudioClip,
-            Resources.Load("Sounds/Synth Slide") as AudioClip};
-        jump = new AudioClip[] { Resources.Load("Sounds/Synth Slide") as AudioClip,
-            Resources.Load("Sounds/Synth Slide") as AudioClip,
-            Resources.Load("Sounds/Synth Slide") as AudioClip,
-            Resources.Load("Sounds/Synth Slide") as AudioClip}; ;
-        fall = new AudioClip[] { Resources.Load("Sounds/Synth Slide") as AudioClip,
-            Resources.Load("Sounds/Synth Slide") as AudioClip,
-            Resources.Load("Sounds/Synth Slide") as AudioClip,
-            Resources.Load("Sounds/Synth Slide") as AudioClip};
-        //attackX;
-        //attackY;
-        //attackA;
-        //attackB;
-        //error;
+        dash = new AudioClip[] { Resources.Load("Sounds/Synth Slide D3") as AudioClip,
+            Resources.Load("Sounds/Synth Slide E3") as AudioClip,
+            Resources.Load("Sounds/Synth Slide F3") as AudioClip,
+            Resources.Load("Sounds/Synth Slide G3") as AudioClip};
+
+        jump = new AudioClip[] { Resources.Load("Sounds/Synth Slide A3") as AudioClip,
+            Resources.Load("Sounds/Synth Slide B3") as AudioClip,
+            Resources.Load("Sounds/Synth Slide A3") as AudioClip,
+            Resources.Load("Sounds/Synth Slide B3") as AudioClip};
+
+        fall = Resources.Load("Sounds/Synth Slide C3") as AudioClip;
+
+        attackX = Resources.Load("Sounds/Attack C3") as AudioClip;
+        attackY = Resources.Load("Sounds/Attack D3") as AudioClip;
+        attackA = Resources.Load("Sounds/Attack E3") as AudioClip;
+        attackB = Resources.Load("Sounds/Attack F3") as AudioClip;
+
+        error = Resources.Load("Sounds/Error Sound") as AudioClip;
         //clash;
-}
+    }
 
     // Use this for initialization
     void Start () {
@@ -220,7 +221,7 @@ public class Platformer : MonoBehaviour {
                         lerpDestination = new Vector2(transform.position.x, transform.position.y + lerpDistance);
                         haveMoved = true;
                         joyStickInput = false;
-                        AudioMan.instance.AddClipToLiveQueue(jump[beatCycleNum]);
+                        AudioMan.instance.AddClipToLiveQueue(jump[beatCycleNum % (jump.Length - 1)]);
                     }
                     else
                     {
@@ -243,7 +244,7 @@ public class Platformer : MonoBehaviour {
                         lerpDestination = new Vector2(transform.position.x, transform.position.y - lerpDistance);
                         haveMoved = true;
                         joyStickInput = false;
-                        AudioMan.instance.AddClipToLiveQueue(fall[beatCycleNum]);
+                        AudioMan.instance.AddClipToLiveQueue(fall);
                     }
                 }
                 //Right
@@ -359,38 +360,67 @@ public class Platformer : MonoBehaviour {
     {
         //See if there is combat input
         //If multiple inputs, Garbage Input
+        AudioClip playAudio = error;
+
         if (Input.GetButtonDown("AButton"))
         {
             if (attackInput == attackInputs.None)
+            {
                 attackInput = attackInputs.A;
+                playAudio = attackA;
+            }
             else
+            {
                 attackInput = attackInputs.Garbage;
+                playAudio = error;
+            }
         }
         if (Input.GetButtonDown("BButton"))
         {
             if (attackInput == attackInputs.None)
+            {
                 attackInput = attackInputs.B;
+                playAudio = attackB;
+            }
             else
+            {
                 attackInput = attackInputs.Garbage;
+                playAudio = error;
+            }
         }
         if (Input.GetButtonDown("XButton"))
         {
             if (attackInput == attackInputs.None)
+            {
                 attackInput = attackInputs.X;
+                playAudio = attackX;
+            }
             else
+            {
                 attackInput = attackInputs.Garbage;
+                playAudio = error;
+            }
         }
         if (Input.GetButtonDown("YButton"))
         {
             if (attackInput == attackInputs.None)
+            {
                 attackInput = attackInputs.Y;
+                playAudio = attackY;
+            }
             else
+            {
                 attackInput = attackInputs.Garbage;
+                playAudio = error;
+            }
         }
 
         //If Offbeat or button mash, Garbage Input
         if (!BeatMan.instance.onTime || haveAttacked)
+        {
             attackInput = attackInputs.Garbage;
+            playAudio = error;
+        }
 
         //Clash back if you mess up
         if(!currentEnemy.CheckInput(attackInput))
@@ -398,9 +428,12 @@ public class Platformer : MonoBehaviour {
             //clash code here
             Clash();
             currentEnemy = null;
+            playAudio = clash;
         }
+
         //We've attempted to attack this beat
-        haveAttacked = true;    
+        AudioMan.instance.AddClipToLiveQueue(playAudio);
+        haveAttacked = true;
     }
 
     /// <summary>
@@ -436,6 +469,7 @@ public class Platformer : MonoBehaviour {
         if(!grounded && !haveMoved)
         {
             lerpDestination = new Vector2(transform.position.x, transform.position.y - lerpDistance);
+            AudioMan.instance.AddClipToLiveQueue(fall);
         }
 
         if(mashingMove > 0)

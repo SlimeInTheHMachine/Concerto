@@ -103,7 +103,7 @@ public class BeatMan : MonoBehaviour
             endBeat(); 
         }
 
-        if(!offBeatHit && offBeat != null && Time.time >= offBeatTime /*- inputMarginOfError*/)
+        if(!offBeatHit && offBeat != null && Time.time >= offBeatTime - inputMarginOfError)
         {
             offBeatTime = nextBeat + timeBetweenBeats / 2;
             offBeatHit = true;

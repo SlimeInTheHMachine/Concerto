@@ -157,9 +157,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba44192facbabe74ca933b8b1cd2a130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainBeat: {fileID: 8300000, guid: 91c34637fdf821444a0ade24dea820ce, type: 3}
-  subBeat: {fileID: 8300000, guid: 91c34637fdf821444a0ade24dea820ce, type: 3}
-  alternateQuery: 1
+  mainBeat: {fileID: 8300000, guid: 1f13024e3534e3843ac0db938184d98a, type: 3}
+  subBeat: {fileID: 8300000, guid: 1ca820d993672fb4daa8e8bb0c585811, type: 3}
+  alternateQuery: 0
 --- !u!114 &369528112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -313,7 +313,7 @@ MonoBehaviour:
   offBeatHit: 0
   timeBetweenBeats: .5
   inputMarginOfError: 0
-  maxInputMarginOfError: .14999999999999999
+  maxInputMarginOfError: .25
   minInputMarginOfError: .074999999999999997
   nextBeat: 0
 --- !u!1 &911001993
@@ -653,7 +653,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: .192156866, g: .301960796, b: .474509805, a: .0196078438}
+  m_BackGroundColor: {r: .201124579, g: .202881515, b: .45588237, a: .0196078438}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
