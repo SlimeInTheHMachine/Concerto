@@ -1,12 +1,17 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+<<<<<<< HEAD
 --- !u!1 &140118
+=======
+--- !u!1 &129902
+>>>>>>> origin/Rose_Branch
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
+<<<<<<< HEAD
   - 4: {fileID: 447682}
   - 50: {fileID: 5086354}
   - 61: {fileID: 6101262}
@@ -29,6 +34,11 @@ GameObject:
   - 61: {fileID: 6190664}
   m_Layer: 0
   m_Name: Right Node
+=======
+  - 4: {fileID: 488594}
+  m_Layer: 10
+  m_Name: LeftFist
+>>>>>>> origin/Rose_Branch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55,23 +65,34 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+<<<<<<< HEAD
 --- !u!1 &189762
+=======
+--- !u!1 &185730
+>>>>>>> origin/Rose_Branch
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
+<<<<<<< HEAD
   - 4: {fileID: 419890}
   - 50: {fileID: 5073180}
   - 61: {fileID: 6159950}
   m_Layer: 0
   m_Name: Left Node
+=======
+  - 4: {fileID: 485834}
+  m_Layer: 10
+  m_Name: RightFist
+>>>>>>> origin/Rose_Branch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+<<<<<<< HEAD
 --- !u!1 &193150
 GameObject:
   m_ObjectHideFlags: 0
@@ -114,25 +135,44 @@ Transform:
   m_Father: {fileID: 494548}
   m_RootOrder: 2
 --- !u!4 &447682
+=======
+--- !u!4 &485834
+>>>>>>> origin/Rose_Branch
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
+<<<<<<< HEAD
   m_GameObject: {fileID: 140118}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
+=======
+  m_GameObject: {fileID: 185730}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: .331, y: -.0710000023, z: 0}
+>>>>>>> origin/Rose_Branch
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 494548}
   m_RootOrder: 0
+<<<<<<< HEAD
 --- !u!4 &471482
+=======
+--- !u!4 &488594
+>>>>>>> origin/Rose_Branch
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
+<<<<<<< HEAD
   m_GameObject: {fileID: 193150}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -1, z: 0}
+=======
+  m_GameObject: {fileID: 129902}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -.314999998, y: -.0710000098, z: 0}
+>>>>>>> origin/Rose_Branch
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 494548}
@@ -144,6 +184,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 158370}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 7.64671803, y: 14.7370062, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -151,6 +192,13 @@ Transform:
   - {fileID: 471482}
   - {fileID: 431758}
   - {fileID: 419890}
+=======
+  m_LocalPosition: {x: 7.22406769, y: .523299098, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 485834}
+  - {fileID: 488594}
+>>>>>>> origin/Rose_Branch
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!50 &5073180
@@ -409,6 +457,9 @@ MonoBehaviour:
   lerpTime: 18
   score: 0
   lerpDestination: {x: 0, y: 0}
+  fightSprite: {fileID: 185016, guid: c64147498841e7b4db6094d5dd89334e, type: 2}
+  LeftFist: {fileID: 129902}
+  RightFist: {fileID: 185730}
 --- !u!212 &21236604
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -468,6 +519,10 @@ Prefab:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: fightSprite
+      value: 
+      objectReference: {fileID: 185016, guid: c64147498841e7b4db6094d5dd89334e, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 158370}

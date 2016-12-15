@@ -27,7 +27,7 @@ public class Platformer : MonoBehaviour {
     private float shake;
 
     private attackInputs attackInput;
-    private ComboScript currentEnemy;
+    private Combo2   currentEnemy;
 
     //Sound Files
     private AudioClip[] dash;
@@ -77,6 +77,8 @@ public class Platformer : MonoBehaviour {
         set { canFall = value; }
     }
 
+    [SerializeField]
+    GameObject fightSprite, LeftFist, RightFist;
     //Called before all start functions
     void Awake()
     {
@@ -335,9 +337,10 @@ public class Platformer : MonoBehaviour {
         }
 
         //Attack
-        if (enemyRayHit.collider != null && (Input.GetButtonDown("AButton") || Input.GetButtonDown("BButton") || Input.GetButtonDown("XButton") || Input.GetButtonDown("YButton")))
+        if (enemyRayHit.collider != null)
         {
-                currentEnemy = enemyRayHit.transform.gameObject.GetComponent<ComboScript>();
+            Debug.Log("I see an enemy");
+                currentEnemy = enemyRayHit.transform.gameObject.GetComponent<Combo2>();
                 CombatInput();
         }
 
@@ -367,84 +370,60 @@ public class Platformer : MonoBehaviour {
     /// </summary>
     void CombatInput()
     {
-        //See if there is combat input
-        //If multiple inputs, Garbage Input
-        AudioClip playAudio = null;
+		//Hits hit;
+		//See if there is combat input
+		//If multiple inputs, Garbage Input
+		AudioClip playAudio = null;
+			
+		if (UnityEngine.Input.GetButtonDown ("XButton")) {
+			currentEnemy.GetComponent<Combo2> ().HitHigh (Hits.high);
+			playAudio = attackX;
+			return;
+		}
+		if (UnityEngine.Input.GetButtonDown ("YButton")) {
+			currentEnemy.GetComponent<Combo2> ().HitMed (Hits.med);
+			playAudio = attackY;
+			return;
+		}
+		if (UnityEngine.Input.GetButtonDown ("BButton")) {
+			currentEnemy.GetComponent<Combo2> ().HitLow (Hits.low);
+			playAudio = attackB;
+			return;
+		}
+        
 
-        if (Input.GetButtonDown("AButton"))
-        {
-            if (attackInput == attackInputs.None)
-            {
-                attackInput = attackInputs.A;
-                playAudio = attackA;
-            }
-            else
-            {
-                attackInput = attackInputs.Garbage;
-                playAudio = error;
-            }
-        }
-        if (Input.GetButtonDown("BButton"))
-        {
-            if (attackInput == attackInputs.None)
-            {
-                attackInput = attackInputs.B;
-                playAudio = attackB;
-            }
-            else
-            {
-                attackInput = attackInputs.Garbage;
-                playAudio = error;
-            }
-        }
-        if (Input.GetButtonDown("XButton"))
-        {
-            if (attackInput == attackInputs.None)
-            {
-                attackInput = attackInputs.X;
-                playAudio = attackX;
-            }
-            else
-            {
-                attackInput = attackInputs.Garbage;
-                playAudio = error;
-            }
-        }
-        if (Input.GetButtonDown("YButton"))
-        {
-            if (attackInput == attackInputs.None)
-            {
-                attackInput = attackInputs.Y;
-                playAudio = attackY;
-            }
-            else
-            {
-                attackInput = attackInputs.Garbage;
-                playAudio = error;
-            }
-        }
+		//If Offbeat or button mash, Garbage Input
+		if (!BeatMan.instance.onTime || haveAttacked) {
+			attackInput = attackInputs.Garbage;
+			playAudio = error;
+		}
 
-        //If Offbeat or button mash, Garbage Input
-        if (!BeatMan.instance.onTime || haveAttacked)
-        {
-            attackInput = attackInputs.Garbage;
-            playAudio = error;
-        }
+		//We've attempted to attack this beat
+		AudioMan.instance.AddClipToLiveQueue (playAudio);
+		haveAttacked = true;
 
-        //Clash back if you mess up
-        if(!currentEnemy.CheckInput(attackInput))
-        {
-            //clash code here
-            Clash();
-            currentEnemy = null;
-            playAudio = clash;
-        }
-
-        //We've attempted to attack this beat
-        AudioMan.instance.AddClipToLiveQueue(playAudio);
-        haveAttacked = true;
+	}
+    public void GenerateRight(float updwn)
+    {
+        GameObject temp = (GameObject)Instantiate(fightSprite);
+        Vector3 tempP = new Vector3(RightFist.transform.position.x, RightFist.transform.position.y + updwn,RightFist.transform.position.z);//)
+        temp.transform.position = tempP;
+        Destroy(temp, 0.5f);
     }
+    public void GenerateLeft()
+    {
+        GameObject temp = (GameObject)Instantiate(fightSprite);
 
+        temp.transform.position = LeftFist.transform.position;
+        Destroy(temp, 0.5f);
+    }
+    void GenerateFightSprite()
+    {
+        GameObject temp = (GameObject)Instantiate(fightSprite);
+        
+        temp.transform.position = transform.position ;
+        Destroy(temp, 0.5f);
+    }
     /// <summary>
     /// Bounce away from enemy
     /// </summary>
@@ -465,11 +444,11 @@ public class Platformer : MonoBehaviour {
         if (currentEnemy != null && !haveAttacked)
         {
             attackInput = attackInputs.None;
-            if (!currentEnemy.CheckInput(attackInput))
-            {
-                Clash();
-                currentEnemy = null;
-            }
+            //if (!currentEnemy.CheckInput(attackInput))
+            //{
+            //   // Clash();
+            //    currentEnemy = null;
+            //}
         }
         haveAttacked = true;
 

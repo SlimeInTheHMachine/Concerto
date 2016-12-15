@@ -53,6 +53,18 @@ public class AttackInputWrapper
     }
 }
 
+public class ButtonLetter{
+    public GameObject sprite;
+    public attackInputs atkInput;
+
+
+    public ButtonLetter(GameObject Sp, attackInputs input)
+    {
+        sprite = Sp;
+        atkInput = input; 
+    }
+}
+
 public class ComboScript : MonoBehaviour {
 
     //Public Variables
@@ -62,7 +74,7 @@ public class ComboScript : MonoBehaviour {
     [SerializeField]
     GameObject letter1, letter2, letter3, letter4;
     //Private Variables
-    private Queue<attackInputs> combo, currentCombo;
+    private Queue<ButtonLetter> combo, currentCombo;
     int lettersLeft = 4;
     //temp Shake code
     private float shake;
@@ -86,6 +98,9 @@ public class ComboScript : MonoBehaviour {
 
     int moveCounter = 0; //2 beats of nothing
     bool lastMoveLeft = false;
+
+
+    public int health = 3;
     // Use this for initialization
     void Start () {
        // flipped = true;
@@ -93,63 +108,67 @@ public class ComboScript : MonoBehaviour {
         BoxCollider2D colliderBox = GetComponent<BoxCollider2D>();
         box = new Rect(colliderBox.bounds.min.x, colliderBox.bounds.min.y, colliderBox.bounds.size.x, colliderBox.bounds.size.y);
         enemyLayerMask = LayerMask.GetMask("Player");
-
-        AttackInputWrapper btnHolder1 = new AttackInputWrapper(button1);
-        letter1.GetComponent<TextMesh>().text = btnHolder1.attackLetter;
-        AttackInputWrapper btnHolder2 = new AttackInputWrapper(button2);
-        letter2.GetComponent<TextMesh>().text = btnHolder2.attackLetter;
-        AttackInputWrapper btnHolder3 = new AttackInputWrapper(button3);
-        letter3.GetComponent<TextMesh>().text = btnHolder3.attackLetter;
-        AttackInputWrapper btnHolder4 = new AttackInputWrapper(button4);
-        letter4.GetComponent<TextMesh>().text = btnHolder4.attackLetter;
-        combo = new Queue<attackInputs>();
-        if (numOfLetters >= 0)
+        combo = new Queue<ButtonLetter>();
+        foreach (Transform child in transform)
         {
-            combo.Enqueue(button1);
+            if(child.gameObject.name == "1")
+            {
+                ButtonLetter bLetter = new ButtonLetter(letter1, button1);
+                combo.Enqueue(bLetter);
+                Debug.Log("First");
+                child.gameObject.GetComponent<SpriteRenderer>().sprite = letter1.GetComponent<SpriteRenderer>().sprite;
+            }
+            if (child.gameObject.name == "2")
+            {
+                ButtonLetter bLetter = new ButtonLetter(letter2, button2);
+                combo.Enqueue(bLetter);
+                Debug.Log("Secind");
+                child.gameObject.GetComponent<SpriteRenderer>().sprite = letter2.GetComponent<SpriteRenderer>().sprite;
+            }
+            if (child.gameObject.name == "3")
+            {
+                ButtonLetter bLetter = new ButtonLetter(letter3, button3);
+                combo.Enqueue(bLetter);
+                Debug.Log("Third");
+                child.gameObject.GetComponent<SpriteRenderer>().sprite = letter2.GetComponent<SpriteRenderer>().sprite;
+            }
+            if (child.gameObject.name == "4")
+            {
+                ButtonLetter bLetter = new ButtonLetter(letter4, button4);
+                combo.Enqueue(bLetter);
+                Debug.Log("Fourth");
+                child.gameObject.GetComponent<SpriteRenderer>().sprite = letter2.GetComponent<SpriteRenderer>().sprite;
+            }
         }
-        if (numOfLetters > 1)
-            combo.Enqueue(button2);
-        else
-            letter2.SetActive(false);
-        if (numOfLetters > 2)
-            combo.Enqueue(button3);
-        else
-            letter3.SetActive(false);
-        if (numOfLetters > 3)
-            combo.Enqueue(button4);
-        else
-            letter4.SetActive(false);
-        Debug.Log(combo.Count);
-        //Deep Clone
-
-        currentCombo = new Queue<attackInputs>(combo);
+       
+        currentCombo = new Queue<ButtonLetter>(combo);
         OGPos = transform.position;
         lerpDestination = this.transform.position;
     }
 
     void ResetQueue()
     {
-        currentCombo = new Queue<attackInputs>(combo);
-        if(lettersLeft == 1)
-        {
-            letter3.GetComponent<MeshRenderer>().enabled = true;
-            lettersLeft += 1;
-        }
-        if (lettersLeft == 2)
-        {
-            letter2.GetComponent<MeshRenderer>().enabled = true;
-            lettersLeft += 1;
-        }
-        if (lettersLeft == 3)
-        {
-            letter1.GetComponent<MeshRenderer>().enabled = true;
-            lettersLeft += 1;
-        }
-        //lettersLeft = 4;
-        if (lettersLeft != 4)
-        {
-            lettersLeft = 4;
-        }
+        //currentCombo = new Queue<attackInputs>(combo);
+        //if(lettersLeft == 1)
+        //{
+        //    letter3.GetComponent<MeshRenderer>().enabled = true;
+        //    lettersLeft += 1;
+        //}
+        //if (lettersLeft == 2)
+        //{
+        //    letter2.GetComponent<MeshRenderer>().enabled = true;
+        //    lettersLeft += 1;
+        //}
+        //if (lettersLeft == 3)
+        //{
+        //    letter1.GetComponent<MeshRenderer>().enabled = true;
+        //    lettersLeft += 1;
+        //}
+        ////lettersLeft = 4;
+        //if (lettersLeft != 4)
+        //{
+        //    lettersLeft = 4;
+        //}
         
     }
 
@@ -169,7 +188,7 @@ public class ComboScript : MonoBehaviour {
 
         if (rayHit.collider != null)
         {
-            Debug.Log("Hitting Player");
+            //Debug.Log("Hitting Player");
             playerInRange = true;
             //I see no problem with this :^) -Rose
             playerObject = rayHit.collider.gameObject;
@@ -189,17 +208,18 @@ public class ComboScript : MonoBehaviour {
     /// <summary>
     /// Has a number of windups equal to the max number of spots + 1
     /// </summary>
+    ///
     void Attack()
     {
-        if(attackCounter == numOfLetters+1)
+        if (attackCounter == numOfLetters + 1)
         {
-            Debug.Log("Attacking");
+            //Debug.Log("Attacking");
             //EnemyClash();
             attackCounter = 0;
         }
         else
         {
-            Debug.Log("Getting Ready to Attack");
+            // Debug.Log("Getting Ready to Attack");
             ++attackCounter;
         }
     }
@@ -227,9 +247,9 @@ public class ComboScript : MonoBehaviour {
     // Update is called once per frame
     public void EnemyUpdate ()
     {
-        Debug.Log("Update");
+        //Debug.Log("Update");
         if (playerInRange)
-            Attack();
+          Attack();
         else
         {
             //Movement
@@ -258,6 +278,38 @@ public class ComboScript : MonoBehaviour {
         }
     }
 
+
+    public void Attacked()
+    {
+        //Debug.Log("I'm attacked");
+        //health -= 1;
+        //if (PlatManager.instance.player.transform.position.x < transform.position.x)
+        //{
+        //    PlatManager.instance.player.GetComponent<Platformer>().GenerateRight();
+        //}
+        //else
+        //{
+        //    PlatManager.instance.player.GetComponent<Platformer>().GenerateLeft();
+        //}
+        //    if (health <= 0)
+        //{
+        //    Destroy(gameObject, 2f);
+        //    //get tossed
+        //    if(PlatManager.instance.player.transform.position.x < transform.position.x)
+        //    {
+        //       // PlatManager.instance.player.GetComponent<Platformer>().GenerateRight();
+        //        gameObject.AddComponent<Rigidbody2D>();
+        //        gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(1, 1) * 25, ForceMode2D.Impulse);
+        //    }
+        //    else
+        //    {
+        //       // PlatManager.instance.player.GetComponent<Platformer>().GenerateLeft();
+        //        gameObject.AddComponent<Rigidbody2D>();
+        //        gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(-1, 1) * 25, ForceMode2D.Impulse);
+        //    }
+        //    Destroy(this);
+        //}
+    }
     /// <summary>
     /// Called by the enemy to initate a clash if the player misses enough beats
     /// </summary>
@@ -295,7 +347,7 @@ public class ComboScript : MonoBehaviour {
     }
     public bool CheckInput(attackInputs input)
     {
-        Debug.Log(currentCombo.Peek());
+        Debug.Log(currentCombo.Peek().atkInput);
         //Reset on mess up
         if (input == attackInputs.Garbage)
         {
@@ -304,35 +356,35 @@ public class ComboScript : MonoBehaviour {
         }
         else
         {
-            if (input == currentCombo.Peek())
-            {
-                currentCombo.Dequeue();
-                shake = 0.05f;
-                OGPos = transform.position;
-                lettersLeft--;
-                if (lettersLeft == 1)
-                {
-                    letter3.GetComponent<MeshRenderer>().enabled = false;
-                }
-                if (lettersLeft == 2)
-                {
-                    letter2.GetComponent<MeshRenderer>().enabled = false;
-                }
-                if (lettersLeft == 3)
-                {
-                    letter1.GetComponent<MeshRenderer>().enabled = false;
-                }
-            }
-            else
-            {
-                ResetQueue();
-                return false;
-            }
-            if (currentCombo.Count == 0)
-            {
-                Destroy(gameObject);
-                return true;
-            }
+            //if (input == currentCombo.Peek())
+            //{
+            //    currentCombo.Dequeue();
+            //    shake = 0.05f;
+            //    OGPos = transform.position;
+            //    lettersLeft--;
+            //    if (lettersLeft == 1)
+            //    {
+            //        letter3.GetComponent<MeshRenderer>().enabled = false;
+            //    }
+            //    if (lettersLeft == 2)
+            //    {
+            //        letter2.GetComponent<MeshRenderer>().enabled = false;
+            //    }
+            //    if (lettersLeft == 3)
+            //    {
+            //        letter1.GetComponent<MeshRenderer>().enabled = false;
+            //    }
+            //}
+            //else
+            //{
+            //    ResetQueue();
+            //    return false;
+            //}
+            //if (currentCombo.Count == 0)
+            //{
+            //    Destroy(gameObject);
+            //    return true;
+            //}
             return true;
         }
     }
