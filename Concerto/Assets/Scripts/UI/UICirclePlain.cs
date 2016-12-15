@@ -9,10 +9,6 @@ public class UICirclePlain : MonoBehaviour {
 	/// </summary>
 	private Animator animationComp;
 	/// <summary>
-	/// The attached sound source component, with a beat sound specified as its default.
-	/// </summary>
-	private AudioSource source;
-	/// <summary>
 	/// The image component of this object
 	/// </summary>
 	private Image thisImage;
@@ -29,7 +25,6 @@ public class UICirclePlain : MonoBehaviour {
 	void Start () {
 		//Find attached components
 		animationComp = this.GetComponent<Animator> ();
-		source = this.GetComponent<AudioSource> ();
 		thisImage = this.GetComponent<Image> ();
 		//Subscribe to onBeat()
 		BeatMan.onBeat += startAnimation;
@@ -48,7 +43,5 @@ public class UICirclePlain : MonoBehaviour {
 		//Debug.Log ("startAnimation() called");
 		//Play the animation in the Animator Component
 		animationComp.Play (0);
-		//Play the sound clip specified in the AudioSource component
-		source.PlayOneShot(source.clip);
 	}
 }
