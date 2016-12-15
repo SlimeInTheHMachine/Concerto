@@ -56,6 +56,7 @@ public class Platformer : MonoBehaviour {
     private GameObject[] checks;
     private GameObject[] spikes;
     private GameObject[] nodes;
+    private GameObject finish;
     public Vector2 LerpDestination
     {
         get { return lerpDestination; }
@@ -118,9 +119,11 @@ public class Platformer : MonoBehaviour {
         BeatMan.endBeat += sendNoInput;
         checks = GameObject.FindGameObjectsWithTag("Checkpoint");
         spikes = GameObject.FindGameObjectsWithTag("Spikes");
+        finish = GameObject.Find("Finish");
         startPos = transform.position;
         checkpointPos = startPos;
         mashingMove = 0;
+        audioSrc = GetComponent<AudioSource>();
         foreach (Transform child in transform)
         {
             switch (child.name)
@@ -136,6 +139,13 @@ public class Platformer : MonoBehaviour {
                     break;
                 case "Left Node":
 					left = child.gameObject;
+                    bottom = child.gameObject;
+                    break;
+                case "Right Node":
+                    right = child.gameObject;
+                    break;
+                case "Left Node":
+                    left = child.gameObject;
                     break;
             }
         }
@@ -317,11 +327,11 @@ public class Platformer : MonoBehaviour {
 
         //Set Checkpoints 
         setCheckpoint();
-        if (GameObject.Find("Finish") != null)
+        if (finish != null)
         {
-            if (GameObject.Find("Finish").GetComponent<BoxCollider2D>().IsTouching(this.GetComponent<BoxCollider2D>()))
+            if (finish.GetComponent<BoxCollider2D>().IsTouching(this.GetComponent<BoxCollider2D>()))
             {
-                //Need end condition
+                    finishLevel();
             }
         }
         if (spikes != null)
@@ -334,6 +344,7 @@ public class Platformer : MonoBehaviour {
                 }
             }
         }
+        
 
         //Attack
         if (enemyRayHit.collider != null)
@@ -485,8 +496,16 @@ public class Platformer : MonoBehaviour {
     /// </summary>
     void ResettoCheck()
     {
-        transform.position = new Vector3(checkpointPos.x,checkpointPos.y,0f);
+        transform.position = new Vector3(checkpointPos.x, checkpointPos.y, 0f);
         lerpDestination = new Vector2(checkpointPos.x, checkpointPos.y);
+    }
+
+    /// <summary>
+    /// go to the next level
+    /// </summary>
+    void finishLevel()
+    {
+        Application.LoadLevel("Menu");
     }
 
     /// <summary>

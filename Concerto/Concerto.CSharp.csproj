@@ -75,6 +75,10 @@
     <Compile Include="Assets\Scripts\Audio\WhiteNoise.cs" />
     <Compile Include="Assets\Scripts\Beat\BeatAnimationScript.cs" />
     <Compile Include="Assets\Scripts\Beat\BeatMan.cs" />
+    <Compile Include="Assets\Scripts\Button Scripts\button_Script_Back.cs" />
+    <Compile Include="Assets\Scripts\Button Scripts\button_Script_Credits.cs" />
+    <Compile Include="Assets\Scripts\Button Scripts\button_Script_Instructions.cs" />
+    <Compile Include="Assets\Scripts\Button Scripts\button_Script_Start.cs" />
     <Compile Include="Assets\Scripts\Camera\CamBehavior.cs" />
     <Compile Include="Assets\Scripts\Enemies\ComboScript.cs" />
     <Compile Include="Assets\Scripts\Enemies\EnemyMan.cs" />
