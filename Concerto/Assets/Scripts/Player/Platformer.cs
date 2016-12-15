@@ -123,7 +123,6 @@ public class Platformer : MonoBehaviour {
         startPos = transform.position;
         checkpointPos = startPos;
         mashingMove = 0;
-        audioSrc = GetComponent<AudioSource>();
         foreach (Transform child in transform)
         {
             switch (child.name)
@@ -136,13 +135,6 @@ public class Platformer : MonoBehaviour {
                     break;
                 case "Right Node":
 					right = child.gameObject;
-                    break;
-                case "Left Node":
-					left = child.gameObject;
-                    bottom = child.gameObject;
-                    break;
-                case "Right Node":
-                    right = child.gameObject;
                     break;
                 case "Left Node":
                     left = child.gameObject;
