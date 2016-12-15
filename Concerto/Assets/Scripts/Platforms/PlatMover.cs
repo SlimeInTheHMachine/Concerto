@@ -6,6 +6,7 @@ public class PlatMover : MonoBehaviour
     public bool moveForward;
     public float up;
     public float right;
+    public float lerpTime;
     GameObject beatManager;
     private double beatTime;
 
@@ -31,12 +32,15 @@ public class PlatMover : MonoBehaviour
     }
     public void moveVer()
     {
+        //Update next location to move to //Supersmooth lerp t = (lerpTime * Time.fixedDeltaTime),  (lerp = t*t*t * (t * (6f*t - 15f) + 10f))
+
 
         if (moveForward)
         {
 
             float PosChanged = (Time.time - startTime) * Mathf.Abs(transform.position.y) / timeBetweenPosChange;
             float t = PosChanged / Mathf.Abs(endPosVer.y);
+            //float t= ((lerpTime * Time.fixedDeltaTime) * (lerpTime * Time.fixedDeltaTime) * (lerpTime * Time.fixedDeltaTime)) * ((lerpTime * Time.fixedDeltaTime) * ((6f * (lerpTime * Time.fixedDeltaTime)) - 15f) + 10f);
             transform.position = Vector3.Lerp(startPos, endPosVer, t);
 
             if (transform.position.y == endPosVer.y)
@@ -49,6 +53,7 @@ public class PlatMover : MonoBehaviour
         {
             float PosChanged = (Time.time - startTime) * Mathf.Abs(transform.position.y) / timeBetweenPosChange;
             float t = PosChanged / Mathf.Abs(startPos.y);
+            //float t = ((lerpTime * Time.fixedDeltaTime) * (lerpTime * Time.fixedDeltaTime) * (lerpTime * Time.fixedDeltaTime)) * ((lerpTime * Time.fixedDeltaTime) * ((6f * (lerpTime * Time.fixedDeltaTime)) - 15f) + 10f);
             transform.position = Vector2.Lerp(endPosVer, startPos, t);
 
             if (transform.position.y == startPos.y)

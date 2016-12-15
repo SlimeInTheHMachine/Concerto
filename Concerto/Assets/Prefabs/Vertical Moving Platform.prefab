@@ -85,6 +85,7 @@ MonoBehaviour:
   moveForward: 0
   up: 1
   right: 0
+  lerpTime: 18
   sprite1: {fileID: 21300000, guid: 4501d5eef2f46e74a96a10b5b6274cc4, type: 3}
   sprite2: {fileID: 21300000, guid: 1c06c14aa0fd80b418e62875a2dd625a, type: 3}
 --- !u!212 &21226160
@@ -145,6 +146,10 @@ Prefab:
       value: 
       objectReference: {fileID: 21300000, guid: 1c06c14aa0fd80b418e62875a2dd625a,
         type: 3}
+    - target: {fileID: 0}
+      propertyPath: lerpTime
+      value: 18
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 156094}
