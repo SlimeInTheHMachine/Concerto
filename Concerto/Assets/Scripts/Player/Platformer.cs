@@ -95,7 +95,6 @@ public class Platformer : MonoBehaviour {
 
         fall = Resources.Load("Sounds/Synth Slide C3") as AudioClip;
         
-        //NULL FOR SOME REAAAASON?????????????
         attackX = Resources.Load("Sounds/Synth Trumpet C3") as AudioClip;
         attackY = Resources.Load("Sounds/Synth Trumpet D3") as AudioClip;
         attackA = Resources.Load("Sounds/Synth Trumpet E3") as AudioClip;
@@ -122,21 +121,21 @@ public class Platformer : MonoBehaviour {
         startPos = transform.position;
         checkpointPos = startPos;
         mashingMove = 0;
-        foreach (GameObject child in transform)
+        foreach (Transform child in transform)
         {
             switch (child.name)
             {
                 case "Top Node":
-                    top = child;
+                    top = child.gameObject;
                     break;
                 case "Bottom Node":
-                    bottom = child;
+					bottom = child.gameObject;
                     break;
                 case "Right Node":
-                    right = child;
+					right = child.gameObject;
                     break;
                 case "Left Node":
-                    left = child;
+					left = child.gameObject;
                     break;
             }
         }
@@ -228,7 +227,7 @@ public class Platformer : MonoBehaviour {
                         lerpDestination = new Vector2(transform.position.x, transform.position.y + lerpDistance);
                         haveMoved = true;
                         joyStickInput = false;
-                        AudioMan.instance.AddClipToLiveQueue(jump[beatCycleNum % (jump.Length - 1)]);
+                        AudioMan.instance.AddClipToLiveQueue(jump[beatCycleNum]);
                     }
                     else
                     {
@@ -377,30 +376,26 @@ public class Platformer : MonoBehaviour {
 			
 		if (UnityEngine.Input.GetButtonDown ("XButton")) {
 			currentEnemy.GetComponent<Combo2> ().HitHigh (Hits.high);
-			playAudio = attackX;
+			AudioMan.instance.AddClipToLiveQueue(attackX);
+			haveAttacked = true;
 			return;
 		}
 		if (UnityEngine.Input.GetButtonDown ("YButton")) {
 			currentEnemy.GetComponent<Combo2> ().HitMed (Hits.med);
-			playAudio = attackY;
+			AudioMan.instance.AddClipToLiveQueue(attackY);
+			haveAttacked = true;
 			return;
 		}
 		if (UnityEngine.Input.GetButtonDown ("BButton")) {
 			currentEnemy.GetComponent<Combo2> ().HitLow (Hits.low);
-			playAudio = attackB;
+			AudioMan.instance.AddClipToLiveQueue(attackB);
+			haveAttacked = true;
 			return;
 		}
-        
-
 		//If Offbeat or button mash, Garbage Input
-		if (!BeatMan.instance.onTime || haveAttacked) {
-			attackInput = attackInputs.Garbage;
-			playAudio = error;
+		if (!BeatMan.instance.onTime) {
+			AudioMan.instance.AddClipToLiveQueue(error);
 		}
-
-		//We've attempted to attack this beat
-		AudioMan.instance.AddClipToLiveQueue (playAudio);
-		haveAttacked = true;
 
 	}
     public void GenerateRight(float updwn)

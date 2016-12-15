@@ -35,10 +35,10 @@ public class EnemyMan : MonoBehaviour {
 	
     void UpdateEnemies()
     {
-        //Debug.Log("Update Enemies");
         foreach(GameObject enemy in enemies)
         {
-            if(enemy)
+			//Debug.Log(enemies.Length);
+            if(enemy.GetComponent<ComboScript>())
                 enemy.GetComponent<ComboScript>().EnemyUpdate();
         }
     }
