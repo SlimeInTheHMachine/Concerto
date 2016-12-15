@@ -14,6 +14,8 @@ TagManager:
   - MovingVertical
   - ConveyorRight
   - Enemy
+  - Nodes
+  - New Tag
   layers:
   - Default
   - TransparentFX

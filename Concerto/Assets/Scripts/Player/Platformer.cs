@@ -13,6 +13,8 @@ public class Platformer : MonoBehaviour {
     public float lerpTime;
     public int score;
 
+    GameObject top, bottom, right, left;
+
     //Private Variables
     private LayerMask platformLayerMask, enemyLayerMask;
     private BoxCollider2D colliderBox;
@@ -25,7 +27,20 @@ public class Platformer : MonoBehaviour {
     private float shake;
 
     private attackInputs attackInput;
-    private ComboScript currentEnemy;
+    private Combo2   currentEnemy;
+
+    //Sound Files
+    private AudioClip[] dash;
+    private AudioClip[] jump;
+    private AudioClip fall;
+    private AudioClip attackX;
+    private AudioClip attackY;
+    private AudioClip attackA;
+    private AudioClip attackB;
+    private AudioClip error;
+    private AudioClip clash;
+    private int beatCycleNum;
+    private bool playedError;
 
     private bool haveAttacked;
     private bool haveMoved;
@@ -40,6 +55,7 @@ public class Platformer : MonoBehaviour {
 
     private GameObject[] checks;
     private GameObject[] spikes;
+    private GameObject[] nodes;
     public Vector2 LerpDestination
     {
         get { return lerpDestination; }
@@ -61,10 +77,31 @@ public class Platformer : MonoBehaviour {
         set { canFall = value; }
     }
 
+    [SerializeField]
+    GameObject fightSprite, LeftFist, RightFist;
     //Called before all start functions
     void Awake()
     {
+        beatCycleNum = 0;
+        dash = new AudioClip[] { Resources.Load("Sounds/Synth Slide D3") as AudioClip,
+            Resources.Load("Sounds/Synth Slide E3") as AudioClip,
+            Resources.Load("Sounds/Synth Slide F3") as AudioClip,
+            Resources.Load("Sounds/Synth Slide G3") as AudioClip};
 
+        jump = new AudioClip[] { Resources.Load("Sounds/Synth Slide A3") as AudioClip,
+            Resources.Load("Sounds/Synth Slide B3") as AudioClip,
+            Resources.Load("Sounds/Synth Slide A3") as AudioClip,
+            Resources.Load("Sounds/Synth Slide B3") as AudioClip};
+
+        fall = Resources.Load("Sounds/Synth Slide C3") as AudioClip;
+        
+        attackX = Resources.Load("Sounds/Synth Trumpet C3") as AudioClip;
+        attackY = Resources.Load("Sounds/Synth Trumpet D3") as AudioClip;
+        attackA = Resources.Load("Sounds/Synth Trumpet E3") as AudioClip;
+        attackB = Resources.Load("Sounds/Synth Trumpet F3") as AudioClip;
+
+        error = Resources.Load("Sounds/Attack D4") as AudioClip;
+        //clash;
     }
 
     // Use this for initialization
@@ -72,6 +109,7 @@ public class Platformer : MonoBehaviour {
         //Layermask for platforms, used for raycasting
         platformLayerMask = LayerMask.GetMask("Platform");
         enemyLayerMask = LayerMask.GetMask("Enemy");
+        nodes = GameObject.FindGameObjectsWithTag("Nodes");
         colliderBox = GetComponent<BoxCollider2D>();
         box = new Rect(colliderBox.bounds.min.x, colliderBox.bounds.min.y, colliderBox.bounds.size.x, colliderBox.bounds.size.y);
         lerpDestination = transform.position;
@@ -83,21 +121,51 @@ public class Platformer : MonoBehaviour {
         startPos = transform.position;
         checkpointPos = startPos;
         mashingMove = 0;
+        foreach (Transform child in transform)
+        {
+            switch (child.name)
+            {
+                case "Top Node":
+                    top = child.gameObject;
+                    break;
+                case "Bottom Node":
+					bottom = child.gameObject;
+                    break;
+                case "Right Node":
+					right = child.gameObject;
+                    break;
+                case "Left Node":
+					left = child.gameObject;
+                    break;
+            }
+        }
     }
 
+    private void DrawHelperAtCenter(
+                   Vector3 direction, Color color, float scale)
+    {
+        Gizmos.color = color;
+        Vector3 destination = transform.position + direction * scale;
+        Gizmos.DrawLine(transform.position, destination);
+    }
+    void OnDrawGizmos()
+    {
+        Color color = Color.green;
+        // local forward
+        DrawHelperAtCenter(this.transform.forward, color, 2f);
+    }
     void FixedUpdate()
     {
-		//check vs both platforms and enemies
-		int platformsAndEnemiesMask = platformLayerMask | enemyLayerMask;
+
         //Raycasts
-		rayUp = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.up, moveCastLength, platformsAndEnemiesMask);
-        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.up * moveCastLength, Color.blue);
-		rayRight = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.right, moveCastLength, platformsAndEnemiesMask);
-        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.right * moveCastLength, Color.blue);
-		rayDown = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.down, moveCastLength, platformsAndEnemiesMask);
-        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.down * moveCastLength, Color.blue);
-		rayLeft = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.left, moveCastLength, platformsAndEnemiesMask);
-        Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.left * moveCastLength, Color.blue);
+        rayUp = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.up, moveCastLength, platformLayerMask.value);
+        //Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.up * moveCastLength, Color.blue);
+        rayRight = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.right, moveCastLength, platformLayerMask.value);
+        //Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.right * moveCastLength, Color.blue);
+        rayDown = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.down, moveCastLength, platformLayerMask.value);
+        //Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.down * moveCastLength, Color.blue);
+        rayLeft = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.left, moveCastLength, platformLayerMask.value);
+        //Debug.DrawRay(new Vector2(transform.position.x, transform.position.y), Vector2.left * moveCastLength, Color.blue);
 
         //Raycast to enemy in front
         if (!flipped)
@@ -141,7 +209,10 @@ public class Platformer : MonoBehaviour {
     void Update () {
         //Make sure joystick has returned to neutral state from last intput
         if (Input.GetAxis("Vertical") == 0 && Input.GetAxis("Horizontal") == 0)
+        {
             joyStickInput = true;
+            playedError = false;
+        }
 
         
         if (BeatMan.instance.onTime && !haveMoved) //Won't work off beat, but won't kill a combo offbeat either currently
@@ -156,6 +227,7 @@ public class Platformer : MonoBehaviour {
                         lerpDestination = new Vector2(transform.position.x, transform.position.y + lerpDistance);
                         haveMoved = true;
                         joyStickInput = false;
+                        AudioMan.instance.AddClipToLiveQueue(jump[beatCycleNum]);
                     }
                     else
                     {
@@ -166,6 +238,7 @@ public class Platformer : MonoBehaviour {
                             haveMoved = true;
                             aerialMove = false;
                             joyStickInput = false;
+                            AudioMan.instance.AddClipToLiveQueue(jump[beatCycleNum]);
                         }
                     }
                 }
@@ -177,6 +250,7 @@ public class Platformer : MonoBehaviour {
                         lerpDestination = new Vector2(transform.position.x, transform.position.y - lerpDistance);
                         haveMoved = true;
                         joyStickInput = false;
+                        AudioMan.instance.AddClipToLiveQueue(fall);
                     }
                 }
                 //Right
@@ -192,6 +266,8 @@ public class Platformer : MonoBehaviour {
 
                         if (flipped)
                             Flip();
+
+                        AudioMan.instance.AddClipToLiveQueue(dash[beatCycleNum]);
                     }
                 }
                 //Left
@@ -206,6 +282,8 @@ public class Platformer : MonoBehaviour {
 
                         if (!flipped)
                             Flip();
+
+                        AudioMan.instance.AddClipToLiveQueue(dash[beatCycleNum]);
                     }
                 }
             }    
@@ -220,6 +298,12 @@ public class Platformer : MonoBehaviour {
                     mashingMove = 3;
                 else
                     mashingMove = 2;
+
+                if (!playedError)
+                {
+                    AudioMan.instance.AddClipToLiveQueue(error);
+                    playedError = true;
+                }
             }
         }
 
@@ -252,9 +336,10 @@ public class Platformer : MonoBehaviour {
         }
 
         //Attack
-        if (enemyRayHit.collider != null && (Input.GetButtonDown("AButton") || Input.GetButtonDown("BButton") || Input.GetButtonDown("XButton") || Input.GetButtonDown("YButton")))
+        if (enemyRayHit.collider != null)
         {
-                currentEnemy = enemyRayHit.transform.gameObject.GetComponent<ComboScript>();
+            Debug.Log("I see an enemy");
+                currentEnemy = enemyRayHit.transform.gameObject.GetComponent<Combo2>();
                 CombatInput();
         }
 
@@ -284,52 +369,56 @@ public class Platformer : MonoBehaviour {
     /// </summary>
     void CombatInput()
     {
-        //See if there is combat input
-        //If multiple inputs, Garbage Input
-        if (Input.GetButtonDown("AButton"))
-        {
-            if (attackInput == attackInputs.None)
-                attackInput = attackInputs.A;
-            else
-                attackInput = attackInputs.Garbage;
-        }
-        if (Input.GetButtonDown("BButton"))
-        {
-            if (attackInput == attackInputs.None)
-                attackInput = attackInputs.B;
-            else
-                attackInput = attackInputs.Garbage;
-        }
-        if (Input.GetButtonDown("XButton"))
-        {
-            if (attackInput == attackInputs.None)
-                attackInput = attackInputs.X;
-            else
-                attackInput = attackInputs.Garbage;
-        }
-        if (Input.GetButtonDown("YButton"))
-        {
-            if (attackInput == attackInputs.None)
-                attackInput = attackInputs.Y;
-            else
-                attackInput = attackInputs.Garbage;
-        }
+		//Hits hit;
+		//See if there is combat input
+		//If multiple inputs, Garbage Input
+		AudioClip playAudio = null;
+			
+		if (UnityEngine.Input.GetButtonDown ("XButton")) {
+			currentEnemy.GetComponent<Combo2> ().HitHigh (Hits.high);
+			AudioMan.instance.AddClipToLiveQueue(attackX);
+			haveAttacked = true;
+			return;
+		}
+		if (UnityEngine.Input.GetButtonDown ("YButton")) {
+			currentEnemy.GetComponent<Combo2> ().HitMed (Hits.med);
+			AudioMan.instance.AddClipToLiveQueue(attackY);
+			haveAttacked = true;
+			return;
+		}
+		if (UnityEngine.Input.GetButtonDown ("BButton")) {
+			currentEnemy.GetComponent<Combo2> ().HitLow (Hits.low);
+			AudioMan.instance.AddClipToLiveQueue(attackB);
+			haveAttacked = true;
+			return;
+		}
+		//If Offbeat or button mash, Garbage Input
+		if (!BeatMan.instance.onTime) {
+			AudioMan.instance.AddClipToLiveQueue(error);
+		}
 
-        //If Offbeat or button mash, Garbage Input
-        if (!BeatMan.instance.onTime || haveAttacked)
-            attackInput = attackInputs.Garbage;
-
-        //Clash back if you mess up
-        if(!currentEnemy.CheckInput(attackInput))
-        {
-            //clash code here
-            Clash();
-            currentEnemy = null;
-        }
-        //We've attempted to attack this beat
-        haveAttacked = true;    
+	}
+    public void GenerateRight(float updwn)
+    {
+        GameObject temp = (GameObject)Instantiate(fightSprite);
+        Vector3 tempP = new Vector3(RightFist.transform.position.x, RightFist.transform.position.y + updwn,RightFist.transform.position.z);//)
+        temp.transform.position = tempP;
+        Destroy(temp, 0.5f);
     }
+    public void GenerateLeft()
+    {
+        GameObject temp = (GameObject)Instantiate(fightSprite);
 
+        temp.transform.position = LeftFist.transform.position;
+        Destroy(temp, 0.5f);
+    }
+    void GenerateFightSprite()
+    {
+        GameObject temp = (GameObject)Instantiate(fightSprite);
+        
+        temp.transform.position = transform.position ;
+        Destroy(temp, 0.5f);
+    }
     /// <summary>
     /// Bounce away from enemy
     /// </summary>
@@ -350,11 +439,11 @@ public class Platformer : MonoBehaviour {
         if (currentEnemy != null && !haveAttacked)
         {
             attackInput = attackInputs.None;
-            if (!currentEnemy.CheckInput(attackInput))
-            {
-                Clash();
-                currentEnemy = null;
-            }
+            //if (!currentEnemy.CheckInput(attackInput))
+            //{
+            //   // Clash();
+            //    currentEnemy = null;
+            //}
         }
         haveAttacked = true;
 
@@ -363,6 +452,7 @@ public class Platformer : MonoBehaviour {
         if(!grounded && !haveMoved)
         {
             lerpDestination = new Vector2(transform.position.x, transform.position.y - lerpDistance);
+            AudioMan.instance.AddClipToLiveQueue(fall);
         }
 
         if(mashingMove > 0)
@@ -383,6 +473,11 @@ public class Platformer : MonoBehaviour {
         }
         else
             mashingMove--;
+
+        if (beatCycleNum <= 2)
+            beatCycleNum++;
+        else
+            beatCycleNum = 0;
     }
 
     /// <summary>
@@ -406,5 +501,155 @@ public class Platformer : MonoBehaviour {
             flipped = true;
         //Flip sprite
         transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+    }
+
+
+    void nodeMovement()
+    {
+        Collider[] topObjects;
+        Collider[] bottomObjects;
+        Collider[] rightObjects;
+        Collider[] leftObjects;
+        bool jump = true;
+        bool fall = false;
+        bool follow = false; 
+        bool moveLeft = true;
+        bool moveRight = true;
+        GameObject movementNodeLeft;
+        GameObject movementNodeRight;
+        GameObject movementNodeTop;
+        GameObject movementNodeBottom;
+
+        if (top != null)
+        {
+            topObjects = Physics.OverlapSphere(top.transform.position, 1);
+            foreach (Collider collider in topObjects)
+            {
+                switch (collider.tag)
+                {
+                    case "Platform":
+                    case "Platform2":
+                    case "fallThroughPlatforms":
+                    case "Moving Vertical":
+                    case "Moving Horizantal":
+                        //Prevent Jumping if a platform is above it
+                        jump = false;
+                        movementNodeTop = null;
+                        break;
+                    case "Nodes":
+                        movementNodeTop = collider.gameObject;
+                        break;
+                }
+            }
+        }
+        if (bottom != null)
+        { 
+             bottomObjects = Physics.OverlapSphere(bottom.transform.position, 1);
+            foreach (Collider collider in bottomObjects)
+            {
+                switch (collider.tag)
+                {
+                    case "fallThroughPlatforms":
+                        //Set Up Falling if there is nothing below. 
+                        
+                        follow = false;
+                        fall = true;
+                        movementNodeBottom = null;
+                        break;
+
+                    case "Moving Vertical":
+                    case "Moving Horizantal":
+                        //Move the player with the object
+                        follow = true;
+                        fall = false;
+                        movementNodeBottom = null;
+                        break;
+
+                    case "Platform":
+                    case "Platform2":
+                        //Prevent Player From falling through platforms
+                        follow = false;
+                        fall = false;
+                        movementNodeBottom = null;
+                        break;
+                    case "Nodes":
+                        movementNodeBottom = collider.gameObject;
+                        break;
+                }
+
+            }
+        }
+        if (right != null)
+        {
+             rightObjects = Physics.OverlapSphere(right.transform.position, 1);
+            foreach (Collider collider in rightObjects)
+            {
+                switch (collider.tag)
+                {
+
+                    case "Platform":
+                    case "Platform2":
+                    case "fallThroughPlatforms":
+                    case "Moving Vertical":
+                    case "Moving Horizantal":
+                    case "Enemy":
+                        // Prevent moving into the block
+                        moveRight = false;
+                        movementNodeRight = null;
+                        break;
+                    case "Nodes":
+                        movementNodeRight = collider.gameObject;
+                        break;
+                }
+            }
+        }
+        if (left != null)
+        {
+            leftObjects = Physics.OverlapSphere(left.transform.position, 1);
+            foreach (Collider collider in leftObjects)
+            {
+                switch (collider.tag)
+                {
+                    case "Platform":
+                    case "Platform2":
+                    case "fallThroughPlatforms":
+                    case "Moving Vertical":
+                    case "Moving Horizantal":
+                    case "Enemy":
+                        moveLeft = false;
+                        movementNodeLeft = null;
+                        break;
+                    case "Nodes":
+                        movementNodeLeft = collider.gameObject;
+                        break;
+                }
+            }
+        }
+
+        //Move the player
+        //Lerp to the node returned from the collider checks if the coresponding variable below is not null.
+        //movementNodeLeft, movementNodeRight, movementNodeTop, movementNodeBottom
+        if (jump)
+        {
+            // Allows the player to jump
+        }
+        if (fall)
+        {
+            //Allow the player to fall if in the air/ on a falling platform
+            //Position to lerp to if falling through platform  > collider.transform.GetChild(1).transform.position;
+        }
+        if (follow)
+        {
+            //Move the player along with moving platforms
+        }
+        if (moveLeft)
+        {
+            //Move if there isnt anything blocking the path 
+        }
+        if (moveRight)
+        {
+            //Move if there isnt anything blocking the path 
+        }
+
     }
 }

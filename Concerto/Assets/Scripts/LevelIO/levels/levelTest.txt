@@ -23,7 +23,7 @@ Level:
 Q W Q W Q W Q W Q W Q W Q W Q W Q W Q W Q W Q W Q
 W Q W B B B B B B B B B B Q B B B B B B B B B B W
 Q P C B B B B B B B B B B W B B B B B B B B B B Q
-W Q W Q B B E Q W B B B B Q B B B B B B B B B B W
+W Q W Q B B B E W B B B B Q B B B B B B B B B B W
 Q W Q W Q W Q W Q B B B B C B B B B B B B B B B Q
 W Q W Q W Q W Q W B B B W Q B B B B B E B B B B W
 Q W Q W Q W Q W Q W Q W Q W Q W Q W Q W Q W Q F Q

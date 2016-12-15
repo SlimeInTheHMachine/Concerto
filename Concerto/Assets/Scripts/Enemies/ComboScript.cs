@@ -53,15 +53,28 @@ public class AttackInputWrapper
     }
 }
 
+public class ButtonLetter{
+    public GameObject sprite;
+    public attackInputs atkInput;
+
+
+    public ButtonLetter(GameObject Sp, attackInputs input)
+    {
+        sprite = Sp;
+        atkInput = input; 
+    }
+}
+
 public class ComboScript : MonoBehaviour {
 
     //Public Variables
     public bool Selected = false;
+    private bool flipped;
     public attackInputs button1, button2, button3, button4;
     [SerializeField]
     GameObject letter1, letter2, letter3, letter4;
     //Private Variables
-    private Queue<attackInputs> combo, currentCombo;
+    private Queue<ButtonLetter> combo, currentCombo;
     int lettersLeft = 4;
     //temp Shake code
     private float shake;
@@ -77,71 +90,105 @@ public class ComboScript : MonoBehaviour {
     private Vector2 lerpDestination;
     public float lerpTime;
 
+    /// <summary>
+    /// This is te number of letters that will appear above the enemys
+    /// </summary>
+    [SerializeField]
+    int numOfLetters = 4;
+
     int moveCounter = 0; //2 beats of nothing
     bool lastMoveLeft = false;
+
+
+    public int health = 3;
     // Use this for initialization
     void Start () {
+       // flipped = true;
         attackCounter = 0;
         BoxCollider2D colliderBox = GetComponent<BoxCollider2D>();
         box = new Rect(colliderBox.bounds.min.x, colliderBox.bounds.min.y, colliderBox.bounds.size.x, colliderBox.bounds.size.y);
         enemyLayerMask = LayerMask.GetMask("Player");
-        //GameControl = GameObject.FindGameObjectWithTag("GameController");
-        //Puts in three standard buttons
-        AttackInputWrapper btnHolder1 = new AttackInputWrapper(button1);
-        letter1.GetComponent<TextMesh>().text = btnHolder1.attackLetter;
-        AttackInputWrapper btnHolder2 = new AttackInputWrapper(button2);
-        letter2.GetComponent<TextMesh>().text = btnHolder2.attackLetter;
-        AttackInputWrapper btnHolder3 = new AttackInputWrapper(button3);
-        letter3.GetComponent<TextMesh>().text = btnHolder3.attackLetter;
-        AttackInputWrapper btnHolder4 = new AttackInputWrapper(button4);
-        letter4.GetComponent<TextMesh>().text = btnHolder4.attackLetter;
-        combo = new Queue<attackInputs>();
-        combo.Enqueue(button1);
-        combo.Enqueue(button2);
-        combo.Enqueue(button3);
-        combo.Enqueue(button4);
-        //Deep Clone
-        currentCombo = new Queue<attackInputs>(combo);
+        combo = new Queue<ButtonLetter>();
+        foreach (Transform child in transform)
+        {
+            if(child.gameObject.name == "1")
+            {
+                ButtonLetter bLetter = new ButtonLetter(letter1, button1);
+                combo.Enqueue(bLetter);
+                Debug.Log("First");
+                child.gameObject.GetComponent<SpriteRenderer>().sprite = letter1.GetComponent<SpriteRenderer>().sprite;
+            }
+            if (child.gameObject.name == "2")
+            {
+                ButtonLetter bLetter = new ButtonLetter(letter2, button2);
+                combo.Enqueue(bLetter);
+                Debug.Log("Secind");
+                child.gameObject.GetComponent<SpriteRenderer>().sprite = letter2.GetComponent<SpriteRenderer>().sprite;
+            }
+            if (child.gameObject.name == "3")
+            {
+                ButtonLetter bLetter = new ButtonLetter(letter3, button3);
+                combo.Enqueue(bLetter);
+                Debug.Log("Third");
+                child.gameObject.GetComponent<SpriteRenderer>().sprite = letter2.GetComponent<SpriteRenderer>().sprite;
+            }
+            if (child.gameObject.name == "4")
+            {
+                ButtonLetter bLetter = new ButtonLetter(letter4, button4);
+                combo.Enqueue(bLetter);
+                Debug.Log("Fourth");
+                child.gameObject.GetComponent<SpriteRenderer>().sprite = letter2.GetComponent<SpriteRenderer>().sprite;
+            }
+        }
+       
+        currentCombo = new Queue<ButtonLetter>(combo);
         OGPos = transform.position;
-        //Per enemy? //NOOOOOOOOOOOOO //Enemy Manager
-        //BeatManager.onBeat += InputCheck;
         lerpDestination = this.transform.position;
     }
 
     void ResetQueue()
     {
-        currentCombo = new Queue<attackInputs>(combo);
-        if(lettersLeft == 1)
-        {
-            letter3.GetComponent<MeshRenderer>().enabled = true;
-            lettersLeft += 1;
-        }
-        if (lettersLeft == 2)
-        {
-            letter2.GetComponent<MeshRenderer>().enabled = true;
-            lettersLeft += 1;
-        }
-        if (lettersLeft == 3)
-        {
-            letter1.GetComponent<MeshRenderer>().enabled = true;
-            lettersLeft += 1;
-        }
-        //lettersLeft = 4;
-        if (lettersLeft != 4)
-        {
-            lettersLeft = 4;
-        }
+        //currentCombo = new Queue<attackInputs>(combo);
+        //if(lettersLeft == 1)
+        //{
+        //    letter3.GetComponent<MeshRenderer>().enabled = true;
+        //    lettersLeft += 1;
+        //}
+        //if (lettersLeft == 2)
+        //{
+        //    letter2.GetComponent<MeshRenderer>().enabled = true;
+        //    lettersLeft += 1;
+        //}
+        //if (lettersLeft == 3)
+        //{
+        //    letter1.GetComponent<MeshRenderer>().enabled = true;
+        //    lettersLeft += 1;
+        //}
+        ////lettersLeft = 4;
+        //if (lettersLeft != 4)
+        //{
+        //    lettersLeft = 4;
+        //}
         
     }
 
     void FixedUpdate()
     {
-        
-        RaycastHit2D rayHit = Physics2D.Raycast(new Vector2(transform.position.x - box.size.x / 2, transform.position.y - box.size.y / 4), -Vector2.right, 3, enemyLayerMask.value);
-        Debug.DrawRay(new Vector2(transform.position.x - box.size.x / 2, transform.position.y - box.size.y / 4), -Vector2.right, Color.red);
+        RaycastHit2D rayHit;
+        if (flipped)
+            rayHit = Physics2D.Raycast(new Vector2(transform.position.x + box.size.x / 2, transform.position.y - box.size.y / 4),
+                Vector2.right, 1, enemyLayerMask.value);
+        else
+            rayHit = Physics2D.Raycast(new Vector2(transform.position.x - box.size.x / 2, transform.position.y - box.size.y / 4),
+                Vector2.left, 1, enemyLayerMask.value);
+        if(flipped)
+            Debug.DrawRay(new Vector2(transform.position.x + box.size.x / 2, transform.position.y - box.size.y / 4), Vector2.right, Color.blue);
+        else
+            Debug.DrawRay(new Vector2(transform.position.x - box.size.x / 2, transform.position.y - box.size.y / 4), Vector2.left, Color.red);
+
         if (rayHit.collider != null)
         {
-            Debug.Log("Hitting Player");
+            //Debug.Log("Hitting Player");
             playerInRange = true;
             //I see no problem with this :^) -Rose
             playerObject = rayHit.collider.gameObject;
@@ -161,17 +208,18 @@ public class ComboScript : MonoBehaviour {
     /// <summary>
     /// Has a number of windups equal to the max number of spots + 1
     /// </summary>
+    ///
     void Attack()
     {
-        if(attackCounter == 5)
+        if (attackCounter == numOfLetters + 1)
         {
-            Debug.Log("Attacking");
-            EnemyClash();
+            //Debug.Log("Attacking");
+            //EnemyClash();
             attackCounter = 0;
         }
         else
         {
-            Debug.Log("Getting Ready to Attack");
+            // Debug.Log("Getting Ready to Attack");
             ++attackCounter;
         }
     }
@@ -186,26 +234,32 @@ public class ComboScript : MonoBehaviour {
         {
             lerpDestination = new Vector2(transform.position.x + lerpDistance, transform.position.y);
             lastMoveLeft = false;
-        }else
+
+        }
+        else
         {
             lerpDestination = new Vector2(transform.position.x - lerpDistance, transform.position.y);
             lastMoveLeft = true;
+
         }
         moveCounter = 0;
     }
     // Update is called once per frame
     public void EnemyUpdate ()
     {
-        Debug.Log("Update");
+        //Debug.Log("Update");
         if (playerInRange)
-            Attack();
+          Attack();
         else
         {
             //Movement
             if(moveCounter >= 2)
             {
                 Move();
-            }else
+                //if (flipped)
+                //    Flip();
+            }
+            else
             {
                 moveCounter++;
             }
@@ -224,20 +278,76 @@ public class ComboScript : MonoBehaviour {
         }
     }
 
+
+    public void Attacked()
+    {
+        //Debug.Log("I'm attacked");
+        //health -= 1;
+        //if (PlatManager.instance.player.transform.position.x < transform.position.x)
+        //{
+        //    PlatManager.instance.player.GetComponent<Platformer>().GenerateRight();
+        //}
+        //else
+        //{
+        //    PlatManager.instance.player.GetComponent<Platformer>().GenerateLeft();
+        //}
+        //    if (health <= 0)
+        //{
+        //    Destroy(gameObject, 2f);
+        //    //get tossed
+        //    if(PlatManager.instance.player.transform.position.x < transform.position.x)
+        //    {
+        //       // PlatManager.instance.player.GetComponent<Platformer>().GenerateRight();
+        //        gameObject.AddComponent<Rigidbody2D>();
+        //        gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(1, 1) * 25, ForceMode2D.Impulse);
+        //    }
+        //    else
+        //    {
+        //       // PlatManager.instance.player.GetComponent<Platformer>().GenerateLeft();
+        //        gameObject.AddComponent<Rigidbody2D>();
+        //        gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(-1, 1) * 25, ForceMode2D.Impulse);
+        //    }
+        //    Destroy(this);
+        //}
+    }
     /// <summary>
     /// Called by the enemy to initate a clash if the player misses enough beats
     /// </summary>
     public void EnemyClash()
     {
-        playerObject.GetComponent<Platformer>().LerpDestination= new Vector2(playerObject.transform.position.x - 2.5f, playerObject.transform.position.y);
+        if (!flipped)
+        {
+            playerObject.GetComponent<Platformer>().LerpDestination = new Vector2(playerObject.transform.position.x - 1f,
+                playerObject.transform.position.y);
+        }
+        else
+        {
+            playerObject.GetComponent<Platformer>().LerpDestination = new Vector2(playerObject.transform.position.x + 1f,
+                playerObject.transform.position.y);
+        }
+       // playerObject.GetComponent<Platformer>().LerpDestination= new Vector2(playerObject.transform.position.x + 1f, playerObject.transform.position.y);
         ////normal of this to Enemy
         //if (Vector2.Dot(transform.position, currentEnemy.GetComponent<Rigidbody2D>().transform.position) < 0)
         //lerpDestination = new Vector2(transform.position.x - 2.5f, transform.position.y);
         //else
         //    lerpDestination = new Vector2(transform.position.x + lerpDistance, transform.position.y);
     }
+    /// <summary>
+    /// Flip the character, right default
+    /// </summary>
+    void Flip()
+    {
+        //Change Flip Boolean
+        if (flipped)
+            flipped = false;
+        else
+            flipped = true;
+        //Flip sprite
+        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+    }
     public bool CheckInput(attackInputs input)
     {
+        Debug.Log(currentCombo.Peek().atkInput);
         //Reset on mess up
         if (input == attackInputs.Garbage)
         {
@@ -246,35 +356,35 @@ public class ComboScript : MonoBehaviour {
         }
         else
         {
-            if (input == currentCombo.Peek())
-            {
-                currentCombo.Dequeue();
-                shake = 0.05f;
-                OGPos = transform.position;
-                lettersLeft--;
-                if (lettersLeft == 1)
-                {
-                    letter3.GetComponent<MeshRenderer>().enabled = false;
-                }
-                if (lettersLeft == 2)
-                {
-                    letter2.GetComponent<MeshRenderer>().enabled = false;
-                }
-                if (lettersLeft == 3)
-                {
-                    letter1.GetComponent<MeshRenderer>().enabled = false;
-                }
-            }
-            else
-            {
-                ResetQueue();
-                return false;
-            }
-            if (currentCombo.Count == 0)
-            {
-                Destroy(gameObject);
-                return true;
-            }
+            //if (input == currentCombo.Peek())
+            //{
+            //    currentCombo.Dequeue();
+            //    shake = 0.05f;
+            //    OGPos = transform.position;
+            //    lettersLeft--;
+            //    if (lettersLeft == 1)
+            //    {
+            //        letter3.GetComponent<MeshRenderer>().enabled = false;
+            //    }
+            //    if (lettersLeft == 2)
+            //    {
+            //        letter2.GetComponent<MeshRenderer>().enabled = false;
+            //    }
+            //    if (lettersLeft == 3)
+            //    {
+            //        letter1.GetComponent<MeshRenderer>().enabled = false;
+            //    }
+            //}
+            //else
+            //{
+            //    ResetQueue();
+            //    return false;
+            //}
+            //if (currentCombo.Count == 0)
+            //{
+            //    Destroy(gameObject);
+            //    return true;
+            //}
             return true;
         }
     }

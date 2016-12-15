@@ -35,11 +35,11 @@ public class EnemyMan : MonoBehaviour {
 	
     void UpdateEnemies()
     {
-        Debug.Log("Update Enemies");
         foreach(GameObject enemy in enemies)
         {
-            Debug.Log("Enemy name: " + enemy.name);
-            enemy.GetComponent<ComboScript>().EnemyUpdate();
+			//Debug.Log(enemies.Length);
+            if(enemy.GetComponent<ComboScript>())
+                enemy.GetComponent<ComboScript>().EnemyUpdate();
         }
     }
 	// Update is called once per frame

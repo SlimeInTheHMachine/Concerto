@@ -27,7 +27,9 @@ public class CamBehavior : MonoBehaviour {
         //transform.position = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
         lerpDestination = new Vector3(player.transform.position.x, player.transform.position.y + bobMod, transform.position.z);
         transform.position = Vector2.Lerp(transform.position, lerpDestination, lerpTime);
+		transform.position = new Vector3(transform.position.x, transform.position.y, -10.0f);
         can.transform.position = transform.position;
+
     }
 
     void CamBobUp()

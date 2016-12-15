@@ -21,8 +21,9 @@ public class IO : MonoBehaviour {
     public GameObject P;
     public GameObject E;
     public GameObject D;
-
-    string defaultFilePath = "Assets/Scripts/LevelIO/levels/levelTest.txt";
+    [SerializeField]
+    string levelName;
+    string defaultFilePath = "Assets/Scripts/LevelIO/levels/levelTwo.txt";
     bool comment = false;
     bool sizeNext = false;
     bool levelNext = false;
@@ -34,7 +35,8 @@ public class IO : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-	    if(levelFilePath == null || !File.Exists(levelFilePath))
+        string defaultFilePath = "Assets/Scripts/LevelIO/levels/" + levelName + ".txt";
+        if (levelFilePath == null || !File.Exists(levelFilePath))
         {
             levelFilePath = defaultFilePath;
         }

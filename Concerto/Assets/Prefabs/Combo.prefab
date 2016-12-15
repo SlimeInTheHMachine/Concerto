@@ -388,6 +388,7 @@ MonoBehaviour:
   letter4: {fileID: 176510}
   lerpDistance: 1
   lerpTime: 18
+  numOfLetters: 3
 --- !u!212 &21266374
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -448,6 +449,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: lerpDistance
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: numOfLetters
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
