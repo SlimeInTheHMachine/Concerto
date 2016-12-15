@@ -37,8 +37,7 @@ public class EnemyMan : MonoBehaviour {
     {
         foreach(GameObject enemy in enemies)
         {
-			//Debug.Log(enemies.Length);
-            if(enemy.GetComponent<ComboScript>())
+			if((enemy!= null) && (enemy.GetComponent<ComboScript>()))
                 enemy.GetComponent<ComboScript>().EnemyUpdate();
         }
     }
