@@ -13,7 +13,7 @@ public class Ingredient : System.Object
     //int amount = 1;
     PlatformType unit;
 }
-public class LevelEditor : EditorWindow
+public class OurLevelEditor : EditorWindow
 {
    
     string myString = "Hello World";
@@ -24,7 +24,7 @@ public class LevelEditor : EditorWindow
 
     public static void ShowWindow()
     {
-        EditorWindow.GetWindow(typeof(LevelEditor));
+		EditorWindow.GetWindow(typeof(OurLevelEditor));
     }
 
 

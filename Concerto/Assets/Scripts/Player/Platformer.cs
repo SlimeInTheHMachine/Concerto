@@ -81,10 +81,14 @@ public class Platformer : MonoBehaviour {
     }
 
     [SerializeField]
-    GameObject fightSprite, LeftFist, RightFist;
+	GameObject fightSprite, LeftFist, RightFist;
     //Called before all start functions
     void Awake()
     {
+		fightSprite = new GameObject ();
+		LeftFist = new GameObject ();
+		RightFist = new GameObject ();
+
         beatCycleNum = 0;
         dash = new AudioClip[] { Resources.Load("Sounds/Synth Slide D3") as AudioClip,
             Resources.Load("Sounds/Synth Slide E3") as AudioClip,
