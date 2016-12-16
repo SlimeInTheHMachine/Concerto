@@ -31,7 +31,7 @@ public class Platformer : MonoBehaviour {
 
     //Sound Files
     private AudioClip[] dash;
-    private AudioClip[] jump;
+	private AudioClip[] jumpAudio;
     private AudioClip fall;
     private AudioClip attackX;
     private AudioClip attackY;
@@ -89,7 +89,7 @@ public class Platformer : MonoBehaviour {
             Resources.Load("Sounds/Synth Slide F3") as AudioClip,
             Resources.Load("Sounds/Synth Slide G3") as AudioClip};
 
-        jump = new AudioClip[] { Resources.Load("Sounds/Synth Slide A3") as AudioClip,
+        jumpAudio = new AudioClip[] { Resources.Load("Sounds/Synth Slide A3") as AudioClip,
             Resources.Load("Sounds/Synth Slide B3") as AudioClip,
             Resources.Load("Sounds/Synth Slide A3") as AudioClip,
             Resources.Load("Sounds/Synth Slide B3") as AudioClip};
@@ -229,7 +229,7 @@ public class Platformer : MonoBehaviour {
                         lerpDestination = new Vector2(transform.position.x, transform.position.y + lerpDistance);
                         haveMoved = true;
                         joyStickInput = false;
-                        AudioMan.instance.AddClipToLiveQueue(jump[beatCycleNum]);
+						AudioMan.instance.AddClipToLiveQueue(jumpAudio[beatCycleNum]);
                     }
                     else
                     {
@@ -240,7 +240,7 @@ public class Platformer : MonoBehaviour {
                             haveMoved = true;
                             aerialMove = false;
                             joyStickInput = false;
-                            AudioMan.instance.AddClipToLiveQueue(jump[beatCycleNum]);
+							AudioMan.instance.AddClipToLiveQueue(jumpAudio[beatCycleNum]);
                         }
                     }
                 }
@@ -526,10 +526,10 @@ public class Platformer : MonoBehaviour {
         bool follow = false; 
         bool moveLeft = true;
         bool moveRight = true;
-        GameObject movementNodeLeft;
-        GameObject movementNodeRight;
-        GameObject movementNodeTop;
-        GameObject movementNodeBottom;
+		GameObject movementNodeLeft = null;
+		GameObject movementNodeRight = null;
+		GameObject movementNodeTop = null;
+		GameObject movementNodeBottom = null;
 
         if (top != null)
         {
@@ -555,7 +555,7 @@ public class Platformer : MonoBehaviour {
         }
         if (bottom != null)
         { 
-             bottomObjects = Physics.OverlapSphere(bottom.transform.position, 1);
+            bottomObjects = Physics.OverlapSphere(bottom.transform.position, 1);
             foreach (Collider collider in bottomObjects)
             {
                 switch (collider.tag)
@@ -592,7 +592,7 @@ public class Platformer : MonoBehaviour {
         }
         if (right != null)
         {
-             rightObjects = Physics.OverlapSphere(right.transform.position, 1);
+            rightObjects = Physics.OverlapSphere(right.transform.position, 1);
             foreach (Collider collider in rightObjects)
             {
                 switch (collider.tag)
@@ -643,23 +643,35 @@ public class Platformer : MonoBehaviour {
         if (jump)
         {
             // Allows the player to jump
-        }
+			Debug.Log("Enter jump");
+			lerpDestination = new Vector2(movementNodeRight.gameObject.transform.position.x, movementNodeRight.gameObject.transform.position.y + lerpDistance);
+			AudioMan.instance.AddClipToLiveQueue(jumpAudio[beatCycleNum]);
+
+		}
         if (fall)
         {
+			Debug.Log("Enter fall");
             //Allow the player to fall if in the air/ on a falling platform
             //Position to lerp to if falling through platform  > collider.transform.GetChild(1).transform.position;
+			lerpDestination = new Vector2(movementNodeRight.gameObject.transform.position.x, movementNodeRight.gameObject.transform.position.y - lerpDistance);
         }
         if (follow)
         {
+			Debug.Log("Enter follow");
             //Move the player along with moving platforms
+			//lerpDestination = new Vector2();
         }
         if (moveLeft)
         {
+			Debug.Log("Enter left");
             //Move if there isnt anything blocking the path 
+			lerpDestination = new Vector2(movementNodeLeft.gameObject.transform.position.x - lerpDistance, movementNodeLeft.gameObject.transform.position.y);
         }
         if (moveRight)
         {
+			Debug.Log("Enter right");
             //Move if there isnt anything blocking the path 
+			lerpDestination = new Vector2(movementNodeRight.gameObject.transform.position.x + lerpDistance, movementNodeRight.gameObject.transform.position.y);
         }
 
     }
