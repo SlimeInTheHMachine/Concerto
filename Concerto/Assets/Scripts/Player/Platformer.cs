@@ -503,9 +503,8 @@ public class Platformer : MonoBehaviour {
             Application.LoadLevel(index);
         else
         {
-            Application.LoadLevel(index);
-            //transform.position = new Vector3(startPos.x, startPos.y, 0f);
-            //lerpDestination = new Vector2(startPos.x, startPos.y);
+            transform.position = new Vector3(startPos.x, startPos.y, 0f);
+            lerpDestination = new Vector2(startPos.x, startPos.y);
         }
     }
 
