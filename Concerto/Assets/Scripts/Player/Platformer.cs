@@ -12,6 +12,8 @@ public class Platformer : MonoBehaviour {
     public float lerpDistance;
     public float lerpTime;
     public int score;
+    public int goal;
+    public int index;
 
     GameObject top, bottom, right, left;
 
@@ -119,7 +121,7 @@ public class Platformer : MonoBehaviour {
         BeatMan.endBeat += sendNoInput;
         checks = GameObject.FindGameObjectsWithTag("Checkpoint");
         spikes = GameObject.FindGameObjectsWithTag("Spikes");
-        finish = GameObject.Find("Finish");
+        finish = GameObject.FindWithTag("Finish");
         startPos = transform.position;
         checkpointPos = startPos;
         mashingMove = 0;
@@ -497,7 +499,14 @@ public class Platformer : MonoBehaviour {
     /// </summary>
     void finishLevel()
     {
-        Application.LoadLevel("Menu");
+        if (score >= goal)
+            Application.LoadLevel(index);
+        else
+        {
+            Application.LoadLevel(index);
+            //transform.position = new Vector3(startPos.x, startPos.y, 0f);
+            //lerpDestination = new Vector2(startPos.x, startPos.y);
+        }
     }
 
     /// <summary>

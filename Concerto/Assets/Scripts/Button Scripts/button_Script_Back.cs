@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class button_Script_Back : MonoBehaviour {
-	// Use this for initialization
-	void Start () {
+public class button_Script_Back : MonoBehaviour
+{
+    public int index;
+    // Use this for initialization
+    void Start () {
 	
 	}
 	
@@ -14,6 +16,6 @@ public class button_Script_Back : MonoBehaviour {
 
     void OnMouseDown()
     {
-        Application.LoadLevel("Menu");
+        Application.LoadLevel(index);
     }
 }

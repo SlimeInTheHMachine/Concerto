@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Combo2.cs" />
     <Compile Include="Assets\Scripts\Animation\OnBeatAnimator.cs" />
     <Compile Include="Assets\Scripts\Audio\AudioGen.cs" />
     <Compile Include="Assets\Scripts\Audio\AudioMan.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Assets\Scripts\Button Scripts\button_Script_Instructions.cs" />
     <Compile Include="Assets\Scripts\Button Scripts\button_Script_Start.cs" />
     <Compile Include="Assets\Scripts\Camera\CamBehavior.cs" />
+    <Compile Include="Assets\Scripts\DontDestroy.cs" />
     <Compile Include="Assets\Scripts\Enemies\ComboScript.cs" />
     <Compile Include="Assets\Scripts\Enemies\EnemyMan.cs" />
     <Compile Include="Assets\Scripts\LevelEditor.cs" />
@@ -92,7 +94,6 @@
     <Compile Include="Assets\Scripts\UI\MetronomeParent.cs" />
     <Compile Include="Assets\Scripts\UI\UIBar.cs" />
     <Compile Include="Assets\Scripts\UI\UIBorder.cs" />
-    <Compile Include="Assets\Scripts\UI\UICirclePlain.cs" />
     <Compile Include="Assets\Scripts\UI\UICircleTwin.cs" />
   </ItemGroup>
   <ItemGroup>

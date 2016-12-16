@@ -42,6 +42,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 487834}
+  - 114: {fileID: 11469484}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -58,7 +59,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 409414}
   - 114: {fileID: 11405872}
-  - 114: {fileID: 11472014}
   - 114: {fileID: 11446958}
   m_Layer: 0
   m_Name: PlatManager
@@ -226,31 +226,17 @@ MonoBehaviour:
   m_InputActionsPerSecond: 10
   m_RepeatDelay: .5
   m_ForceModuleActive: 0
---- !u!114 &11472014
+--- !u!114 &11469484
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 180588}
+  m_GameObject: {fileID: 160280}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78aeec541956a294fa555bb6e401cd14, type: 3}
+  m_Script: {fileID: 11500000, guid: 1497cb1e4c9d2b343bd2bfe59f92e98a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelFilePath: levelTest
-  Q: {fileID: 158574, guid: 380447916b48dde49af6b421dcd93bca, type: 2}
-  W: {fileID: 118696, guid: 3c2bc2e2b9785894f8aa58f0ad858205, type: 2}
-  Z: {fileID: 151346, guid: 629efe84286feee4baf6e948caae261c, type: 2}
-  X: {fileID: 156094, guid: df7f346a0b82ba941a5c4557580c6465, type: 2}
-  N: {fileID: 103344, guid: 0302e7e166904294ca92687ce1c11b71, type: 2}
-  M: {fileID: 146572, guid: 4f0ebeddbc3a7564d9e5e630ae96f098, type: 2}
-  S: {fileID: 147302, guid: 7bc01a8946788074d9756f247cb82da5, type: 2}
-  F: {fileID: 116958, guid: ed34ec5713e44cd4f8760c7638c06355, type: 2}
-  C: {fileID: 127694, guid: 42a343ca13c169a4faa31ea2c5bb2fdb, type: 2}
-  P: {fileID: 158370, guid: 279bf950bf088f940ac32b79cc91bc71, type: 2}
-  E: {fileID: 177092, guid: aa3fccf86b9e6db41ac75655c8d188be, type: 2}
-  D: {fileID: 147828, guid: 198d05bf1cb65c844af010e171f8283a, type: 2}
-  levelName: levelTest
 --- !u!114 &11472264
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -60,7 +60,7 @@ public class PlatManager : MonoBehaviour
             //If so (somehow), destroy this object.
             Destroy(gameObject);
 
-        
+
 
         //Get List of platforms
         platforms = GameObject.FindGameObjectsWithTag("Platform");
@@ -75,6 +75,11 @@ public class PlatManager : MonoBehaviour
         //Get the spriteRenderers of each platform that changed colors
         platformSpriteRens = new SpriteRenderer[platforms.Length + platforms2.Length];
         platMoverRens = new SpriteRenderer[movPlatformsVer.Length + movPlatformsHor.Length];
+
+        foreach (SpriteRenderer p in platformSpriteRens)
+        { DontDestroyOnLoad(p); }
+        foreach (SpriteRenderer p in platMoverRens)
+        { DontDestroyOnLoad(p); }
 
         //Get Colliders to check against the player Collider
         platformCols = new BoxCollider2D[platforms.Length + platforms2.Length];

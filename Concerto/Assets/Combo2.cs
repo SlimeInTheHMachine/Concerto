@@ -38,6 +38,7 @@ public class Combo2 : MonoBehaviour {
                 gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(-1, 1) * 25, ForceMode2D.Impulse);
             }
             Destroy(this);
+            PlatManager.instance.player.GetComponent<Platformer>().score++;
         }
         else
         //These show what the next hit required is.

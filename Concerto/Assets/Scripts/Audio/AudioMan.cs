@@ -29,6 +29,9 @@ public class AudioMan : MonoBehaviour
         else if (instance != this)
             //If so (somehow), destroy this object.
             Destroy(gameObject);
+
+
+        DontDestroyOnLoad(audioSrc);
     }
 
 
